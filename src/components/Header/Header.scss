@@ -1,0 +1,72 @@
+
+.header {
+    background-color: $background-dark;
+
+    &__container {
+        display: flex;
+        flex-direction: column;
+        height: 12.5rem;
+        align-items: center;
+        max-width: 79rem;
+        margin: auto;
+
+        @include tablet {
+            height: 11.62rem;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+
+        @include desktop {
+            height: 11.62rem;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+    }
+
+    &__logo {
+        width: 8.0625rem;
+        margin: 1.5rem;
+    }
+
+    &__nav {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        text-align: center;
+        padding: 0 1rem;
+
+        @include tablet {
+            padding: 1rem;
+            width: 30%;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+    }
+
+    &__trips {
+        @include H3;
+        width: 50%;
+        color: $primary-white;
+        padding: .5rem;
+        border-radius: 1rem;
+
+        &:hover {
+            text-decoration: underline $primary-white;
+        }
+
+        @include tablet {
+            padding: .5rem;
+            width: fit-content;
+        }
+    }
+
+    &__text {
+        padding: 0 .5rem
+    }
+}
+
+.active {
+    background-color: $primary-black;
+}
