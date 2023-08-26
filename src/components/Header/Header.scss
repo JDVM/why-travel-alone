@@ -59,6 +59,7 @@
         @include tablet {
             padding: .5rem;
             width: fit-content;
+            width: -moz-fit-content;
         }
     }
 
