@@ -18,6 +18,7 @@ function Header() {
                     >
                         <div className="header__text">Create New Trip</div>
                     </NavLink>
+                    <input type="text" placeholder="Search" />
                 </nav>
             </div>
         </header>
