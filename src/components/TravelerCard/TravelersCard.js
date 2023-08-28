@@ -15,7 +15,7 @@ function TravelerCard() {
                 </article>
                 <article>
                     <p>Kids</p>
-                    <p></p>
+                   <input type="radial"></input>
                 </article>
                 <article>
                     <p>Realationship Status</p>
