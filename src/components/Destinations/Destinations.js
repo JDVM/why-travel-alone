@@ -1,14 +1,14 @@
 import "./Destinations.scss"
 
 function Destinations() {
-    <div class="dropdown">
-        <button onclick="myFunction()" class="dropbtn">Dropdown</button>
-        <div id="myDropdown" class="dropdown-content">
-            <a href="#">Link 1</a>
-            <a href="#">Link 2</a>
-            <a href="#">Link 3</a>
-        </div>
-    </div>
+    return (
+        <select>
+            <option>Asia</option>
+            <option>Latin America</option>
+            <option>North America</option>
+            <option>Europe</option>
+        </select>
+    )
 }
 
 export default Destinations

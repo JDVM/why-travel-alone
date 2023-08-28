@@ -22,6 +22,13 @@ function TravelerCard() {
                     <p></p>
                 </article>
             </section>
+            <div>
+                <select>
+                    |<option>test</option>
+                    |<option>test1</option>
+                </select>
+                <button>Add to trip</button>
+            </div>
         </div>
     )
 }

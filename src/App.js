@@ -3,6 +3,7 @@ import './App.scss';
 import Header from './components/Header/Header';
 import Travelers from './pages/Travelers/Traveler';
 import Trips from './pages/Trips/Trips'
+import AddTrip from './components/AddTrip/AddTrip';
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
         <Route path="/Travelers/:id" />
         <Route path="/Trips" element={<Trips />} />
         <Route path="/Trips/:id" />
-        <Route path="/Trips/new" />
+        <Route path="/Trips/new" element={<AddTrip />}/>
       </Routes>
     </BrowserRouter>
   );
