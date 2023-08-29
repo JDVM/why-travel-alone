@@ -4,6 +4,7 @@ import Header from './components/Header/Header';
 import Travelers from './pages/Travelers/Traveler';
 import Trips from './pages/Trips/Trips'
 import AddTrip from './components/AddTrip/AddTrip';
+import TripDetails from './components/TripDetails/TripDetails'
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
         <Route path="/Travelers" element={<Travelers />} />
         <Route path="/Travelers/:id" />
         <Route path="/Trips" element={<Trips />} />
-        <Route path="/Trips/:id" />
+        <Route path="/Trips/:id" element={<TripDetails/>}/>
         <Route path="/Trips/new" element={<AddTrip />}/>
       </Routes>
     </BrowserRouter>
