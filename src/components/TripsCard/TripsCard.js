@@ -6,7 +6,7 @@ function TripsCard(){
             <div>
                 <p>Number of travelers title</p>
                 <p>number of travelers</p>
-                <p>Destination</p>
+                <p>Destination title</p>
                 <p>Description</p>
             </div>
         </div>

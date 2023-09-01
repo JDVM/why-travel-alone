@@ -12,10 +12,11 @@ function App() {
       <Header />
       <Routes>
         <Route path="/Travelers" element={<Travelers />} />
-        <Route path="/Travelers/:id" />
+        <Route path="/Travelers/:id" element={<Travelers/>} />
         <Route path="/Trips" element={<Trips />} />
-        <Route path="/Trips/:id" element={<TripDetails/>}/>
-        <Route path="/Trips/new" element={<AddTrip />}/>
+        <Route path="/Trips/:id" element={<Trips />}/>
+        <Route path="/Trips/new" element={<Trips />}/>
+        <Route path='/*' element={<Travelers />} />
       </Routes>
     </BrowserRouter>
   );
