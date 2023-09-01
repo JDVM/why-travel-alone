@@ -1,0 +1,14 @@
+.traveler-card{
+    display: flex;
+    flex-wrap: wrap;
+
+    &__container{
+        border: 1px solid blue;
+        margin: .5rem;
+    }
+
+    &__image{
+        width: 5rem;
+        align-self: center;
+    }
+}

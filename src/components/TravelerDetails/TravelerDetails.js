@@ -1,16 +1,14 @@
 import "./TravelerDetails.scss"
+import placeholderImage from '../../assets/images/placeholder_image.png'
 
 function TravelerDetails({ travelerDetails }) {
-    console.log(travelerDetails)
-    const name = `${travelerDetails.first_name} ${travelerDetails.last_name}`
-    let hasKids = "no"
-    if (travelerDetails.has_kids === 1) {
-        hasKids = "Yes"
-    } 
+    const name = `${travelerDetails.first_name} ${travelerDetails.last_name}`;
+    const hasKids = travelerDetails.has_kids === 1 ? "Yes" : "No";
+    const PreferredDestinations = travelerDetails.preferred_destinations
 
     return (
         <div className="travler-details">
-            <img src="/" />
+            <img className="travel-details__image" alt="placeholder" src={placeholderImage} />
             <section>
                 <article>
                     <p>Name</p>
@@ -18,7 +16,15 @@ function TravelerDetails({ travelerDetails }) {
                 </article>
                 <article>
                     <p>PrefereddDestinations</p>
-                    <p></p>
+                    <ul>
+                        {PreferredDestinations.map((destination, index) => {
+                            return <li key={index}>{destination}</li>;
+                        })}
+                    </ul>
+                </article>
+                <article>
+                    <p>Type of travel</p>
+                    <p>{travelerDetails.type_of_travel}</p>
                 </article>
                 <article>
                     <p>Kids</p>

@@ -24,7 +24,9 @@ function Travelers() {
             .catch(error => {
                 console.log(error)
             });
+    }, []);
 
+    useEffect(() => {
         axios
             .get(`${API_URL}:${PORT}/travelers/${id}`)
             .then((res) => {
@@ -34,7 +36,7 @@ function Travelers() {
             .catch(error => {
                 console.log(error)
             });
-    }, []);
+    }, [])
 
     console.log(travelerDetails)
 
@@ -44,17 +46,17 @@ function Travelers() {
                 <TravelerDetails travelerDetails={travelerDetails} />
             </>
         )
-    // i have 
-    // if (!travelerDetails) {
-    //     return <p>Loading...</p>;
-    // }
-    console.log("travelers props", travelers)
-        return (
-            
-            <>
-                <TravelerCard Travelers={travelers} />
-            </>
-        )
+        if (!travelers) {
+            return <p>Loading...</p>;
+        }
+
+
+    return (
+
+        <>
+            <TravelerCard travelers={travelers} />
+        </>
+    )
 }
 
 export default Travelers
