@@ -1,6 +1,7 @@
 import TravelerCard from "../TravelerCard/TravelersCard";
 import "./TripDetails.scss"
 
+
 function TripDetails() {
     return(
         <div>

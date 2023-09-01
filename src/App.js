@@ -15,8 +15,8 @@ function App() {
         <Route path="/Travelers" element={<Travelers />} />
         <Route path="/Travelers/:id" element={<TravelerDetails/>} />
         <Route path="/Trips" element={<Trips />} />
-        <Route path="/Trips/:id" element={<Trips />}/>
-        <Route path="/Trips/new" element={<Trips />}/>
+        <Route path="/Trips/:id" element={<TripDetails/>}/>
+        <Route path="/Trips/new" element={<AddTrip />}/>
         <Route  path='/*' element={<Navigate to="/Travelers"/>}/>
       </Routes>
     </BrowserRouter>
