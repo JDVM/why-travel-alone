@@ -11,9 +11,9 @@ function TravelerCard({ travelers }) {
                 const name = `${t.first_name} ${t.last_name}`;
                 const hasKids = t.has_kids === 1 ? "Yes" : "No";
                 const PreferredDestinations = t.preferred_destinations
-                // console.log(PreferredDestinations)
+                console.log(PreferredDestinations)
                 return (
-                    <Link to={`travelers/${t.user_id}`}>
+                    <Link to={`/Travelers/${t.user_id}`}>
                         <div className="traveler-card__container" key={t.user_id} >
                             <img className="traveler-card__image" src={placeHolderImage} alt="placeholder a human profile" />
                             <section>
