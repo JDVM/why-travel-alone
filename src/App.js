@@ -6,6 +6,7 @@ import Trips from './pages/Trips/Trips'
 import AddTrip from './components/AddTrip/AddTrip';
 import TripDetails from './components/TripDetails/TripDetails'
 import TravelerDetails from './components/TravelerDetails/TravelerDetails';
+import EditTrip from './components/EditTrip/EditTrip';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/Travelers/:id" element={<TravelerDetails/>} />
         <Route path="/Trips" element={<Trips />} />
         <Route path="/Trips/:id" element={<TripDetails/>}/>
+        <Route path='/Trips/:id/edit' element={<EditTrip />}/>
         <Route path="/Trips/new" element={<AddTrip />}/>
         <Route  path='/*' element={<Navigate to="/Travelers"/>}/>
       </Routes>

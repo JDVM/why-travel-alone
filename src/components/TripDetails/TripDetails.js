@@ -1,7 +1,7 @@
 import "./TripDetails.scss"
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import SmallTravelerCard from "../SmallTravelerCard/SmallTraverlerCard";
 const API_URL = process.env.REACT_APP_API_URL;
 const PORT = process.env.REACT_APP_API_PORT;
@@ -47,6 +47,9 @@ function TripDetails() {
             <section>
                 <SmallTravelerCard travelers={travelersForThisTrip} />
             </section>
+            <Link to={`/Trips/${id}/edit`}>
+            <button>edit</button>
+            </Link>
         </div>
     )
 }
