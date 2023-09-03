@@ -8,6 +8,7 @@ function TravelerDetails() {
     const API_URL = process.env.REACT_APP_API_URL;
     const PORT = process.env.REACT_APP_API_PORT;
     const [travelerDetails, setTravelerDetails] = useState();
+    const [trips, setTrips] = useState();
     const { id } = useParams();
     useEffect(() => {
         axios
@@ -18,8 +19,21 @@ function TravelerDetails() {
             })
             .catch(error => {
                 console.log(error)
+            })
+
+        axios
+            .get(`${API_URL}:${PORT}/Trips`)
+            .then((res) => {
+                const tripsData = res.data;
+                console.log(tripsData);
+                setTrips(tripsData);
+            })
+            .catch(error => {
+                console.log(error)
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id])
+
     if (!travelerDetails) {
         return (
             <>
@@ -31,8 +45,14 @@ function TravelerDetails() {
     const name = `${travelerDetails.first_name} ${travelerDetails.last_name}`;
     const hasKids = travelerDetails.has_kids === 1 ? "Yes" : "No";
     const PreferredDestinations = travelerDetails.preferred_destinations
-    console.log(travelerDetails)
 
+    if (!trips) {
+        return (
+            <>
+                <p>Loading Trips Please wait</p>
+            </>
+        )
+    }
 
     return (
         <div className="travler-details">
@@ -65,8 +85,11 @@ function TravelerDetails() {
             </section>
             <div>
                 <select>
-                    <option>trip option 1</option>
-                    <option>trip option 2</option>
+                    {trips.map((trip) => {
+                        return (
+                            <option key={trip.id} value={trip.id}>{trip.trip_name}</option>
+                        )
+                    })}
                 </select>
                 <button>Add to trip</button>
             </div>
