@@ -18,7 +18,7 @@ function App() {
         <Route path="/Trips" element={<Trips />} />
         <Route path="/Trips/:id" element={<TripDetails/>}/>
         <Route path='/Trips/:id/edit' element={<EditTrip />}/>
-        <Route path="/Trips/new" element={<AddTrip />}/>
+        <Route path="/new" element={<AddTrip />}/>
         <Route  path='/*' element={<Navigate to="/Travelers"/>}/>
       </Routes>
     </BrowserRouter>

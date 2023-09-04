@@ -7,16 +7,21 @@ function Header() {
             <div className="header__container">
                 <Link to={"/Travelers"}><img className="header__logo" src={logo} alt="Logo for Instock Company" /></Link>
                 <nav className="header__nav">
-                    <NavLink
-                        className={`header__trips ${({ isActive, isPending }) => isPending ? "pending" : isActive ? "active" : "header__warehouses"}`}
-                        to={"/Trips"}
-                    >
-                        <div className="header__text">Trips</div>
+                    <NavLink className={`header__links ${({ isActive, isPending }) => isPending ? "pending" : isActive ? "active" : "header__link"}`}
+                        to={"/Travelers"}>
+                        <p className="header__text">Travelers</p>
                     </NavLink>
                     <NavLink
-                        className={`header__trips ${({ isActive, isPending }) => isPending ? "pending" : isActive ? "active" : "header__inventory"}`} to={"/Trips/new"}
+                        className={`header__links ${({ isActive, isPending }) => isPending ? "pending" : isActive ? "active" : "header__link"}`}
+                        to={"/Trips"}
                     >
-                        <div className="header__text">Create New Trip</div>
+                        <p className="header__text">Trips</p>
+                    </NavLink>
+                    <NavLink
+                        className={`header__links ${({ isActive, isPending }) => isPending ? "pending" : isActive ? "active" : "header__link"}`}
+                        to={"/Trips/new"}
+                    >
+                        <p className="header__text">Create New Trip</p>
                     </NavLink>
                     <input type="text" placeholder="Search" />
                 </nav>

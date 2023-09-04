@@ -1,3 +1,7 @@
+@use '../../styles/partials/fonts' as *;
+@use '../../styles/partials/mixins' as *;
+@use '../../styles/partials/variables' as *;
+
 
 .header {
     background-color: darkblue;
@@ -9,8 +13,6 @@
         align-items: center;
         max-width: 79rem;
         margin: auto;
-
-        
     }
 
     &__logo {
@@ -24,13 +26,11 @@
         width: 100%;
         text-align: center;
         padding: 0 1rem;
-
-       
     }
 
-    &__trips {
+    &__links {
        
-        width: 50%;
+        width: 33%;
         color: lightseagreen;
         padding: .5rem;
         border-radius: 1rem;
@@ -38,12 +38,11 @@
         &:hover {
             text-decoration: underline white;
         }
-
-       
     }
 
     &__text {
-        padding: 0 .5rem
+        @include sub-heading;
+        padding: 0 .5rem;
     }
 }
 
