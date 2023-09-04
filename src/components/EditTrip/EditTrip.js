@@ -17,10 +17,11 @@ function EditTrip() {
         trip_length: "",
         notes: ""
     });
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
     const goBack = () => navigate(-1); 
 
-    const [isSubmissionSuccess, setIsSubmissionSuccess] = useState(false);
+
 
     useEffect(() => {
         axios
@@ -55,6 +56,11 @@ function EditTrip() {
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
+
+        if (!tripDetails.trip_name || !tripDetails.destination_id || isNaN(tripDetails.trip_length)) {
+            setError("Please fill in all required fields and ensure trip length is a valid number.");
+            return;
+        }
         const updatedTripDetails = {
             trip_name: tripDetails.trip_name,
             kid_friendly: tripDetails.kid_friendly ? "true" : "false",
@@ -67,7 +73,7 @@ function EditTrip() {
             .put(`${API_URL}:${PORT}/trips/${id}`, updatedTripDetails)
             .then((res) => {
                 console.log(res.data);
-                setIsSubmissionSuccess(true); console.log(updatedTripDetails)
+            
             })
             .catch(error => {
                 console.log(error);
@@ -82,12 +88,21 @@ function EditTrip() {
         )
     }
 
+    const deleteTrip = () => {
+        axios
+        .delete(`${API_URL}:${PORT}/trips/${id}`)
+        .then(() => {
+            navigate('/Trips')
+        })
+    }
+
     return (
         <form onSubmit={handleFormSubmit}>
             <div>
                 <h1>Edit Trip Details</h1>
                 <img src={backarrow} alt="Back arrowkey" onClick={goBack} />
             </div>
+            {error && <p className="error">{error}</p>}
             <input type='text' placeholder='Name of trip' value={tripDetails.trip_name} onChange={(e) => setTripDetails({ ...tripDetails, trip_name: e.target.value })} />
             <input type='text' placeholder='Length of Trip' value={tripDetails.trip_length} onChange={(e) => setTripDetails({ ...tripDetails, trip_length: e.target.value })} />
             <div>
@@ -113,6 +128,7 @@ function EditTrip() {
             </label>
             <textarea placeholder='Add travel details' value={tripDetails.notes} onChange={(e) => setTripDetails({ ...tripDetails, notes: e.target.value })}></textarea>
             <button type="submit">Update Trip</button>
+            <button onClick={deleteTrip}>Delete Trip</button>
         </form>
     )
 }
