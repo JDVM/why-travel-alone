@@ -88,6 +88,14 @@ function EditTrip() {
         )
     }
 
+    const deleteTrip = () => {
+        axios
+        .delete(`${API_URL}:${PORT}/trips/${id}`)
+        .then(() => {
+            navigate('/Trips')
+        })
+    }
+
     return (
         <form onSubmit={handleFormSubmit}>
             <div>
@@ -120,6 +128,7 @@ function EditTrip() {
             </label>
             <textarea placeholder='Add travel details' value={tripDetails.notes} onChange={(e) => setTripDetails({ ...tripDetails, notes: e.target.value })}></textarea>
             <button type="submit">Update Trip</button>
+            <button onClick={deleteTrip}>Delete Trip</button>
         </form>
     )
 }

@@ -43,6 +43,7 @@ function AddTrip() {
             return;
         }
 
+
         setIsLoading(true);
 
         const updatedTripDetails = {
@@ -58,7 +59,7 @@ function AddTrip() {
             .then((res) => {
                 console.log(res.data);
                 setIsLoading(false);
-                // Optionally, you can redirect the user to a success page or perform other actions.
+                navigate('/Trips')
             })
             .catch(error => {
                 console.log(error);
