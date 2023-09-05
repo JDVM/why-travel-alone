@@ -1,6 +1,6 @@
 import "./TravelerDetails.scss"
 import placeholderImage from '../../assets/images/placeholder_image.png'
-import { useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom"
 import backarrow from "../../assets/images/arrow_back-24px.svg";
@@ -13,7 +13,7 @@ function TravelerDetails() {
     const [selectedTripId, setSelectedTripId] = useState("");
     const { id } = useParams();
     const navigate = useNavigate();
-    const goBack = () => navigate(-1); 
+    const goBack = () => navigate(-1);
 
     useEffect(() => {
         axios
@@ -82,54 +82,58 @@ function TravelerDetails() {
     }
 
     return (
-        <div className="travler-details">
-            <div>
-                <h1>Traveler Profile</h1>
-                <img src={backarrow} alt="Back arrowkey" onClick={goBack} />
-            </div>
-            <img className="travel-details__image" alt="placeholder" src={placeholderImage} />
-            <section>
-                <article>
-                    <p>Name</p>
-                    <p>{name}</p>
-                </article>
-                <article>
-                    <p>Prefered Destinations</p>
-                    <ul>
-                        {PreferredDestinations.map((destination, index) => {
-                            return <li key={index}>{destination}</li>;
+        <div className="traveler-details">
+            <section className="traveler-details__container">
+                <div className="traveler-details__title-container">
+                    <img src={backarrow} alt="Back arrowkey" onClick={goBack} />
+                    <h1 className="traveler-details__main-title">Traveler Profile</h1>
+                </div>
+
+                <img className="traveler-details__image" alt="placeholder" src={placeholderImage} />
+                <section className="traveler-details__information-container">
+                    <article className="traveler-details__information">
+                        <h3 className="traveler-details__title">Name</h3>
+                        <p className="traveler-details__text">{name}</p>
+                    </article>
+                    <article className="traveler-details__information">
+                        <h3 className="traveler-details__title">Prefered Destinations</h3>
+                        <ul className="traveler-details__list traveler-details__text">
+                            {PreferredDestinations.map((destination, index) => {
+                                return <li key={index}>{destination}</li>;
+                            })}
+                        </ul>
+                    </article>
+                    <article className="traveler-details__information">
+                        <h3 className="traveler-details__title">Type of travel</h3>
+                        <p className="traveler-details__text">{travelerDetails.type_of_travel}</p>
+                    </article>
+                    <article className="traveler-details__information">
+                        <h3 className="traveler-details__title">Kids</h3>
+                        <p className="traveler-details__text">{hasKids}</p>
+                    </article>
+                    <article className="traveler-details__information">
+                        <h3 className="traveler-details__title">Special Considerations</h3>
+                        <p className="traveler-details__text">{travelerDetails.special_considerations}</p>
+                    </article>
+                </section>
+                <div className="traveler-details__input-container">
+                    <label className="traveler-details__title" for="tripSelect">Select a Trip:</label>
+                    <select
+                        className="traveler-details__input"
+                        id="tripSelect"
+                        value={selectedTripId}
+                        onChange={(e) => setSelectedTripId(e.target.value)}
+                    >
+                        <option value="">Select a Trip</option>
+                        {trips.map((trip) => {
+                            return (
+                                <option key={trip.trip_id} value={trip.trip_id}> {trip.trip_name} </option>
+                            )
                         })}
-                    </ul>
-                </article>
-                <article>
-                    <p>Type of travel</p>
-                    <p>{travelerDetails.type_of_travel}</p>
-                </article>
-                <article>
-                    <p>Kids</p>
-                    <p>{hasKids}</p>
-                </article>
-                <article>
-                    <p>Special Considerations</p>
-                    <p>{travelerDetails.special_considerations}</p>
-                </article>
+                    </select>
+                    <button className="traveler-details__button" onClick={handleAddToTrip}>Add to Trip</button>
+                </div>
             </section>
-            <div>
-                <label for="tripSelect">Select a Trip:</label>
-                <select
-                    id="tripSelect"
-                    value={selectedTripId}
-                    onChange={(e) => setSelectedTripId(e.target.value)}
-                >
-                    <option value="">Select a Trip</option>
-                    {trips.map((trip) => {
-                        return (
-                            <option key={trip.trip_id} value={trip.trip_id}> {trip.trip_name} </option>
-                        )
-                    })}
-                </select>
-                <button onClick={handleAddToTrip}>Add to Trip</button>
-            </div>
         </div>
     )
 }

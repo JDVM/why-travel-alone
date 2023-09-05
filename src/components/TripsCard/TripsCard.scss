@@ -9,8 +9,9 @@
     flex-direction: column;
     align-items: center;
 
-    @include desktop {
+    @include tablet {
         flex-direction: row;
+        flex-wrap: wrap;
     }
 
     &__container {

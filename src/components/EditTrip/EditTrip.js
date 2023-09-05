@@ -76,7 +76,7 @@ function EditTrip() {
                 console.log(res.data);
                 console.log(updatedTripDetails)
                 navigate('/Trips')
-                
+
             })
             .catch(error => {
                 console.log(error);
@@ -100,33 +100,34 @@ function EditTrip() {
     }
 
     return (
-        <form onSubmit={handleFormSubmit}>
-            <div>
-                <h1>Edit Trip Details</h1>
+        <form className='trip-edit' onSubmit={handleFormSubmit}>
+            <div className='trip-edit__title-container'>
                 <img src={backarrow} alt="Back arrowkey" onClick={goBack} />
+                <h1 className='trip-edit__main-title'>Edit Trip Details</h1>
             </div>
-            {error && <p className="error">{error}</p>}
-            <input type='text' placeholder='Name of trip' value={tripDetails.trip_name} onChange={(e) => setTripDetails({ ...tripDetails, trip_name: e.target.value })} />
-            <input type='text' placeholder='Length of Trip' value={tripDetails.trip_length} onChange={(e) => setTripDetails({ ...tripDetails, trip_length: e.target.value })} />
-      
+            <label for="name" className='trip-edit__title'>Trip Name </label>
+            <input className='trip-edit__input' type='text' id="name" placeholder='Name of trip' value={tripDetails.trip_name} onChange={(e) => setTripDetails({ ...tripDetails, trip_name: e.target.value })} />
+            <label for="length" className='trip-edit__title'>Trip Lentgh </label>
+            <input className='trip-edit__input' type='text' id="length" placeholder='Length of Trip' value={tripDetails.trip_length} onChange={(e) => setTripDetails({ ...tripDetails, trip_length: e.target.value })} />
+
             {destination !== null && (
-            <div>
-                <p>Destinations</p>
-                <label htmlFor="destination-select">Select a destination:</label>
-                <select
-                    id="destination-select"
-                    value={tripDetails.destination_id}
-                    onChange={(e) => setTripDetails({ ...tripDetails, destination_id: e.target.value })}
-                    defaultValue={tripDetails.destination_id}
-                >
-                    <option>Select Destination</option>
-                    {destination.map((place) => (
-                        <option key={place.id} value={place.id}>{place.place}</option>
-                    ))}
-                </select>
-            </div>
-        )}
-            <label>
+                <div className='trip-edit__destination-container'>
+                    <h3 className='trip-edit__title'>Destinations</h3>
+                    <select
+                        className='trip-edit__input'
+                        id="destination-select"
+                        value={tripDetails.destination_id}
+                        onChange={(e) => setTripDetails({ ...tripDetails, destination_id: e.target.value })}
+                        defaultValue={tripDetails.destination_id}
+                    >
+                        <option>Select Destination</option>
+                        {destination.map((place) => (
+                            <option key={place.id} value={place.id}>{place.place}</option>
+                        ))}
+                    </select>
+                </div>
+            )}
+            <label className='trip-edit__title'>
                 Kid Friendly Trip
                 <input
                     type="checkbox"
@@ -136,9 +137,15 @@ function EditTrip() {
                     onChange={(e) => setTripDetails({ ...tripDetails, kid_friendly: e.target.checked })}
                 />
             </label>
-            <textarea placeholder='Add travel details' value={tripDetails.notes} onChange={(e) => setTripDetails({ ...tripDetails, notes: e.target.value })}></textarea>
-            <button type="submit">Update Trip</button>
-            <button onClick={deleteTrip}>Delete Trip</button>
+            <div className='trip-edit__description-container'>
+                <h3 className='trip-edit__title'>Discription/Notes</h3>
+                <textarea className='trip-edit__input' placeholder='Add travel details' value={tripDetails.notes} onChange={(e) => setTripDetails({ ...tripDetails, notes: e.target.value })}></textarea>
+            </div>
+            <div className='trip-edit__button-container'>
+                <button className='trip-edit__button' type="submit">Update Trip</button>
+                <button className='trip-edit__button' onClick={deleteTrip}>Delete Trip</button>
+            </div>
+
         </form>
     )
 }
