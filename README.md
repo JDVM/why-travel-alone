@@ -35,6 +35,7 @@ If you encounter any issues, please feel free to contact me via GitHub.
 
 - Create a database in MySQL
 - Create an `.env` file using the `.env.example` file to format appropriate variables (screenshot)
+- ![image](https://github.com/JDVM/why-travel-alone/assets/40014232/98f0ca2a-d367-4409-8025-fd1179156f65)
 - In the terminal, run `npm run migrate` to apply the latest migration files
 - Seed the database by running `npm run seed` to populate it with the latest data
 
