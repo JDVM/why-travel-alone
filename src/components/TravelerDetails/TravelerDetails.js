@@ -15,6 +15,101 @@ function TravelerDetails() {
     const navigate = useNavigate();
     const goBack = () => navigate(-1);
 
+    const profilepic = [
+        {
+            picture: "/userprofilepictures/1.jpg"
+        },
+        {
+            picture: "/userprofilepictures/2.jpg"
+        },
+        {
+            picture: "/userprofilepictures/3.jpg"
+        },
+        {
+            picture: "/userprofilepictures/4.jpg"
+        },
+        {
+            picture: "/userprofilepictures/5.jpg"
+        },
+        {
+            picture: "/userprofilepictures/6.jpg"
+        },
+        {
+            picture: "/userprofilepictures/7.jpg"
+        },
+        {
+            picture: "/userprofilepictures/8.jpg"
+        },
+        {
+            picture: "/userprofilepictures/9.jpg"
+        },
+        {
+            picture: "/userprofilepictures/10.jpg"
+        },
+        {
+            picture: "/userprofilepictures/11.jpg"
+        },
+        {
+            picture: "/userprofilepictures/12.jpg"
+        },
+        {
+            picture: "/userprofilepictures/13.jpg"
+        },
+        {
+            picture: "/userprofilepictures/14.jpg"
+        },
+        {
+            picture: "/userprofilepictures/15.jpg"
+        },
+        {
+            picture: "/userprofilepictures/16.jpg"
+        },
+        {
+            picture: "/userprofilepictures/17.jpg"
+        },
+        {
+            picture: "/userprofilepictures/18.jpg"
+        },
+        {
+            picture: "/userprofilepictures/19.jpg"
+        },
+        {
+            picture: "/userprofilepictures/20.jpg"
+        },
+        {
+            picture: "/userprofilepictures/21.jpg"
+        },
+        {
+            picture: "/userprofilepictures/23.jpg"
+        },
+        {
+            picture: "/userprofilepictures/24.jpg"
+        },
+        {
+            picture: "/userprofilepictures/25.jpg"
+        },
+        {
+            picture: "/userprofilepictures/26.jpg"
+        },
+        {
+            picture: "/userprofilepictures/27.jpg"
+        },
+        {
+            picture: "/userprofilepictures/28.jpg"
+        },
+        {
+            picture: "/userprofilepictures/29.jpg"
+        },
+        {
+            picture: "/userprofilepictures/30.jpg"
+        },
+        {
+            picture: "/userprofilepictures/31.jpg"
+        },
+        {
+            picture: "/userprofilepictures/31.jpg"
+        }
+    ]
     useEffect(() => {
         axios
             .get(`${API_URL}:${PORT}/travelers/${id}`)
@@ -89,7 +184,7 @@ function TravelerDetails() {
                     <h1 className="traveler-details__main-title">Traveler Profile</h1>
                 </div>
 
-                <img className="traveler-details__image" alt="placeholder" src={placeholderImage} />
+                <img className="traveler-details__image" alt="placeholder" src={profilepic[0].picture} />
                 <section className="traveler-details__information-container">
                     <article className="traveler-details__information">
                         <h3 className="traveler-details__title">Name</h3>
