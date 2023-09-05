@@ -3,9 +3,12 @@ import logo from "../../assets/Logo/plain-logo.svg"
 import { Link, NavLink } from "react-router-dom";
 function Header() {
     return (
-        <header>
+        <header className="header">
             <div className="header__container">
-                <Link to={"/Travelers"}><img className="header__logo" src={logo} alt="Logo for Instock Company" /></Link>
+                <div className="header__title-container">
+                    <Link to={"/Travelers"}><img className="header__logo" src={logo} alt="Logo for Instock Company" /></Link>
+                    <h1 className="header__title">Why Travel Alone</h1>
+                </div>
                 <nav className="header__nav">
                     <NavLink className={`header__links ${({ isActive, isPending }) => isPending ? "pending" : isActive ? "active" : "header__link"}`}
                         to={"/Travelers"}>
@@ -19,11 +22,10 @@ function Header() {
                     </NavLink>
                     <NavLink
                         className={`header__links ${({ isActive, isPending }) => isPending ? "pending" : isActive ? "active" : "header__link"}`}
-                        to={"/Trips/new"}
+                        to={"/new"}
                     >
-                        <p className="header__text">Create New Trip</p>
+                        <p className="header__text">New Trip</p>
                     </NavLink>
-                    <input type="text" placeholder="Search" />
                 </nav>
             </div>
         </header>

@@ -1,23 +1,45 @@
 @use '../../styles/partials/fonts' as *;
 @use '../../styles/partials/mixins' as *;
 @use '../../styles/partials/variables' as *;
+@use '../../App.scss' as *;
 
 
 .header {
-    background-color: darkblue;
+    background-color:$moonstone;
 
     &__container {
         display: flex;
         flex-direction: column;
-        height: 12.5rem;
         align-items: center;
-        max-width: 79rem;
-        margin: auto;
+        padding: .5rem 1rem;
+
+        @include tablet{
+            flex-direction: row;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+        }
+        @include desktop{
+            padding: 2rem 3.5rem 1rem 3.5rem;
+        }
+    }
+
+     &__title-container{
+        display: flex;
+        align-items: center;
+     }
+    &__title{
+        @include sub-heading;
+        margin: 0;
+
     }
 
     &__logo {
-        width: 8.0625rem;
-        margin: 1.5rem;
+        width: 2rem;
+        margin: .5rem;
+        @include tablet{
+            width: 3rem;
+            margin: 0;
+        }
     }
 
     &__nav {
@@ -25,27 +47,37 @@
         flex-direction: row;
         width: 100%;
         text-align: center;
-        padding: 0 1rem;
+       
+        @include tablet{
+            flex-direction: row;
+            justify-content: flex-end;
+            width: fit-content;
+            width: -moz-fit-content;  
+        }
     }
 
     &__links {
-       
+       display: flex;
         width: 33%;
-        color: lightseagreen;
-        padding: .5rem;
         border-radius: 1rem;
-
+        text-align: center;
+        justify-content: center;  
+        @include tablet{
+            width: 5rem;
+        }
         &:hover {
-            text-decoration: underline white;
+            text-decoration: underline $cambridge-blue;
+            color: white;
         }
     }
 
     &__text {
-        @include sub-heading;
-        padding: 0 .5rem;
+        @include section-header;
+        margin: .25rem;
     }
 }
 
 .active {
-    background-color: black;
+    background-color: $fern-green;
+    color: white;
 }

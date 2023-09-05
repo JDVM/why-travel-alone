@@ -1,9 +1,14 @@
+@use './styles/partials/mixins' as *;
+@use './styles/partials/variables' as *;
+
+
 *{ box-sizing: border-box;}
 
 html,
 header,
 nav,
-body{
+body,
+a{
   margin: 0;
   padding: 0;
 }
@@ -11,3 +16,9 @@ a{
   text-decoration: none;
   color: inherit;
 }
+
+body{
+  background-color: $background-gray;
+}
+
+

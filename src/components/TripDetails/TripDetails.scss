@@ -1,0 +1,77 @@
+@use '../../styles/partials/fonts' as *;
+@use '../../styles/partials/mixins' as *;
+@use '../../styles/partials/variables' as *;
+@use '../../App.scss' as *;
+
+
+.trip-details {
+    margin: 1rem;
+
+    @include desktop{
+        margin: 1rem 4rem;
+    }
+
+    &__container {
+        display: flex;
+        flex-direction: column;
+        background-color: $cambridge-blue;
+        box-shadow: 2px 2px 15px 5px rgba(169, 111, 103, 0.47);
+        border-radius: 1.5625rem;
+
+    }
+
+    &__information-container{
+        display: inherit;
+        flex-direction: column;
+        margin: .5rem 0;
+        @include tablet{
+            flex-wrap:wrap;
+            flex-direction: row;
+            
+        }
+    }
+
+    &__information{
+        width: 25%;
+    }
+
+    &__title-container {
+        display: inherit;
+        justify-content: center;
+         border-radius: 1.5625rem 1.5625rem 0 0;
+        background-color: $moonstone
+    }
+
+    &__main-title {
+        @include page-header;
+        color: white;
+        width: 90%;
+        text-align: center;
+    }
+
+    &__title {
+        margin: 0 .5rem;
+        @include sub-heading;
+        color: white;
+    }
+
+    &__text {
+        color: white;
+        margin: .5rem;
+        @include body-copy
+    }
+
+    &__button-container{
+        display: flex;
+        justify-content: center; 
+    }
+
+    &__button {
+       @include lables-buttons;
+        background-color: $redwood;
+        display: inherit;
+        justify-content: center; 
+        margin: 0.5rem;
+               
+    }
+}

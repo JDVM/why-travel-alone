@@ -22,7 +22,7 @@
     font-family: "Avenir Next";
   
     @include tablet() {
-      font-size: 2.0625rem;
+      font-size: 1.5rem;
       line-height: 2.75rem;
     }
   }
@@ -59,24 +59,12 @@
   }
 
   @mixin lables-buttons {
-    font-size: 0.625rem;
-    line-height: 1.25rem;
-    font-weight: 700;
-    font-family: "Avenir Next";
-    @include tablet() {
-        font-size: .75rem;
-    }
+    @include body-copy;
+    width: 8rem;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: .5rem;
   }
 
-  @mixin profile-Picture {
-    background-color: $Mercury;
-    height: 2.25rem;
-    min-width: 2.25rem;
-    padding-right: .3rem;
-  
-    @include tablet {
-      height: 2.5rem;
-      min-width: 2.5rem;
-    }
-  }
   

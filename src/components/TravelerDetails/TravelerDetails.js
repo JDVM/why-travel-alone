@@ -84,7 +84,7 @@ function TravelerDetails() {
     return (
         <div className="travler-details">
             <div>
-                <h1>Edit Trip Details</h1>
+                <h1>Traveler Profile</h1>
                 <img src={backarrow} alt="Back arrowkey" onClick={goBack} />
             </div>
             <img className="travel-details__image" alt="placeholder" src={placeholderImage} />
@@ -94,7 +94,7 @@ function TravelerDetails() {
                     <p>{name}</p>
                 </article>
                 <article>
-                    <p>PrefereddDestinations</p>
+                    <p>Prefered Destinations</p>
                     <ul>
                         {PreferredDestinations.map((destination, index) => {
                             return <li key={index}>{destination}</li>;
@@ -115,7 +115,7 @@ function TravelerDetails() {
                 </article>
             </section>
             <div>
-                <label htmlFor="tripSelect">Select a Trip:</label>
+                <label for="tripSelect">Select a Trip:</label>
                 <select
                     id="tripSelect"
                     value={selectedTripId}

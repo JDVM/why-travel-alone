@@ -1,4 +1,100 @@
-.trips-card{
-    border: .0625rem solid blue;
-    margin: 2rem;
+@use '../../styles/partials/fonts' as *;
+@use '../../styles/partials/mixins' as *;
+@use '../../styles/partials/variables' as *;
+@use '../../App.scss' as *;
+
+
+.trips-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    @include desktop {
+        flex-direction: row;
+    }
+
+    &__container {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        background-color: $cambridge-blue;
+        box-shadow: 2px 2px 15px 5px rgba(169, 111, 103, 0.47);
+        border-radius: 1.5625rem;
+        margin: 1rem;
+        max-height: 21.625rem;
+
+        @include tablet {
+            width: 50%;
+            max-width: 223px;
+            margin: .5rem 1rem;
+        }
+
+    }
+
+    &__title-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: $moonstone;
+        border-radius: 1.5625rem 1.5625rem 0 0;
+        height: 80px;
+        max-height: 80px;
+        justify-content: center;
+
+    }
+
+    &__main-title {
+        @include page-header;
+        color: white;
+        text-align: center;
+        margin: 0;
+        @include desktop{
+          overflow: overlay;  
+        }
+    }
+
+    &__name {
+        @include sub-heading;
+        color: white;
+    }
+
+    &__info-container {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 .5rem;
+    }
+
+    &__information {
+        width: 50%;
+
+        &--description {
+            min-width: 100%;
+        }
+    }
+
+    &__title {
+        @include section-header;
+        color: white;
+        margin: 0 0 .5rem 0;
+
+    }
+
+    &__text {
+        color: white;
+        @include body-copy;
+        margin: 0 0 .5rem 0;
+
+    }
+
+    &__description {
+        color: white;
+        @include body-copy;
+        overflow: overlay;
+        margin: 0 0 .5rem 0;
+        max-height: 1.375rem;
+        text-overflow: ellipsis; 
+        white-space: nowrap; 
+        overflow: hidden; 
+    }
+
 }

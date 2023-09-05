@@ -1,14 +1,71 @@
+@use '../../styles/partials/fonts' as *;
+@use '../../styles/partials/mixins' as *;
+@use '../../styles/partials/variables' as *;
+@use '../../App.scss' as *;
+
+
 .small-traveler-card{
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    margin: 1rem;
+    @include tablet{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+    }
 
     &__container{
-        border: 1px solid blue;
-        margin: .5rem;
+        border-radius: 25px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: .5rem ;
+        margin: .5rem 0;
+        background-color: $bronze; 
+        box-shadow: 0px 0px 19px 5px rgba(73,111,68,0.76);
+        max-width: 20rem;
+        align-items: center;
+        @include tablet{
+            width: 50%;
+            margin: .5rem 1rem; 
+        } 
     }
 
     &__image{
-        width: 5rem;
+        width: 7rem;
         align-self: center;
     }
+
+    &__information{
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    &__info-container{
+        width: 50%;
+    }
+
+    &__title{
+        @include section-header;
+        color: white;
+        margin: 0 0 .5rem 0;
+    }
+    &__text{
+        color: white;
+        @include body-copy;
+        margin: 0 0 .5rem 0;
+    }
+
+    &__list{
+        list-style: none;
+        padding:0;
+    }
+    &__button{
+        @include lables-buttons;
+        background-color: $cambridge-blue;
+        
+    }
 }
+

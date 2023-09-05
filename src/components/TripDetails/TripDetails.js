@@ -1,7 +1,7 @@
 import "./TripDetails.scss"
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useParams, useNavigate} from "react-router-dom"
+import { Link, useParams, useNavigate } from "react-router-dom"
 import SmallTravelerCard from "../SmallTravelerCard/SmallTraverlerCard";
 import backarrow from "../../assets/images/arrow_back-24px.svg";
 const API_URL = process.env.REACT_APP_API_URL;
@@ -12,7 +12,7 @@ function TripDetails() {
     const [tripDetails, setTripDetails] = useState(id);
     const travelersForThisTrip = tripDetails.users
     const navigate = useNavigate();
-    const goBack = () => navigate(-1); 
+    const goBack = () => navigate(-1);
 
     console.log("travelers", travelersForThisTrip)
 
@@ -36,27 +36,42 @@ function TripDetails() {
     console.log(tripDetails)
     const kidFriendly = tripDetails.kid_friendly === 1 ? "Yes" : "No";
     return (
-        <div>
-            <div>
-                <h1>Trip Details</h1>
-                <img src={backarrow} alt="Back arrowkey" onClick={goBack} />
-            </div>
-            <p>{tripDetails.trip_name}</p>
-            <p>Trip Duration</p>
-            <p>{tripDetails.trip_length} days</p>
-            <div>
-                <p>Destination</p>
-                <p>{tripDetails.destination}</p>
+        <div className="trip-details">
+            <div className="trip-details__container">
+                <div className="trip-details__title-container">
+                    <img className="trip-details__image" src={backarrow} alt="Back arrowkey" onClick={goBack} />
+                    <h1 className="trip-details__main-title">Trip Details</h1>
+                </div>
+                <div className="trip-details__information-container">
+                    <div className="trip-details__information">
+                        <h3 className="trip-details__title">Trip Name</h3>
+                        <p className="trip-details__text">{tripDetails.trip_name}</p>
+                    </div>
 
+                    <div className="trip-details__information">
+                        <h4 className="trip-details__title">Trip Duration</h4>
+                        <p className="trip-details__text">{tripDetails.trip_length} days</p>
+                    </div>
+                    <div className="trip-details__information">
+                        <h4 className="trip-details__title">Destination</h4>
+                        <p className="trip-details__text">{tripDetails.destination}</p>
+                    </div>
+                    <div className="trip-details__information">
+                        <label for="kid-friendly" className="trip-details__title">Kid Friendly</label>
+                        <p id="kid-friendly" className="trip-details__text">{kidFriendly}</p>
+                    </div>
+                    <div className="trips-card__information--description">
+                        <h3 className="trip-details__title">Trip Description</h3>
+                        <p className="trip-details__text">{tripDetails.notes}</p>
+                    </div>
+                </div>
+                <Link className="trip-details__button-container" to={`/Trips/${id}/edit`}>
+                    <button className="trip-details__button">Edit</button>
+                </Link>
             </div>
-            <label>Kid Friendly<p>{kidFriendly}</p></label>
-            <p>{tripDetails.notes}</p>
             <section>
                 <SmallTravelerCard travelers={travelersForThisTrip} />
             </section>
-            <Link to={`/Trips/${id}/edit`}>
-            <button>edit</button>
-            </Link>
         </div>
     )
 }

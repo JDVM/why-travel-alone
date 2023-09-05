@@ -1,7 +1,7 @@
 import './EditTrip.scss'
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams, useNavigate} from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import backarrow from "../../assets/images/arrow_back-24px.svg";
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -13,15 +13,13 @@ function EditTrip() {
     const [tripDetails, setTripDetails] = useState({
         trip_name: "",
         kid_friendly: false,
-        destination_id: "", 
+        destination_id: ``,
         trip_length: "",
         notes: ""
     });
     const [error, setError] = useState(null);
     const navigate = useNavigate();
-    const goBack = () => navigate(-1); 
-
-
+    const goBack = () => navigate(-1);
 
     useEffect(() => {
         axios
@@ -31,7 +29,7 @@ function EditTrip() {
                 setTripDetails({
                     ...tripDetails,
                     trip_name: tripData.trip_name,
-                    kid_friendly: tripData.kid_friendly === "true", 
+                    kid_friendly: tripData.kid_friendly === "true",
                     destination_id: tripData.destination_id,
                     trip_length: tripData.trip_length,
                     notes: tripData.notes
@@ -59,6 +57,9 @@ function EditTrip() {
 
         if (!tripDetails.trip_name || !tripDetails.destination_id || isNaN(tripDetails.trip_length)) {
             setError("Please fill in all required fields and ensure trip length is a valid number.");
+            console.log(tripDetails.trip_length)
+            console.log(tripDetails.destination_id)
+            console.log(tripDetails.trip_name)
             return;
         }
         const updatedTripDetails = {
@@ -73,7 +74,9 @@ function EditTrip() {
             .put(`${API_URL}:${PORT}/trips/${id}`, updatedTripDetails)
             .then((res) => {
                 console.log(res.data);
-            
+                console.log(updatedTripDetails)
+                navigate('/Trips')
+                
             })
             .catch(error => {
                 console.log(error);
@@ -90,10 +93,10 @@ function EditTrip() {
 
     const deleteTrip = () => {
         axios
-        .delete(`${API_URL}:${PORT}/trips/${id}`)
-        .then(() => {
-            navigate('/Trips')
-        })
+            .delete(`${API_URL}:${PORT}/trips/${id}`)
+            .then(() => {
+                navigate('/Trips')
+            })
     }
 
     return (
@@ -105,17 +108,24 @@ function EditTrip() {
             {error && <p className="error">{error}</p>}
             <input type='text' placeholder='Name of trip' value={tripDetails.trip_name} onChange={(e) => setTripDetails({ ...tripDetails, trip_name: e.target.value })} />
             <input type='text' placeholder='Length of Trip' value={tripDetails.trip_length} onChange={(e) => setTripDetails({ ...tripDetails, trip_length: e.target.value })} />
+      
+            {destination !== null && (
             <div>
                 <p>Destinations</p>
+                <label htmlFor="destination-select">Select a destination:</label>
                 <select
+                    id="destination-select"
                     value={tripDetails.destination_id}
                     onChange={(e) => setTripDetails({ ...tripDetails, destination_id: e.target.value })}
+                    defaultValue={tripDetails.destination_id}
                 >
+                    <option>Select Destination</option>
                     {destination.map((place) => (
-                    <option key={place.id} value={place.id}>{place.place}</option>
-                ))}
+                        <option key={place.id} value={place.id}>{place.place}</option>
+                    ))}
                 </select>
             </div>
+        )}
             <label>
                 Kid Friendly Trip
                 <input
