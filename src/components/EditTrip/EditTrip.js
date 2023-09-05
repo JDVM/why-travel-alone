@@ -113,6 +113,7 @@ function EditTrip() {
             {destination !== null && (
                 <div className='trip-edit__destination-container'>
                     <h3 className='trip-edit__title'>Destinations</h3>
+                    { tripDetails.destination_id !== '' &&  
                     <select
                         className='trip-edit__input'
                         id="destination-select"
@@ -122,9 +123,9 @@ function EditTrip() {
                     >
                         <option>Select Destination</option>
                         {destination.map((place) => (
-                            <option key={place.id} value={place.id}>{place.place}</option>
+                            <option  key={place.id} value={place.id}>{place.place}</option>
                         ))}
-                    </select>
+                    </select>}
                 </div>
             )}
             <label className='trip-edit__title'>
