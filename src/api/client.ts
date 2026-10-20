@@ -19,16 +19,19 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
+// Pages anyone can open, signed in or not.
+const PUBLIC_PATHS = ['/login', '/register', '/privacy', '/terms'];
+
 // On 401 the token is missing/expired: drop it and send the user to login.
-// Skip the redirect when the 401 came from the auth pages themselves (e.g. a
-// failed login attempt) so those components can show the error.
+// Skip the redirect on public pages: the auth pages show the error themselves
+// (e.g. a failed login attempt), and the legal pages don't need an account.
 api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response && error.response.status === 401) {
             clearToken();
             const path = window.location.pathname.toLowerCase();
-            if (!path.startsWith('/login') && !path.startsWith('/register')) {
+            if (!PUBLIC_PATHS.some((publicPath) => path.startsWith(publicPath))) {
                 window.location.assign('/login');
             }
         }

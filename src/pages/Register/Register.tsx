@@ -11,6 +11,7 @@ function Register() {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [acceptTerms, setAcceptTerms] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [submitting, setSubmitting] = useState(false);
     const { register } = useAuth();
@@ -24,10 +25,14 @@ function Register() {
             setError(`Password must be at least ${MIN_PASSWORD_LENGTH} characters.`);
             return;
         }
+        if (!acceptTerms) {
+            setError('Please accept the Terms of Service and Privacy Policy to create an account.');
+            return;
+        }
 
         setSubmitting(true);
         try {
-            await register({ email, password, first_name: firstName, last_name: lastName });
+            await register({ email, password, first_name: firstName, last_name: lastName, accept_terms: acceptTerms });
             // Name now, the rest of the profile later: send new users to their profile.
             navigate('/profile', { state: { welcome: true } });
         } catch (err) {
@@ -95,6 +100,21 @@ function Register() {
                         minLength={MIN_PASSWORD_LENGTH}
                         required
                     />
+                </label>
+                <label className="auth__checkbox" htmlFor="acceptTerms">
+                    <input
+                        id="acceptTerms"
+                        type="checkbox"
+                        checked={acceptTerms}
+                        onChange={(e) => setAcceptTerms(e.target.checked)}
+                        required
+                    />
+                    <span>
+                        I agree to the{' '}
+                        <Link to="/terms" target="_blank" rel="noopener noreferrer">Terms of Service</Link>{' '}
+                        and have read the{' '}
+                        <Link to="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</Link>.
+                    </span>
                 </label>
                 {error && <p className="auth__error">{error}</p>}
                 <button className="auth__button" type="submit" disabled={submitting}>

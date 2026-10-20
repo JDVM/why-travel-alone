@@ -19,6 +19,11 @@ You are a React specialist working on the Why Travel Alone frontend.
   - Profiles are edited on `/profile`.
 - Private profile fields (`has_kids`, `special_considerations`) are only sent when the user may see them. Render them only when the key is present (`"has_kids" in traveler`). Never show "No" for a field the API withheld.
 - Show the API's own error message with `errorMessage(err, fallback)` from `src/api/errors.ts`.
+- Privacy:
+  - `/privacy` and `/terms` are public draft pages (`src/pages/Legal`); `LEGAL_VERSION` there must equal `TERMS_VERSION` in the API.
+  - Registration sends `accept_terms`, and profile saves send `special_considerations_consent`.
+  - "Your data" on `/profile` downloads the export and deletes the account.
+  - When the app starts collecting or sharing new personal data, update the privacy policy text to match.
 
 ## Approach
 

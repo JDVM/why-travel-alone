@@ -1,5 +1,5 @@
 import { useState, FormEvent } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../../auth/AuthContext';
 import '../../auth/auth.scss';
@@ -11,6 +11,8 @@ function Login() {
     const [submitting, setSubmitting] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
+    const accountDeleted = Boolean((location.state as { accountDeleted?: boolean } | null)?.accountDeleted);
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -33,6 +35,11 @@ function Login() {
     return (
         <div className="auth">
             <h1 className="auth__title">Log In</h1>
+            {accountDeleted && (
+                <p className="auth__notice" role="status">
+                    Your account and its data have been deleted.
+                </p>
+            )}
             <form className="auth__form" onSubmit={handleSubmit}>
                 <label className="auth__label" htmlFor="email">
                     Email
