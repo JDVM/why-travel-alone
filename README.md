@@ -20,8 +20,11 @@ Why Travel Alone is a small passion project that began as my capstone for the Br
 ### Front-End
 
 1. Clone the repository: `https://github.com/JDVM/why-travel-alone.git`
-2. Install dependencies: `npm install axios sass react-router-dom`
-3. Run the application: `npm start`
+2. Install dependencies: `npm ci`
+3. Copy `.env.example` to `.env` and point it at the API
+4. Run the application: `npm start`
+
+Rendering errors show a "Something went wrong" page instead of a blank screen. Set `REACT_APP_SENTRY_DSN` at build time to report them, and uncaught errors, to Sentry. Reports carry the account id only: no query strings (which can hold one-time tokens), cookies, headers or console arguments. The Sentry SDK is loaded as a separate chunk only when a DSN is set.
 
 ### Back-end
 
