@@ -1,0 +1,11 @@
+.git
+.github
+.claude
+.vscode
+node_modules
+build
+coverage
+.env
+.env.*
+!.env.example
+npm-debug.log*

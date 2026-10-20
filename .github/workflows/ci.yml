@@ -21,3 +21,29 @@ jobs:
       - run: npm test
       # With CI=true, lint warnings fail the build.
       - run: npm run build
+
+  # Builds the production image and checks nginx serves the app with its
+  # security headers.
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - run: docker build --build-arg REACT_APP_API_BASE_URL=https://api.example.com -t why-travel-alone-web .
+      - run: docker run -d --name web -p 3000:8080 -e API_ORIGIN=https://api.example.com why-travel-alone-web
+      - name: Serves the app, deep links and security headers
+        run: |
+          for i in $(seq 1 30); do curl -fsS http://localhost:3000/healthz && break; sleep 1; done
+          headers=$(curl -fsSI http://localhost:3000/Trips/1)
+          echo "$headers"
+          echo "$headers" | grep -i "^content-security-policy:.*connect-src 'self' https://api.example.com"
+          echo "$headers" | grep -i "^x-frame-options: DENY"
+          echo "$headers" | grep -i "^cache-control: no-cache"
+          curl -fsS http://localhost:3000/ | grep -q '<div id="root">'
+          # No inline scripts, so the CSP can forbid them.
+          ! curl -fsS http://localhost:3000/ | grep -q '<script>'
+          # The API address is built in.
+          main=$(curl -fsS http://localhost:3000/ | grep -o '/static/js/main[^"]*')
+          curl -fsS "http://localhost:3000$main" | grep -q 'https://api.example.com'
+      - name: Logs
+        if: failure()
+        run: docker logs web

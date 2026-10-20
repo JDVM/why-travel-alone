@@ -42,6 +42,17 @@ If you encounter any issues, please feel free to contact me via GitHub.
 - In the terminal, run `npm run migrate` to apply the latest migration files
 - Seed the database by running `npm run seed` to populate it with the latest data
 
+### Deploying
+
+`Dockerfile` builds the production site served by nginx, with a strict Content-Security-Policy and other security headers (`nginx/default.conf.template`):
+
+```sh
+docker build --build-arg REACT_APP_API_BASE_URL=https://api.example.com -t why-travel-alone-web .
+docker run -e API_ORIGIN=https://api.example.com -p 3000:8080 why-travel-alone-web
+```
+
+The full runbook (configuration, releases, backups, monitoring and the launch checklist) is [DEPLOYMENT.md in the API repository](https://github.com/JDVM/why-travel-alone-api/blob/main/DEPLOYMENT.md).
+
 ## Features
 
 - Trips: Add, Edit, Delete trips

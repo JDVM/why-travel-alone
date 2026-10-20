@@ -1,13 +1,19 @@
 import axios from 'axios';
 import { getToken, clearToken } from '../auth/token';
 
-const API_URL = process.env.REACT_APP_API_URL;
-const PORT = process.env.REACT_APP_API_PORT;
+// Where the API is, fixed when the app is built: REACT_APP_API_BASE_URL (e.g.
+// https://api.example.com), or for local development REACT_APP_API_URL plus
+// REACT_APP_API_PORT.
+export function apiBaseUrl(env: NodeJS.ProcessEnv = process.env): string {
+    if (env.REACT_APP_API_BASE_URL) {
+        return env.REACT_APP_API_BASE_URL.replace(/\/+$/, '');
+    }
+    return `${env.REACT_APP_API_URL}:${env.REACT_APP_API_PORT}`;
+}
 
-// One axios instance for the whole app. baseURL is assembled from the same
-// env vars the old per-component calls used, so deployment config is unchanged.
+// One axios instance for the whole app.
 export const api = axios.create({
-    baseURL: `${API_URL}:${PORT}`,
+    baseURL: apiBaseUrl(),
 });
 
 // Attach the bearer token to every request when we have one.
