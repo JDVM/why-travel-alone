@@ -3,14 +3,20 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { AuthProvider } from './auth/AuthContext';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
+import { initMonitoring } from './monitoring';
 import reportWebVitals from './reportWebVitals';
+
+initMonitoring();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <AuthProvider>
-      <App />
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </ErrorBoundary>
   </React.StrictMode>
 );
 

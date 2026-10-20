@@ -36,6 +36,8 @@ You are a React specialist working on the Why Travel Alone frontend.
 - Loading, error and empty states are handled and visible.
 - No direct axios or env-built URLs in components.
 - No leftover `console.log` (a `console.error` in a catch block is fine).
+- Unexpected failures that the user can't fix go to `reportError(error, context)` from `src/monitoring.ts` (a no-op unless `REACT_APP_SENTRY_DSN` is set). Expected API errors (4xx) are shown to the user, not reported. Never put emails, names, tokens or form values in the context.
+- Rendering errors are caught by `ErrorBoundary` (around the whole app in `src/index.js`, and per page in `src/App.js`).
 - Labels are tied to inputs with `htmlFor`, actions are buttons, images have meaningful `alt` text.
 - List `key`s are stable ids, not array indexes, when items can change.
 - Pages that are public still work when logged out.

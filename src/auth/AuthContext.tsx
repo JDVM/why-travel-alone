@@ -3,6 +3,7 @@ import { Account } from '../types';
 import { getToken, setToken, clearToken } from './token';
 import * as authApi from '../api/auth';
 import { Registration } from '../api/auth';
+import { setMonitoringUser } from '../monitoring';
 
 interface AuthContextValue {
     account: Account | null;
@@ -37,6 +38,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             })
             .finally(() => setLoading(false));
     }, []);
+
+    // Error reports name the signed-in account by id only.
+    useEffect(() => {
+        setMonitoringUser(account ? account.id : null);
+    }, [account]);
 
     const login = async (email: string, password: string) => {
         const { token, account: acct } = await authApi.login(email, password);
