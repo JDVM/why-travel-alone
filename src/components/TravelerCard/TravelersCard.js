@@ -33,14 +33,19 @@ function TravelerCard({ travelers }) {
                                     })}
                                 </ul>
                             </article>
-                            <article className="traveler-card__info-container">
-                                <h3 className="traveler-card__title">Kids</h3>
-                                <p className="traveler-card__text">{hasKids}</p>
-                            </article>
-                            <article className="traveler-card__info-container">
-                                <h3 className="traveler-card__title">Special Considerations</h3>
-                                <p className="traveler-card__text">{t.special_considerations}</p>
-                            </article>
+                            {/* Private fields: the API only sends them when you may see them. */}
+                            {"has_kids" in t && (
+                                <article className="traveler-card__info-container">
+                                    <h3 className="traveler-card__title">Kids</h3>
+                                    <p className="traveler-card__text">{hasKids}</p>
+                                </article>
+                            )}
+                            {"special_considerations" in t && (
+                                <article className="traveler-card__info-container">
+                                    <h3 className="traveler-card__title">Special Considerations</h3>
+                                    <p className="traveler-card__text">{t.special_considerations}</p>
+                                </article>
+                            )}
                         </section>
                     </Link>
                 );

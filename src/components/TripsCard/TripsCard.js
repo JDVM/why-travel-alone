@@ -11,6 +11,7 @@ function TripsCard({ trips }) {
                     <Link className="trips-card__container" to={`/Trips/${data.trip_id}`} key={data.trip_id}>
                         <div className="trips-card__title-container">
                             <h1 className="trips-card__main-title">{data.trip_name}</h1>
+                            <p className="trips-card__role">{data.is_owner ? "You're the owner" : "You're a traveler"}</p>
                         </div>
                         <div className="trips-card__info-container">
                             <div className="trips-card__information">

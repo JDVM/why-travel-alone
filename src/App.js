@@ -9,8 +9,12 @@ import TravelerDetails from './components/TravelerDetails/TravelerDetails';
 import EditTrip from './components/EditTrip/EditTrip';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
+import Profile from './pages/Profile/Profile';
+import Invitations from './pages/Invitations/Invitations';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
+// Travelers are the site's users, so everything but login and registration
+// needs an account.
 function App() {
   return (
     <BrowserRouter>
@@ -18,12 +22,14 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/Travelers" element={<Travelers />} />
-        <Route path="/Travelers/:id" element={<TravelerDetails />} />
+        <Route path="/Travelers" element={<ProtectedRoute><Travelers /></ProtectedRoute>} />
+        <Route path="/Travelers/:id" element={<ProtectedRoute><TravelerDetails /></ProtectedRoute>} />
         <Route path="/Trips" element={<ProtectedRoute><Trips /></ProtectedRoute>} />
         <Route path="/Trips/:id" element={<ProtectedRoute><TripDetails /></ProtectedRoute>} />
         <Route path="/Trips/:id/edit" element={<ProtectedRoute><EditTrip /></ProtectedRoute>} />
         <Route path="/new" element={<ProtectedRoute><AddTrip /></ProtectedRoute>} />
+        <Route path="/invitations" element={<ProtectedRoute><Invitations /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path='/*' element={<Navigate to="/Travelers" />} />
       </Routes>
     </BrowserRouter>

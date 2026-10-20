@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import backarrow from "../../assets/images/arrow_back-24px.svg";
 import { getDestinations } from "../../api/destinations";
 import { getTrip, updateTrip, deleteTrip } from "../../api/trips";
+import { errorMessage } from "../../api/errors";
 
 function EditTrip() {
     const { id } = useParams();
@@ -66,7 +67,7 @@ function EditTrip() {
             })
             .catch((err) => {
                 console.error(err);
-                setError("Failed to update trip. Please try again.");
+                setError(errorMessage(err, "Failed to update trip. Please try again."));
             });
     }
 
@@ -77,7 +78,7 @@ function EditTrip() {
             })
             .catch((err) => {
                 console.error(err);
-                setError("Failed to delete trip. Please try again.");
+                setError(errorMessage(err, "Failed to delete trip. Please try again."));
             });
     }
 

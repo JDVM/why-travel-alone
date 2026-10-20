@@ -10,7 +10,7 @@ You are a TypeScript specialist working on the Why Travel Alone frontend.
 
 - TypeScript **4.9.5**, the newest version create-react-app (react-scripts 5.0.1) accepts. Don't upgrade to 5.x while the app is on create-react-app: npm's peer-dependency check makes a fresh `npm install` fail. Avoid TypeScript 5-only features.
 - `tsconfig.json` has `strict: false` and `allowJs: true` for now, and `.js` files aren't type-checked. The plan is to convert components to `.tsx` one at a time, leaf components first, then turn on `strict`.
-- `src/types.ts` describes the API contract (`Account`, `AuthResponse`, `TripSummary`, `TripDetail`, `TripInput`, `Traveler`, `Destination`). When the backend contract changes, update it there first. Fields older API versions may not return are optional (for example `destination_id?`).
+- `src/types.ts` describes the API contract (`Account`, `TravelerSummary`, `AuthResponse`, `Traveler`, `TripSummary`, `TripDetail`, `TripInvitation`, `TripInput`, `ReceivedInvitation`, `Profile`, `ProfileInput`, `Destination`, `TypeOfTravel`). When the backend contract changes, update it there first. Fields older API versions may not return are optional (for example `destination_id?`).
 - The types describe data after normalization in `src/api/*` (MySQL 0/1 becomes `boolean`), not the raw JSON.
 - `@types/react` 18 and `@types/jest` 27 match the installed React 18 and Jest 27; keep them matched.
 

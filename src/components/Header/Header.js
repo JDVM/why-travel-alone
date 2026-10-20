@@ -25,22 +25,32 @@ function Header() {
                     <h1 className="header__title">Why Travel Alone</h1>
                 </div>
                 <nav className="header__nav">
-                    <NavLink className={navClass} to={"/Travelers"}>
-                        <p className="header__text">Travelers</p>
-                    </NavLink>
                     {isAuthenticated && (
                         <>
+                            <NavLink className={navClass} to={"/Travelers"}>
+                                <p className="header__text">Travelers</p>
+                            </NavLink>
                             <NavLink className={navClass} to={"/Trips"}>
                                 <p className="header__text">Trips</p>
                             </NavLink>
                             <NavLink className={navClass} to={"/new"}>
                                 <p className="header__text">New Trip</p>
                             </NavLink>
+                            <NavLink className={navClass} to={"/invitations"}>
+                                <p className="header__text">Invitations</p>
+                            </NavLink>
+                            <NavLink className={navClass} to={"/profile"}>
+                                <p className="header__text">Profile</p>
+                            </NavLink>
                         </>
                     )}
                     {isAuthenticated ? (
                         <>
-                            {account && <span className="header__text header__account">{account.email}</span>}
+                            {account && (
+                                <span className="header__text header__account">
+                                    {account.traveler ? `${account.traveler.first_name} ${account.traveler.last_name}` : account.email}
+                                </span>
+                            )}
                             <button className="header__links header__logout" type="button" onClick={handleLogout}>
                                 <p className="header__text">Log Out</p>
                             </button>

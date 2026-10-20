@@ -2,14 +2,17 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { Account } from '../types';
 import { getToken, setToken, clearToken } from './token';
 import * as authApi from '../api/auth';
+import { Registration } from '../api/auth';
 
 interface AuthContextValue {
     account: Account | null;
     isAuthenticated: boolean;
     loading: boolean;
     login: (email: string, password: string) => Promise<void>;
-    register: (email: string, password: string) => Promise<void>;
+    register: (registration: Registration) => Promise<void>;
     logout: () => void;
+    // Re-reads the account, e.g. after creating or renaming the traveler profile.
+    refreshAccount: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -41,8 +44,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setAccount(acct);
     };
 
-    const register = async (email: string, password: string) => {
-        const { token, account: acct } = await authApi.register(email, password);
+    const register = async (registration: Registration) => {
+        const { token, account: acct } = await authApi.register(registration);
         setToken(token);
         setAccount(acct);
     };
@@ -52,9 +55,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setAccount(null);
     };
 
+    const refreshAccount = async () => {
+        setAccount(await authApi.getMe());
+    };
+
     return (
         <AuthContext.Provider
-            value={{ account, isAuthenticated: !!account, loading, login, register, logout }}
+            value={{ account, isAuthenticated: !!account, loading, login, register, logout, refreshAccount }}
         >
             {children}
         </AuthContext.Provider>

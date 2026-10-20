@@ -12,7 +12,10 @@ You are an end-to-end testing specialist working on the Why Travel Alone fronten
 - End-to-end tests need the whole stack running:
   - The API (`why-travel-alone-api` repo) with MySQL 8, a `.env` that includes `JWT_SECRET`, migrated and seeded (`npm run migrate`, `npm run seed`).
   - The frontend pointed at it. Shell variables override `.env`, e.g. `BROWSER=none PORT=3000 REACT_APP_API_URL=http://localhost REACT_APP_API_PORT=8080 npm start`.
-- Seeded login: `demo@why-travel-alone.local` / `password123`, which owns three trips. Register a fresh account to test that accounts can't see each other's trips; new accounts own none.
+- Seeded logins, all with password `password123`:
+  - `demo@why-travel-alone.local` is traveler 1 (Juan Perez). It owns trips 1-3 and has a pending invitation to traveler 2's trip 4.
+  - `traveler<N>@why-travel-alone.local` are travelers 2-31 (e.g. `traveler7@…` is Marco Williams).
+  - Use two of them to test invitations from both sides. Register a fresh account to test isolation: new accounts own no trips and see no one else's private fields.
 - In cloud sessions:
   - Chromium is preinstalled. Launch it with `executablePath: '/opt/pw-browsers/chromium'` and don't run `npx playwright install`.
   - MySQL isn't preinstalled: `apt-get install -y mysql-server && service mysql start`.
@@ -20,7 +23,9 @@ You are an end-to-end testing specialist working on the Why Travel Alone fronten
   - login, including a wrong password
   - redirect to `/login` from protected pages
   - create, edit and delete a trip; the edit form must pre-fill Kid Friendly and the destination
-  - add and remove a traveler, including adding the same one twice ("already on this trip")
+  - invite a traveler (a second invite shows "already been invited"), then log in as them to accept or decline on `/invitations`
+  - the member view: no Edit, a Leave trip button, and the owner's private fields hidden
+  - the owner cancelling an invitation and removing a traveler
   - logout and registration
   - per-account isolation
   - staying logged in after a reload
