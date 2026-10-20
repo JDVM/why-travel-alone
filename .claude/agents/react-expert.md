@@ -19,6 +19,8 @@ You are a React specialist working on the Why Travel Alone frontend.
   - Profiles are edited on `/profile`.
 - Private profile fields (`has_kids`, `special_considerations`) are only sent when the user may see them. Render them only when the key is present (`"has_kids" in traveler`). Never show "No" for a field the API withheld.
 - Show the API's own error message with `errorMessage(err, fallback)` from `src/api/errors.ts`.
+- Emailed links open `/verify-email?token=…` and `/reset-password?token=…` (public pages, like `/forgot-password`). Read the token with `useLinkToken()`, which also removes it from the address bar. Tokens work once, so don't send them twice (React runs effects twice in development).
+- `account.email_verified` is false until the address is confirmed. `VerifyEmailBanner` reminds the user, and the API answers 403 to invitations from unverified accounts.
 - Privacy:
   - `/privacy` and `/terms` are public draft pages (`src/pages/Legal`); `LEGAL_VERSION` there must equal `TERMS_VERSION` in the API.
   - Registration sends `accept_terms`, and profile saves send `special_considerations_consent`.

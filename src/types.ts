@@ -16,6 +16,8 @@ export interface Account {
     email: string;
     auth_provider?: string;
     created_at?: string;
+    // Until the email address is confirmed, invitations can't be sent or accepted.
+    email_verified: boolean;
     // null only for older accounts created before every account had a profile.
     traveler: TravelerSummary | null;
 }
