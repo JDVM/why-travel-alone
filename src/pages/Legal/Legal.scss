@@ -1,0 +1,48 @@
+@use '../../styles/partials/variables' as *;
+@use '../../styles/partials/mixins' as *;
+
+.legal {
+    max-width: 44rem;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    line-height: 1.5;
+
+    &__title {
+        @include page-header;
+        margin: 0;
+    }
+
+    &__meta {
+        margin: 0.25rem 0 1rem;
+        font-size: 0.875rem;
+    }
+
+    &__draft {
+        padding: 0.75rem;
+        border: 1px solid $bronze;
+        border-radius: 0.5rem;
+        background: #fbf3e9;
+        font-weight: 600;
+    }
+
+    h2 {
+        margin: 1.5rem 0 0.5rem;
+        font-size: 1.125rem;
+    }
+
+    ul {
+        padding-left: 1.25rem;
+    }
+
+    li {
+        margin-bottom: 0.4rem;
+    }
+
+    a {
+        color: $fern-green;
+    }
+
+    &__related {
+        margin-top: 2rem;
+    }
+}

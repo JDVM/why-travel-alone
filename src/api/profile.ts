@@ -3,7 +3,11 @@ import { api, toBool } from './client';
 import { Profile, ProfileInput, TypeOfTravel } from '../types';
 
 function normalizeProfile(raw: any): Profile {
-    return { ...raw, has_kids: toBool(raw.has_kids) };
+    return {
+        ...raw,
+        has_kids: toBool(raw.has_kids),
+        special_considerations_consent: toBool(raw.special_considerations_consent),
+    };
 }
 
 // Your profile, or null for an older account that doesn't have one yet.

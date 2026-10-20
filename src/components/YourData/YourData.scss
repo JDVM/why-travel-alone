@@ -1,0 +1,93 @@
+@use '../../styles/partials/variables' as *;
+@use '../../styles/partials/mixins' as *;
+
+.your-data {
+    max-width: 32rem;
+    margin: 0 auto 2rem;
+    padding: 1rem 1rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    border-top: 1px solid $cambridge-blue;
+
+    &__title {
+        @include page-header;
+        margin: 0;
+    }
+
+    &__text,
+    &__warning,
+    &__error {
+        margin: 0;
+    }
+
+    &__warning {
+        font-weight: 600;
+    }
+
+    &__error {
+        color: $redwood;
+    }
+
+    &__confirm {
+        align-self: stretch;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 1rem;
+        border: 1px solid $redwood;
+        border-radius: 0.5rem;
+    }
+
+    &__label {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        font-weight: 600;
+    }
+
+    &__input {
+        padding: 0.5rem;
+        border: 1px solid $cambridge-blue;
+        border-radius: 0.25rem;
+        font-size: 1rem;
+        font-weight: 400;
+    }
+
+    &__actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    &__button {
+        padding: 0.6rem 1.25rem;
+        border: none;
+        border-radius: 1rem;
+        background: $fern-green;
+        color: #fff;
+        font-size: 1rem;
+        cursor: pointer;
+
+        &--danger {
+            background: #a33a2f;
+        }
+
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    }
+
+    &__link {
+        border: none;
+        background: none;
+        padding: 0;
+        color: $fern-green;
+        font-size: 1rem;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+}

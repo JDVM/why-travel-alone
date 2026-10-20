@@ -11,6 +11,8 @@ export interface Registration {
     password: string;
     first_name: string;
     last_name: string;
+    // The API refuses to create an account without it.
+    accept_terms: boolean;
 }
 
 // Creates the account and its traveler profile.

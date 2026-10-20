@@ -13,6 +13,9 @@ import Profile from './pages/Profile/Profile';
 import Invitations from './pages/Invitations/Invitations';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
+import Footer from './components/Footer/Footer';
+import Privacy from './pages/Legal/Privacy';
+import Terms from './pages/Legal/Terms';
 
 // A page that crashes shows the error message under a working header, and
 // navigating elsewhere starts the next page fresh.
@@ -21,8 +24,8 @@ function PageErrorBoundary({ children }) {
   return <ErrorBoundary key={location.pathname}>{children}</ErrorBoundary>;
 }
 
-// Travelers are the site's users, so everything but login and registration
-// needs an account.
+// Travelers are the site's users, so everything but login, registration and
+// the legal pages needs an account.
 function App() {
   return (
     <BrowserRouter>
@@ -31,6 +34,8 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
           <Route path="/Travelers" element={<ProtectedRoute><Travelers /></ProtectedRoute>} />
           <Route path="/Travelers/:id" element={<ProtectedRoute><TravelerDetails /></ProtectedRoute>} />
           <Route path="/Trips" element={<ProtectedRoute><Trips /></ProtectedRoute>} />
@@ -42,6 +47,7 @@ function App() {
           <Route path='/*' element={<Navigate to="/Travelers" />} />
         </Routes>
       </PageErrorBoundary>
+      <Footer />
     </BrowserRouter>
   );
 }

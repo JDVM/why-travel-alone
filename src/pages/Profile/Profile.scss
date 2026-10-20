@@ -59,6 +59,15 @@
         gap: 0.5rem;
     }
 
+    &__consent {
+        align-items: flex-start;
+        font-size: 0.875rem;
+
+        input {
+            margin-top: 0.2rem;
+        }
+    }
+
     &__error {
         color: $redwood;
         margin: 0;

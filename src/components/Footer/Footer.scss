@@ -1,0 +1,27 @@
+@use '../../styles/partials/variables' as *;
+
+.footer {
+    margin-top: 2rem;
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    border-top: 1px solid $cambridge-blue;
+    font-size: 0.875rem;
+
+    &__links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.5rem;
+    }
+
+    &__link {
+        color: $fern-green;
+    }
+
+    &__copyright {
+        margin: 0;
+    }
+}

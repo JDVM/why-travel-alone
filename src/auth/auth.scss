@@ -46,6 +46,24 @@
         }
     }
 
+    &__checkbox {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+
+        input {
+            margin-top: 0.2rem;
+        }
+    }
+
+    &__notice {
+        margin: 0;
+        padding: 0.75rem;
+        border-radius: 4px;
+        background: #e8f3ea;
+    }
+
     &__error {
         color: #b00020;
         margin: 0;

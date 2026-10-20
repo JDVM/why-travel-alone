@@ -45,7 +45,8 @@ If you encounter any issues, please feel free to contact me via GitHub.
 ## Features
 
 - Trips: Add, Edit, Delete trips
-- Traveler: Traveler Details, Add Travelers to trip, Delete travelers from trip
+- Travelers: every user is a traveler. Trip owners invite travelers, who accept or decline on the Invitations page
+- Privacy: draft Privacy Policy and Terms of Service (pending legal review), terms accepted at signup, explicit consent before storing special considerations, and "Your data" on the profile page to download everything or delete the account
 - Fully responsive with a mobile-first design
 
 ## Lessons Learned

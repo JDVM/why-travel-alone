@@ -115,6 +115,8 @@ export interface Profile {
     last_name: string;
     has_kids: boolean;
     special_considerations: string | null;
+    // Whether the traveler agreed to us storing special considerations.
+    special_considerations_consent: boolean;
     type_of_travel_id: number | null;
     type_of_travel: string | null;
     preferred_destinations: Destination[];
@@ -126,5 +128,7 @@ export interface ProfileInput {
     has_kids: boolean;
     type_of_travel_id: number | null;
     special_considerations: string;
+    // Required (true) whenever special_considerations isn't empty.
+    special_considerations_consent: boolean;
     preferred_destination_ids: number[];
 }
