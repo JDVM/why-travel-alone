@@ -7,23 +7,27 @@ import AddTrip from './components/AddTrip/AddTrip';
 import TripDetails from './components/TripDetails/TripDetails'
 import TravelerDetails from './components/TravelerDetails/TravelerDetails';
 import EditTrip from './components/EditTrip/EditTrip';
+import Login from './pages/Login/Login';
+import Register from './pages/Register/Register';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
 function App() {
   return (
     <BrowserRouter>
       <Header />
       <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/Travelers" element={<Travelers />} />
-        <Route path="/Travelers/:id" element={<TravelerDetails/>} />
-        <Route path="/Trips" element={<Trips />} />
-        <Route path="/Trips/:id" element={<TripDetails/>}/>
-        <Route path='/Trips/:id/edit' element={<EditTrip />}/>
-        <Route path="/new" element={<AddTrip />}/>
-        <Route  path='/*' element={<Navigate to="/Travelers"/>}/>
+        <Route path="/Travelers/:id" element={<TravelerDetails />} />
+        <Route path="/Trips" element={<ProtectedRoute><Trips /></ProtectedRoute>} />
+        <Route path="/Trips/:id" element={<ProtectedRoute><TripDetails /></ProtectedRoute>} />
+        <Route path="/Trips/:id/edit" element={<ProtectedRoute><EditTrip /></ProtectedRoute>} />
+        <Route path="/new" element={<ProtectedRoute><AddTrip /></ProtectedRoute>} />
+        <Route path='/*' element={<Navigate to="/Travelers" />} />
       </Routes>
     </BrowserRouter>
   );
 }
 
 export default App;
-

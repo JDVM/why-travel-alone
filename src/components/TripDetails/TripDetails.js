@@ -1,40 +1,40 @@
 import "./TripDetails.scss"
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect, useState, useCallback } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom"
 import SmallTravelerCard from "../SmallTravelerCard/SmallTraverlerCard";
 import backarrow from "../../assets/images/arrow_back-24px.svg";
-const API_URL = process.env.REACT_APP_API_URL;
-const PORT = process.env.REACT_APP_API_PORT;
+import { getTrip } from "../../api/trips";
 
 function TripDetails() {
     const { id } = useParams();
-    const [tripDetails, setTripDetails] = useState(id);
-    const travelersForThisTrip = tripDetails.users
+    const [tripDetails, setTripDetails] = useState(null);
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
     const goBack = () => navigate(-1);
 
-    console.log("travelers", travelersForThisTrip)
+    const loadTrip = useCallback(() => {
+        getTrip(id)
+            .then(setTripDetails)
+            .catch((err) => {
+                console.error(err);
+                setError("Unable to load trip data.");
+            });
+    }, [id]);
 
     useEffect(() => {
-        axios
-            .get(`${API_URL}:${PORT}/trips/${id}`)
-            .then((res) => {
-                const tripData = res.data;
-                setTripDetails(tripData);
-            })
-            .catch(error => {
-                console.log(error)
-            });
-    }, [id])
-    if (!tripDetails) {
-        return (
-            <>
-                <p>Loading Traveler Data Please Wait.</p>
-            </>)
+        loadTrip();
+    }, [loadTrip]);
+
+    if (error) {
+        return <p>{error}</p>;
     }
-    console.log(tripDetails)
-    const kidFriendly = tripDetails.kid_friendly === 1 ? "Yes" : "No";
+    if (!tripDetails) {
+        return <p>Loading trip data, please wait…</p>;
+    }
+
+    const kidFriendly = tripDetails.kid_friendly ? "Yes" : "No";
+    const travelersForThisTrip = tripDetails.users || [];
+
     return (
         <div className="trip-details">
             <div className="trip-details__container">
@@ -47,7 +47,6 @@ function TripDetails() {
                         <h3 className="trip-details__title">Trip Name</h3>
                         <p className="trip-details__text">{tripDetails.trip_name}</p>
                     </div>
-
                     <div className="trip-details__information">
                         <h4 className="trip-details__title">Trip Duration</h4>
                         <p className="trip-details__text">{tripDetails.trip_length} days</p>
@@ -57,7 +56,7 @@ function TripDetails() {
                         <p className="trip-details__text">{tripDetails.destination}</p>
                     </div>
                     <div className="trip-details__information">
-                        <label for="kid-friendly" className="trip-details__title">Kid Friendly</label>
+                        <label htmlFor="kid-friendly" className="trip-details__title">Kid Friendly</label>
                         <p id="kid-friendly" className="trip-details__text">{kidFriendly}</p>
                     </div>
                     <div className="trips-card__information--description">
@@ -70,7 +69,7 @@ function TripDetails() {
                 </Link>
             </div>
             <section>
-                <SmallTravelerCard travelers={travelersForThisTrip} />
+                <SmallTravelerCard travelers={travelersForThisTrip} onRemoved={loadTrip} />
             </section>
         </div>
     )

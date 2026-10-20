@@ -1,29 +1,36 @@
 import TripsCard from "../../components/TripsCard/TripsCard"
 import "./Trips.scss"
-import axios from "axios";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { getTrips } from "../../api/trips";
+
 function Trips() {
-    const API_URL = process.env.REACT_APP_API_URL;
-    const PORT = process.env.REACT_APP_API_PORT;
     const [trips, setTrips] = useState();
+    const [error, setError] = useState(null);
+
     useEffect(() => {
-        axios
-            .get(`${API_URL}:${PORT}/Trips`)
-            .then((res) => {
-                const tripsData = res.data;
-                console.log(tripsData);
-                setTrips(tripsData);
-            })
-            .catch(error => {
-                console.log(error)
+        getTrips()
+            .then(setTrips)
+            .catch((err) => {
+                console.error(err);
+                setError("Unable to load trips. Please try again.");
             });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    if (error) {
+        return <p>{error}</p>;
+    }
     if (!trips) {
+        return <p>Loading trips, please wait…</p>;
+    }
+    // Trips are owner-scoped, so a brand-new account has none yet.
+    if (trips.length === 0) {
         return (
-            <>
-                <p>Loading Trips Please wait</p>
-            </>
+            <div className="trips">
+                <p className="trips__empty">
+                    You don't have any trips yet. <Link to="/new">Create your first trip</Link>.
+                </p>
+            </div>
         )
     }
     return (
