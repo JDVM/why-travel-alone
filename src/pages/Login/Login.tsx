@@ -12,7 +12,7 @@ function Login() {
     const { login } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
-    const accountDeleted = Boolean((location.state as { accountDeleted?: boolean } | null)?.accountDeleted);
+    const state = location.state as { accountDeleted?: boolean; passwordReset?: boolean } | null;
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -35,9 +35,14 @@ function Login() {
     return (
         <div className="auth">
             <h1 className="auth__title">Log In</h1>
-            {accountDeleted && (
+            {state?.accountDeleted && (
                 <p className="auth__notice" role="status">
                     Your account and its data have been deleted.
+                </p>
+            )}
+            {state?.passwordReset && (
+                <p className="auth__notice" role="status">
+                    Your password has been changed. Log in with your new password.
                 </p>
             )}
             <form className="auth__form" onSubmit={handleSubmit}>
@@ -70,6 +75,9 @@ function Login() {
                     {submitting ? 'Logging in…' : 'Log In'}
                 </button>
             </form>
+            <p className="auth__switch">
+                <Link to="/forgot-password">Forgot your password?</Link>
+            </p>
             <p className="auth__switch">
                 Need an account? <Link to="/register">Register</Link>
             </p>

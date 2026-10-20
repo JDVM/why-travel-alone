@@ -20,7 +20,7 @@ api.interceptors.request.use((config) => {
 });
 
 // Pages anyone can open, signed in or not.
-const PUBLIC_PATHS = ['/login', '/register', '/privacy', '/terms'];
+const PUBLIC_PATHS = ['/login', '/register', '/privacy', '/terms', '/forgot-password', '/reset-password', '/verify-email'];
 
 // On 401 the token is missing/expired: drop it and send the user to login.
 // Skip the redirect on public pages: the auth pages show the error themselves

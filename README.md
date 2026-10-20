@@ -46,6 +46,7 @@ If you encounter any issues, please feel free to contact me via GitHub.
 
 - Trips: Add, Edit, Delete trips
 - Travelers: every user is a traveler. Trip owners invite travelers, who accept or decline on the Invitations page
+- Email: signup sends a link to confirm the address (a banner reminds you until you do; inviting and joining trips need it), and "Forgot your password?" emails a one-hour reset link. Resetting signs out every other session
 - Privacy: draft Privacy Policy and Terms of Service (pending legal review), terms accepted at signup, explicit consent before storing special considerations, and "Your data" on the profile page to download everything or delete the account
 - Fully responsive with a mobile-first design
 
