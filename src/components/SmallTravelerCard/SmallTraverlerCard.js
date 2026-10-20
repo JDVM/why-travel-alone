@@ -1,134 +1,38 @@
 import React from "react";
 import "./SmallTravelerCard.scss";
-import placeHolderImage from "../../assets/images/placeholder_image.png";
 import { Link, useParams } from "react-router-dom";
-import axios from "axios";
+import { picForIndex } from "../../data/profilePics";
+import { removeTravelerFromTrip } from "../../api/travelers";
 
-function SmallTravelerCard({ travelers }) {
-    const profilepic = [
-        {
-            picture: "/userprofilepictures/1.jpg"
-        },
-        {
-            picture: "/userprofilepictures/2.jpg"
-        },
-        {
-            picture: "/userprofilepictures/3.jpg"
-        },
-        {
-            picture: "/userprofilepictures/4.jpg"
-        },
-        {
-            picture: "/userprofilepictures/5.jpg"
-        },
-        {
-            picture: "/userprofilepictures/6.jpg"
-        },
-        {
-            picture: "/userprofilepictures/7.jpg"
-        },
-        {
-            picture: "/userprofilepictures/8.jpg"
-        },
-        {
-            picture: "/userprofilepictures/9.jpg"
-        },
-        {
-            picture: "/userprofilepictures/10.jpg"
-        },
-        {
-            picture: "/userprofilepictures/11.jpg"
-        },
-        {
-            picture: "/userprofilepictures/12.jpg"
-        },
-        {
-            picture: "/userprofilepictures/13.jpg"
-        },
-        {
-            picture: "/userprofilepictures/14.jpg"
-        },
-        {
-            picture: "/userprofilepictures/15.jpg"
-        },
-        {
-            picture: "/userprofilepictures/16.jpg"
-        },
-        {
-            picture: "/userprofilepictures/17.jpg"
-        },
-        {
-            picture: "/userprofilepictures/18.jpg"
-        },
-        {
-            picture: "/userprofilepictures/19.jpg"
-        },
-        {
-            picture: "/userprofilepictures/20.jpg"
-        },
-        {
-            picture: "/userprofilepictures/21.jpg"
-        },
-        {
-            picture: "/userprofilepictures/23.jpg"
-        },
-        {
-            picture: "/userprofilepictures/24.jpg"
-        },
-        {
-            picture: "/userprofilepictures/25.jpg"
-        },
-        {
-            picture: "/userprofilepictures/26.jpg"
-        },
-        {
-            picture: "/userprofilepictures/27.jpg"
-        },
-        {
-            picture: "/userprofilepictures/28.jpg"
-        },
-        {
-            picture: "/userprofilepictures/29.jpg"
-        },
-        {
-            picture: "/userprofilepictures/30.jpg"
-        },
-        {
-            picture: "/userprofilepictures/31.jpg"
-        },
-        {
-            picture: "/userprofilepictures/31.jpg"
-        }
-    ]
-    const API_URL = process.env.REACT_APP_API_URL;
-    const PORT = process.env.REACT_APP_API_PORT;
-    const { id } = useParams()
-    console.log("traveler props", travelers)
-    console.log("profilepic", profilepic)
+function SmallTravelerCard({ travelers, onRemoved }) {
+    const { id } = useParams();
 
     if (travelers === undefined) {
         return <p>Loading...</p>;
     }
 
-    const handleDelete = async (userId) => {
-        await axios.delete(`${API_URL}:${PORT}/travelers/${id}/${userId}`)
-            .then(() => {
-                window.location.reload();
-            });
-
-        console.log(`Removed User ${userId} from trip`);
-    }
+    const handleDelete = async (e, userId) => {
+        // The button sits inside a Link; stop the click from navigating.
+        e.preventDefault();
+        e.stopPropagation();
+        try {
+            await removeTravelerFromTrip(id, userId);
+            if (onRemoved) {
+                onRemoved();
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
     return (
         <div className="small-traveler-card">
             {travelers.map((t, i) => {
                 const name = `${t.first_name} ${t.last_name}`;
-                const hasKids = t.has_kids === 1 ? "Yes" : "No";
-                const PreferredDestinations = t.preferred_destinations
-                console.log(PreferredDestinations)
+                const hasKids = t.has_kids ? "Yes" : "No";
                 return (
                     <Link className="small-traveler-card__container" key={t.user_id} to={`/Travelers/${t.user_id}`}>
-                        <img className="small-traveler-card__image" src={profilepic[i].picture} alt="placeholder a human profile" />
+                        <img className="small-traveler-card__image" src={picForIndex(i)} alt="Traveler profile" />
                         <section className="small-traveler-card__information">
                             <article className="small-traveler-card__info-container">
                                 <p className="small-traveler-card__title">Name</p>
@@ -147,7 +51,7 @@ function SmallTravelerCard({ travelers }) {
                                 <p className="small-traveler-card__text">{t.special_considerations}</p>
                             </article>
                         </section>
-                        <button className="small-traveler-card__button" onClick={() => handleDelete(t.user_id)}>Remove</button>
+                        <button className="small-traveler-card__button" type="button" onClick={(e) => handleDelete(e, t.user_id)}>Remove</button>
                     </Link>
                 );
             })}
@@ -155,4 +59,3 @@ function SmallTravelerCard({ travelers }) {
     )
 }
 export default SmallTravelerCard;
-
