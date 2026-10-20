@@ -75,3 +75,45 @@
                
     }
 }
+.trip-details {
+    &__error {
+        color: $redwood;
+        text-align: center;
+    }
+
+    &__invitations {
+        margin: 1rem auto;
+        padding: 1rem;
+        max-width: 40rem;
+    }
+
+    &__invitation-list {
+        list-style: none;
+        margin: 0.5rem 0 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    &__invitation {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    &__invitation-status {
+        font-size: 0.875rem;
+        color: $fern-green;
+    }
+
+    &__invitation-cancel {
+        padding: 0.25rem 0.75rem;
+        border: 1px solid $redwood;
+        border-radius: 1rem;
+        background: #fff;
+        color: $redwood;
+        cursor: pointer;
+    }
+}

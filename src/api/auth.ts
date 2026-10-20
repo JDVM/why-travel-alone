@@ -6,8 +6,16 @@ export async function login(email: string, password: string): Promise<AuthRespon
     return data;
 }
 
-export async function register(email: string, password: string): Promise<AuthResponse> {
-    const { data } = await api.post<AuthResponse>('/auth/register', { email, password });
+export interface Registration {
+    email: string;
+    password: string;
+    first_name: string;
+    last_name: string;
+}
+
+// Creates the account and its traveler profile.
+export async function register(registration: Registration): Promise<AuthResponse> {
+    const { data } = await api.post<AuthResponse>('/auth/register', registration);
     return data;
 }
 

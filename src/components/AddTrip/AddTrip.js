@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import backarrow from "../../assets/images/arrow_back-24px.svg";
 import { getDestinations } from "../../api/destinations";
 import { createTrip } from "../../api/trips";
+import { errorMessage } from "../../api/errors";
 
 function AddTrip() {
     const [destination, setDestination] = useState([]);
@@ -48,7 +49,7 @@ function AddTrip() {
             })
             .catch((err) => {
                 console.error(err);
-                setError("Failed to create trip. Please try again.");
+                setError(errorMessage(err, "Failed to create trip. Please try again."));
             });
     }
 

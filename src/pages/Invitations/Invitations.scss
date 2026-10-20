@@ -1,0 +1,77 @@
+@use '../../styles/partials/variables' as *;
+@use '../../styles/partials/mixins' as *;
+
+.invitations {
+    max-width: 40rem;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    &__title {
+        @include page-header;
+        margin: 0;
+    }
+
+    &__status,
+    &__empty,
+    &__details,
+    &__from {
+        margin: 0;
+    }
+
+    &__error {
+        color: $redwood;
+        margin: 0;
+    }
+
+    &__list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    &__card {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 1rem;
+        border-radius: 0.75rem;
+        background: $cambridge-blue;
+        color: #fff;
+    }
+
+    &__trip {
+        @include section-header;
+        font-size: 1.125rem;
+        margin: 0;
+    }
+
+    &__actions {
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    &__accept,
+    &__decline {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 1rem;
+        font-size: 1rem;
+        cursor: pointer;
+    }
+
+    &__accept {
+        background: $fern-green;
+        color: #fff;
+    }
+
+    &__decline {
+        background: #fff;
+        color: $fern-green;
+    }
+}
