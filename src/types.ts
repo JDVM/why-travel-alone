@@ -30,12 +30,14 @@ export interface Traveler {
 }
 
 // A row from GET /trips (the caller's own trips).
+// destination_id is optional until every deployed API returns it.
 export interface TripSummary {
     trip_id: number;
     trip_name: string;
     kid_friendly: boolean;
     trip_length: number;
     notes: string | null;
+    destination_id?: number;
     destination: string | null;
     num_travelers: number;
 }
@@ -47,6 +49,7 @@ export interface TripDetail {
     kid_friendly: boolean;
     trip_length: number;
     notes: string | null;
+    destination_id?: number;
     destination: string | null;
     users: Traveler[];
 }

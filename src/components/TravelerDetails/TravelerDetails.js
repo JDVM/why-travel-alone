@@ -53,7 +53,8 @@ function TravelerDetails() {
             })
             .catch((err) => {
                 console.error(err);
-                setError("Unable to add traveler to trip.");
+                // Surface the API's reason (e.g. 409 "already on this trip").
+                setError(err.response?.data?.error || "Unable to add traveler to trip.");
             });
     }
 

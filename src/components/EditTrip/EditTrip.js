@@ -19,9 +19,9 @@ function EditTrip() {
     const navigate = useNavigate();
     const goBack = () => navigate(-1);
 
-    // Load destinations first, then the trip. GET /trips/:id returns the
-    // destination *name* (not destination_id), so we map the name back to an id
-    // against the destinations list to preselect the dropdown.
+    // Load destinations first, then the trip. Older APIs return only the
+    // destination name from GET /trips/:id, so fall back to matching the name
+    // against the destinations list when destination_id is absent.
     useEffect(() => {
         let destinationsList = [];
         getDestinations()
@@ -35,7 +35,7 @@ function EditTrip() {
                 setTripDetails({
                     trip_name: tripData.trip_name,
                     kid_friendly: tripData.kid_friendly,
-                    destination_id: match ? match.id : "",
+                    destination_id: tripData.destination_id ?? (match ? match.id : ""),
                     trip_length: tripData.trip_length,
                     notes: tripData.notes || "",
                 });
