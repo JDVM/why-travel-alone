@@ -9,9 +9,8 @@ Why Travel Alone is a small passion project that began as my capstone for the Br
 - React, built with Vite
 - TypeScript (strict mode)
 - Axios
-- SASS
+- Material UI (with Emotion)
 - React Router DOM
-- React Icons
 - Knex
 - MySQL
 - Vitest, React Testing Library and Playwright for tests
