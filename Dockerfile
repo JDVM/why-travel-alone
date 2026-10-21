@@ -17,10 +17,6 @@ ARG REACT_APP_API_BASE_URL
 ARG REACT_APP_SENTRY_DSN=
 ARG REACT_APP_SENTRY_ENVIRONMENT=production
 ARG REACT_APP_SENTRY_RELEASE=
-# No inline <script> in index.html, so the Content-Security-Policy can forbid
-# inline scripts; no source maps published with the site.
-ENV INLINE_RUNTIME_CHUNK=false \
-    GENERATE_SOURCEMAP=false
 RUN test -n "$REACT_APP_API_BASE_URL" || { echo "Set --build-arg REACT_APP_API_BASE_URL"; exit 1; }
 RUN npm run build
 

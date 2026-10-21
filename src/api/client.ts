@@ -4,7 +4,7 @@ import { getToken, clearToken } from '../auth/token';
 // Where the API is, fixed when the app is built: REACT_APP_API_BASE_URL (e.g.
 // https://api.example.com), or for local development REACT_APP_API_URL plus
 // REACT_APP_API_PORT.
-export function apiBaseUrl(env: NodeJS.ProcessEnv = process.env): string {
+export function apiBaseUrl(env: Partial<ImportMetaEnv> = import.meta.env): string {
     if (env.REACT_APP_API_BASE_URL) {
         return env.REACT_APP_API_BASE_URL.replace(/\/+$/, '');
     }

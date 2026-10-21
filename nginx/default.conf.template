@@ -30,7 +30,7 @@ server {
     }
 
     # Built assets have content hashes in their names: cache them for good.
-    location /static/ {
+    location /assets/ {
         expires max;
         try_files $uri =404;
     }

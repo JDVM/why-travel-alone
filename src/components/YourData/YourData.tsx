@@ -50,8 +50,8 @@ function YourData() {
         setDeleting(true);
         try {
             await deleteAccount(password);
-            logout();
-            navigate('/login', { replace: true, state: { accountDeleted: true } });
+            logout('Your account and its data have been deleted.');
+            navigate('/login', { replace: true });
         } catch (err) {
             setDeleteError(errorMessage(err, 'Unable to delete your account. Please try again.'));
             setDeleting(false);

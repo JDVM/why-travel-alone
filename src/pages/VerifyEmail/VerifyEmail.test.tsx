@@ -1,15 +1,16 @@
+import type { Mock } from 'vitest';
 import { StrictMode } from 'react';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import VerifyEmail from './VerifyEmail';
 import { verifyEmail } from '../../api/auth';
 
-const mockRefreshAccount = jest.fn();
+const { mockRefreshAccount } = vi.hoisted(() => ({ mockRefreshAccount: vi.fn() }));
 let mockAuthenticated = false;
-jest.mock('../../auth/AuthContext', () => ({
+vi.mock('../../auth/AuthContext', () => ({
     useAuth: () => ({ isAuthenticated: mockAuthenticated, refreshAccount: mockRefreshAccount }),
 }));
-jest.mock('../../api/auth', () => ({ verifyEmail: jest.fn() }));
+vi.mock('../../api/auth', () => ({ verifyEmail: vi.fn() }));
 
 function Url() {
     const location = useLocation();
@@ -35,7 +36,7 @@ describe('VerifyEmail', () => {
     });
 
     test('confirms the address once, and removes the token from the address bar', async () => {
-        (verifyEmail as jest.Mock).mockResolvedValue(undefined);
+        (verifyEmail as Mock).mockResolvedValue(undefined);
         renderAt('/verify-email?token=abc123');
 
         expect(await screen.findByText(/your email address is confirmed/i)).toBeInTheDocument();
@@ -47,7 +48,7 @@ describe('VerifyEmail', () => {
 
     test('refreshes the signed-in account so the reminder disappears', async () => {
         mockAuthenticated = true;
-        (verifyEmail as jest.Mock).mockResolvedValue(undefined);
+        (verifyEmail as Mock).mockResolvedValue(undefined);
         renderAt('/verify-email?token=abc123');
 
         expect(await screen.findByText(/your email address is confirmed/i)).toBeInTheDocument();
@@ -55,7 +56,7 @@ describe('VerifyEmail', () => {
     });
 
     test("shows the API's message for a used or expired link", async () => {
-        (verifyEmail as jest.Mock).mockRejectedValue({
+        (verifyEmail as Mock).mockRejectedValue({
             isAxiosError: true,
             response: { status: 400, data: { error: 'This link is invalid or has expired. Log in to get a new one.' } },
         });

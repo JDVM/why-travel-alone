@@ -2,7 +2,7 @@ import "./TripDetails.scss"
 import { useEffect, useState, useCallback } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom"
 import SmallTravelerCard from "../SmallTravelerCard/SmallTraverlerCard";
-import backarrow from "../../assets/images/arrow_back-24px.svg";
+import BackButton from "../BackButton/BackButton";
 import { getTrip, removeTraveler, cancelInvitation, leaveTrip } from "../../api/trips";
 import { errorMessage } from "../../api/errors";
 import { useAuth } from "../../auth/AuthContext";
@@ -15,7 +15,6 @@ function TripDetails() {
     const [error, setError] = useState(null);
     const [actionError, setActionError] = useState(null);
     const navigate = useNavigate();
-    const goBack = () => navigate(-1);
     const { account } = useAuth();
     const myTravelerId = account && account.traveler ? account.traveler.user_id : null;
 
@@ -72,7 +71,7 @@ function TripDetails() {
         <div className="trip-details">
             <div className="trip-details__container">
                 <div className="trip-details__title-container">
-                    <img className="trip-details__image" src={backarrow} alt="Back arrowkey" onClick={goBack} />
+                    <BackButton />
                     <h1 className="trip-details__main-title">Trip Details</h1>
                 </div>
                 <div className="trip-details__information-container">

@@ -3,7 +3,7 @@ import { initMonitoring, reportError, scrubBreadcrumb, scrubEvent, stripQuery } 
 
 describe('monitoring', () => {
     test('is off without REACT_APP_SENTRY_DSN, and reporting is then a no-op', () => {
-        expect(process.env.REACT_APP_SENTRY_DSN).toBeUndefined();
+        expect(import.meta.env.REACT_APP_SENTRY_DSN).toBeUndefined();
         expect(initMonitoring()).toBe(false);
         expect(() => reportError(new Error('ignored'))).not.toThrow();
     });
