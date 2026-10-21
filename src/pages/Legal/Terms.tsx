@@ -1,14 +1,10 @@
 import { Link } from 'react-router-dom';
-import { LEGAL_VERSION, DraftNotice } from './legal';
-import './Legal.scss';
+import { LegalPage } from './legal';
 
 // DRAFT for legal review. Bracketed text is for the business to fill in.
 function Terms() {
     return (
-        <article className="legal">
-            <h1 className="legal__title">Terms of Service</h1>
-            <p className="legal__meta">Version {LEGAL_VERSION}</p>
-            <DraftNotice />
+        <LegalPage title="Terms of Service">
 
             <h2>About these terms</h2>
             <p>
@@ -92,7 +88,7 @@ function Terms() {
 
             <h2>Contact</h2>
             <p>[Company legal name], [registered address], [support contact email].</p>
-        </article>
+        </LegalPage>
     );
 }
 

@@ -1,16 +1,12 @@
 import { Link } from 'react-router-dom';
-import { LEGAL_VERSION, DraftNotice } from './legal';
-import './Legal.scss';
+import { LegalPage } from './legal';
 
 // DRAFT for legal review. Describes what the app actually does today; keep it
 // in step with the code (what is collected, who sees it, where it goes).
 // Bracketed text is for the business to fill in.
 function Privacy() {
     return (
-        <article className="legal">
-            <h1 className="legal__title">Privacy Policy</h1>
-            <p className="legal__meta">Version {LEGAL_VERSION}</p>
-            <DraftNotice />
+        <LegalPage title="Privacy Policy">
 
             <h2>Who we are</h2>
             <p>
@@ -143,10 +139,10 @@ function Privacy() {
                 change takes effect. The version date is at the top of this page.
             </p>
 
-            <p className="legal__related">
+            <p>
                 See also the <Link to="/terms">Terms of Service</Link>.
             </p>
-        </article>
+        </LegalPage>
     );
 }
 
