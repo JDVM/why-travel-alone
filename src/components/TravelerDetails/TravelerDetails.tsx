@@ -1,13 +1,24 @@
-import "./TravelerDetails.scss"
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"
-import BackButton from "../BackButton/BackButton";
+import { ReactNode, useEffect, useState } from "react";
+import { Link as RouterLink, useParams } from "react-router-dom";
+import { Alert, Avatar, Box, Button, Chip, Container, Link, Paper, Stack, TextField, Typography } from "@mui/material";
+import PageHeader from "../PageHeader/PageHeader";
 import { picForIndex } from "../../data/profilePics";
 import { getTraveler } from "../../api/travelers";
 import { getTrips, inviteTraveler } from "../../api/trips";
 import { errorMessage } from "../../api/errors";
 import { useAuth } from "../../auth/AuthContext";
 import { Traveler, TripSummary } from "../../types";
+
+function Detail({ label, children }: { label: string; children: ReactNode }) {
+    return (
+        <Box>
+            <Typography variant="overline" color="text.secondary" component="h3" sx={{ lineHeight: 1.5 }}>
+                {label}
+            </Typography>
+            {children}
+        </Box>
+    );
+}
 
 function TravelerDetails() {
     const [travelerDetails, setTravelerDetails] = useState<Traveler | null>(null);
@@ -35,11 +46,15 @@ function TravelerDetails() {
     }, [id]);
 
     if (!travelerDetails) {
-        return error ? <p>{error}</p> : <p>Loading traveler data, please wait…</p>;
+        return (
+            <Container maxWidth="md" sx={{ py: 3 }}>
+                <PageHeader title="Traveler Profile" back />
+                {error ? <Alert severity="error">{error}</Alert> : <Typography>Loading traveler data, please wait…</Typography>}
+            </Container>
+        );
     }
 
     const name = `${travelerDetails.first_name} ${travelerDetails.last_name}`;
-    const hasKids = travelerDetails.has_kids ? "Yes" : "No";
     const preferredDestinations = travelerDetails.preferred_destinations ?? [];
 
     const handleInvite = async () => {
@@ -56,77 +71,84 @@ function TravelerDetails() {
             // e.g. 409 "Traveler has already been invited".
             setInviteError(errorMessage(err, "Unable to send the invitation."));
         }
-    }
+    };
 
     return (
-        <div className="traveler-details">
-            <section className="traveler-details__container">
-                <div className="traveler-details__title-container">
-                    <BackButton />
-                    <h1 className="traveler-details__main-title">Traveler Profile</h1>
-                </div>
-
-                <img className="traveler-details__image" alt="" src={picForIndex(0)} />
-                <section className="traveler-details__information-container">
-                    <article className="traveler-details__information">
-                        <h3 className="traveler-details__title">Name</h3>
-                        <p className="traveler-details__text">{name}</p>
-                    </article>
-                    <article className="traveler-details__information">
-                        <h3 className="traveler-details__title">Preferred Destinations</h3>
-                        <ul className="traveler-details__list traveler-details__text">
-                            {preferredDestinations.map((destination, index) => {
-                                return <li key={index}>{destination}</li>;
-                            })}
-                        </ul>
-                    </article>
-                    <article className="traveler-details__information">
-                        <h3 className="traveler-details__title">Type of travel</h3>
-                        <p className="traveler-details__text">{travelerDetails.type_of_travel}</p>
-                    </article>
-                    {/* Private fields: the API only sends them when you may see them. */}
-                    {"has_kids" in travelerDetails && (
-                        <article className="traveler-details__information">
-                            <h3 className="traveler-details__title">Kids</h3>
-                            <p className="traveler-details__text">{hasKids}</p>
-                        </article>
-                    )}
-                    {"special_considerations" in travelerDetails && (
-                        <article className="traveler-details__information">
-                            <h3 className="traveler-details__title">Special Considerations</h3>
-                            <p className="traveler-details__text">{travelerDetails.special_considerations}</p>
-                        </article>
-                    )}
-                </section>
-                {!isMe && (
-                    <div className="traveler-details__input-container">
-                        {ownedTrips.length > 0 ? (
-                            <>
-                                <label className="traveler-details__title" htmlFor="tripSelect">Invite to one of your trips:</label>
-                                <select
-                                    className="traveler-details__input"
-                                    id="tripSelect"
-                                    value={selectedTripId}
-                                    onChange={(e) => setSelectedTripId(e.target.value)}
-                                >
-                                    <option value="">Select a Trip</option>
-                                    {ownedTrips.map((trip) => {
-                                        return (
-                                            <option key={trip.trip_id} value={trip.trip_id}> {trip.trip_name} </option>
-                                        )
-                                    })}
-                                </select>
-                                <button className="traveler-details__button" type="button" onClick={handleInvite}>Send invite</button>
-                            </>
-                        ) : (
-                            <p className="traveler-details__text">Create a trip to invite {travelerDetails.first_name} to it.</p>
+        <Container maxWidth="md" sx={{ py: 3 }}>
+            <PageHeader title="Traveler Profile" back />
+            <Paper variant="outlined" sx={{ p: { xs: 2, sm: 3 }, mb: 3 }}>
+                <Stack direction={{ xs: "column", sm: "row" }} spacing={3} sx={{ alignItems: { xs: "center", sm: "flex-start" } }}>
+                    <Avatar src={picForIndex(travelerDetails.user_id)} alt="" sx={{ width: 120, height: 120 }} />
+                    <Stack spacing={2} sx={{ flexGrow: 1, width: "100%" }}>
+                        <Typography component="h2" variant="h5" sx={{ fontWeight: 700 }}>{name}</Typography>
+                        <Detail label="Type of travel">
+                            <Typography>{travelerDetails.type_of_travel || "Not set"}</Typography>
+                        </Detail>
+                        <Detail label="Preferred Destinations">
+                            {preferredDestinations.length > 0 ? (
+                                <Stack direction="row" spacing={0.5} sx={{ flexWrap: "wrap", rowGap: 0.5 }}>
+                                    {preferredDestinations.map((destination) => (
+                                        <Chip key={destination} label={destination} size="small" />
+                                    ))}
+                                </Stack>
+                            ) : (
+                                <Typography>None yet</Typography>
+                            )}
+                        </Detail>
+                        {/* Private fields: the API only sends them when you may see them. */}
+                        {"has_kids" in travelerDetails && (
+                            <Detail label="Kids">
+                                <Typography>{travelerDetails.has_kids ? "Yes" : "No"}</Typography>
+                            </Detail>
                         )}
-                        {inviteMessage && <p className="traveler-details__message">{inviteMessage}</p>}
-                        {inviteError && <p className="traveler-details__error">{inviteError}</p>}
-                    </div>
-                )}
-            </section>
-        </div>
-    )
+                        {"special_considerations" in travelerDetails && (
+                            <Detail label="Special Considerations">
+                                <Typography>{travelerDetails.special_considerations || "None"}</Typography>
+                            </Detail>
+                        )}
+                    </Stack>
+                </Stack>
+            </Paper>
+
+            {!isMe && (
+                <Paper variant="outlined" sx={{ p: { xs: 2, sm: 3 } }}>
+                    <Typography component="h2" variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
+                        Invite {travelerDetails.first_name}
+                    </Typography>
+                    {ownedTrips.length > 0 ? (
+                        <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ alignItems: { sm: "center" } }}>
+                            {/* A native select: the browser tests pick the trip by its id. */}
+                            <TextField
+                                id="tripSelect"
+                                select
+                                label="Invite to one of your trips"
+                                value={selectedTripId}
+                                onChange={(e) => setSelectedTripId(e.target.value)}
+                                slotProps={{ select: { native: true }, inputLabel: { shrink: true } }}
+                                sx={{ flexGrow: 1 }}
+                            >
+                                <option value="">Select a Trip</option>
+                                {ownedTrips.map((trip) => (
+                                    <option key={trip.trip_id} value={trip.trip_id}>{trip.trip_name}</option>
+                                ))}
+                            </TextField>
+                            <Button variant="contained" onClick={handleInvite}>Send invite</Button>
+                        </Stack>
+                    ) : (
+                        <Typography>
+                            <Link component={RouterLink} to="/new">Create a trip</Link> to invite {travelerDetails.first_name} to it.
+                        </Typography>
+                    )}
+                    {inviteMessage && (
+                        <Alert severity="success" className="traveler-details__message" sx={{ mt: 2 }}>{inviteMessage}</Alert>
+                    )}
+                    {inviteError && (
+                        <Alert severity="error" className="traveler-details__error" sx={{ mt: 2 }}>{inviteError}</Alert>
+                    )}
+                </Paper>
+            )}
+        </Container>
+    );
 }
+
 export default TravelerDetails
