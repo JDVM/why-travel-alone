@@ -16,11 +16,13 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - run: npx tsc --noEmit
-      # react-scripts runs the tests once (not in watch mode) because CI=true.
+      - run: npm run typecheck
+      # Lint warnings fail CI too.
+      - run: npm run lint
       - run: npm test
-      # With CI=true, lint warnings fail the build.
       - run: npm run build
+      # Fail on high or critical vulnerabilities in anything installed.
+      - run: npm audit --audit-level=high
 
   # Builds the production image and checks nginx serves the app with its
   # security headers.
@@ -42,7 +44,7 @@ jobs:
           # No inline scripts, so the CSP can forbid them.
           ! curl -fsS http://localhost:3000/ | grep -q '<script>'
           # The API address is built in.
-          main=$(curl -fsS http://localhost:3000/ | grep -o '/static/js/main[^"]*')
+          main=$(curl -fsS http://localhost:3000/ | grep -o '/assets/index-[^"]*\.js')
           curl -fsS "http://localhost:3000$main" | grep -q 'https://api.example.com'
       - name: Logs
         if: failure()

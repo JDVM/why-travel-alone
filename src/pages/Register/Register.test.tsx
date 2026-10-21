@@ -3,14 +3,14 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import Register from './Register';
 
-const mockRegister = jest.fn();
-jest.mock('../../auth/AuthContext', () => ({ useAuth: () => ({ register: mockRegister }) }));
+const { mockRegister } = vi.hoisted(() => ({ mockRegister: vi.fn() }));
+vi.mock('../../auth/AuthContext', () => ({ useAuth: () => ({ register: mockRegister }) }));
 
-function fillIn() {
-    userEvent.type(screen.getByLabelText('First name'), 'Ana');
-    userEvent.type(screen.getByLabelText('Last name'), 'Lima');
-    userEvent.type(screen.getByLabelText('Email'), 'ana@example.com');
-    userEvent.type(screen.getByLabelText('Password'), 'a-good-password');
+async function fillIn() {
+    await userEvent.type(screen.getByLabelText('First name'), 'Ana');
+    await userEvent.type(screen.getByLabelText('Last name'), 'Lima');
+    await userEvent.type(screen.getByLabelText('Email'), 'ana@example.com');
+    await userEvent.type(screen.getByLabelText('Password'), 'a-good-password');
 }
 
 describe('Register', () => {
@@ -27,18 +27,19 @@ describe('Register', () => {
         expect(screen.getByRole('link', { name: 'Terms of Service' })).toHaveAttribute('href', '/terms');
         expect(screen.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute('href', '/privacy');
 
-        fillIn();
+        await fillIn();
         const terms = screen.getByRole('checkbox', { name: /i agree to the terms/i });
         expect(terms).toBeRequired();
-        userEvent.click(screen.getByRole('button', { name: 'Register' }));
-        expect(await screen.findByText(/please accept the terms/i)).toBeInTheDocument();
+        await userEvent.click(screen.getByRole('button', { name: 'Register' }));
+        // The browser refuses to submit with the box unticked.
+        expect(terms).toBeInvalid();
         expect(mockRegister).not.toHaveBeenCalled();
     });
 
     test('sends the acceptance with the registration', async () => {
-        fillIn();
-        userEvent.click(screen.getByRole('checkbox', { name: /i agree to the terms/i }));
-        userEvent.click(screen.getByRole('button', { name: 'Register' }));
+        await fillIn();
+        await userEvent.click(screen.getByRole('checkbox', { name: /i agree to the terms/i }));
+        await userEvent.click(screen.getByRole('button', { name: 'Register' }));
 
         await waitFor(() =>
             expect(mockRegister).toHaveBeenCalledWith({

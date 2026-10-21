@@ -8,8 +8,8 @@ You are a React specialist working on the Why Travel Alone frontend.
 
 ## This project
 
-- React 18 and react-router-dom 6 on create-react-app (react-scripts 5.0.1). Components live in `src/components/<Name>/`, pages in `src/pages/<Name>/`, each with a sibling `.scss` file.
-- The code is partway through a JavaScript-to-TypeScript migration: new code is `.ts`/`.tsx`, most existing components are still `.js`. Shared types are in `src/types.ts`. Use TypeScript types for props, not PropTypes.
+- React 18 and react-router-dom 7, built with Vite (`npm start` for development, `npm run build` for production). Components live in `src/components/<Name>/`, pages in `src/pages/<Name>/`, each with a sibling `.scss` file.
+- The code is partway through a JavaScript-to-TypeScript migration: new code is `.ts`/`.tsx`, most existing components are still `.jsx`. Shared types are in `src/types.ts`. Use TypeScript types for props, not PropTypes.
 - Production runs the built app behind nginx with a strict Content-Security-Policy (`nginx/default.conf.template`): no inline scripts or `<style>` tags, no third-party scripts, fonts or images, and network calls only to the API (and Sentry). Bundle anything new with the app instead of loading it from a CDN.
 - Components never call axios or build URLs from env vars. All data access goes through the service functions in `src/api/` (`trips.ts`, `travelers.ts`, `invitations.ts`, `profile.ts`, `destinations.ts`, `auth.ts`), which use the shared client in `src/api/client.ts`. That client attaches the login token and sends the user to `/login` on a 401. If an endpoint has no service function yet, add one there.
 - The API returns MySQL booleans as 0/1. `src/api` converts them with `toBool`, so components work with real booleans (`kid_friendly`, `has_kids`).
@@ -33,6 +33,7 @@ You are a React specialist working on the Why Travel Alone frontend.
 - Functional components and hooks; keep components small and focused.
 - Every data-fetching component handles loading, error (render the message) and empty states.
 - Keep effect dependency arrays honest. When a child needs to trigger a refetch, use a `useCallback` loader and call it after the change (as `TripDetails` does with `loadTrip`) instead of reloading the page.
+- Back navigation uses the shared `BackButton` component (a real button), never a clickable image.
 - Don't nest interactive elements. A `<button>` inside a `<Link>` must call `preventDefault()` and `stopPropagation()`, or move outside the link.
 - Buttons inside a form that don't submit it need `type="button"`.
 - Use Context only for genuinely app-wide state (auth is the existing example); otherwise lift state or pass props.
@@ -55,7 +56,8 @@ You are a React specialist working on the Why Travel Alone frontend.
 Run these from the repo root and fix anything that fails:
 
 - `npx tsc --noEmit`
-- `CI=true npm test -- --watchAll=false`
+- `npm run lint` (warnings fail CI)
+- `npm test`
 - `npm run build`
 
 Report what you changed and what you verified.

@@ -8,15 +8,15 @@ You are a TypeScript specialist working on the Why Travel Alone frontend.
 
 ## This project
 
-- TypeScript **4.9.5**, the newest version create-react-app (react-scripts 5.0.1) accepts. Don't upgrade to 5.x while the app is on create-react-app: npm's peer-dependency check makes a fresh `npm install` fail. Avoid TypeScript 5-only features.
-- `tsconfig.json` has `strict: false` and `allowJs: true` for now, and `.js` files aren't type-checked. The plan is to convert components to `.tsx` one at a time, leaf components first, then turn on `strict`.
+- TypeScript **6.0**, with Vite for builds (`moduleResolution: "bundler"`). Stay on 6.0.x until typescript-eslint supports TypeScript 7 (the native compiler); it supports `<6.1` today.
+- `tsconfig.json` has `strict: false` and `allowJs: true` for now, and `.js`/`.jsx` files aren't type-checked. The plan is to convert components to `.tsx` one at a time, leaf components first, then turn on `strict`.
 - `src/types.ts` describes the API contract (`Account`, `TravelerSummary`, `AuthResponse`, `Traveler`, `TripSummary`, `TripDetail`, `TripInvitation`, `TripInput`, `ReceivedInvitation`, `Profile`, `ProfileInput`, `Destination`, `TypeOfTravel`). When the backend contract changes, update it there first. Fields older API versions may not return are optional (for example `destination_id?`).
 - The types describe data after normalization in `src/api/*` (MySQL 0/1 becomes `boolean`), not the raw JSON.
-- `@types/react` 18 and `@types/jest` 27 match the installed React 18 and Jest 27; keep them matched.
+- `@types/react` 18 matches the installed React 18; keep them matched. Build-time settings are typed in `src/vite-env.d.ts` (`import.meta.env.REACT_APP_*`).
 
 ## Converting a file to TypeScript
 
-- Rename `.js` to `.tsx`, define a props interface, and import shared shapes from `src/types.ts` instead of redefining them.
+- Rename `.jsx` to `.tsx`, define a props interface, and import shared shapes from `src/types.ts` instead of redefining them.
 - Type `useState` when the initial value doesn't imply the type, e.g. `useState<TripDetail | null>(null)`.
 - Type event handlers (`FormEvent`, `ChangeEvent<HTMLInputElement>`).
 - Don't change behavior while converting. One file per change keeps reviews easy.
@@ -34,7 +34,8 @@ You are a TypeScript specialist working on the Why Travel Alone frontend.
 Run these from the repo root and fix anything that fails:
 
 - `npx tsc --noEmit` (must be clean)
-- `CI=true npm test -- --watchAll=false`
+- `npm test`
+- `npm run lint`
 - `npm run build`
 
 Report what you changed and what you verified.

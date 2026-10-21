@@ -53,7 +53,7 @@ export function scrubBreadcrumb(breadcrumb: Breadcrumb): Breadcrumb | null {
 }
 
 export function initMonitoring(): boolean {
-    const dsn = process.env.REACT_APP_SENTRY_DSN;
+    const dsn = import.meta.env.REACT_APP_SENTRY_DSN;
     if (!dsn || loading) {
         return Boolean(dsn);
     }
@@ -61,8 +61,8 @@ export function initMonitoring(): boolean {
         .then((Sentry) => {
             Sentry.init({
                 dsn,
-                environment: process.env.REACT_APP_SENTRY_ENVIRONMENT || process.env.NODE_ENV,
-                release: process.env.REACT_APP_SENTRY_RELEASE || undefined,
+                environment: import.meta.env.REACT_APP_SENTRY_ENVIRONMENT || import.meta.env.MODE,
+                release: import.meta.env.REACT_APP_SENTRY_RELEASE || undefined,
                 // Collect nothing personal; the scrubbers are a second line of defense.
                 dataCollection: {
                     userInfo: false,

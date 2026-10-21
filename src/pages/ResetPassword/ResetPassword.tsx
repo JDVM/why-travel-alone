@@ -34,8 +34,8 @@ function ResetPassword() {
         try {
             await resetPassword(token as string, password);
             // Every session was signed out, including this browser's.
-            logout();
-            navigate('/login', { replace: true, state: { passwordReset: true } });
+            logout('Your password has been changed. Log in with your new password.');
+            navigate('/login', { replace: true });
         } catch (err) {
             setError(errorMessage(err, 'Unable to change your password. Please try again.'));
             setSubmitting(false);

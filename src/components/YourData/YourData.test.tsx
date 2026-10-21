@@ -1,16 +1,16 @@
+import type { Mock } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import YourData from './YourData';
 import { deleteAccount, exportAccountData } from '../../api/account';
 
-const mockLogout = jest.fn();
-jest.mock('../../auth/AuthContext', () => ({ useAuth: () => ({ logout: mockLogout }) }));
-jest.mock('../../api/account', () => ({ exportAccountData: jest.fn(), deleteAccount: jest.fn() }));
+const { mockLogout } = vi.hoisted(() => ({ mockLogout: vi.fn() }));
+vi.mock('../../auth/AuthContext', () => ({ useAuth: () => ({ logout: mockLogout }) }));
+vi.mock('../../api/account', () => ({ exportAccountData: vi.fn(), deleteAccount: vi.fn() }));
 
 function LoginPage() {
-    const location = useLocation();
-    return <p>Login page {JSON.stringify(location.state)}</p>;
+    return <p>Login page</p>;
 }
 
 function renderYourData() {
@@ -26,18 +26,18 @@ function renderYourData() {
 
 describe('YourData', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     test('downloads the export as a file', async () => {
-        (exportAccountData as jest.Mock).mockResolvedValue(new Blob(['{}'], { type: 'application/json' }));
-        const createObjectURL = jest.fn(() => 'blob:export');
-        const revokeObjectURL = jest.fn();
+        (exportAccountData as Mock).mockResolvedValue(new Blob(['{}'], { type: 'application/json' }));
+        const createObjectURL = vi.fn(() => 'blob:export');
+        const revokeObjectURL = vi.fn();
         Object.assign(URL, { createObjectURL, revokeObjectURL });
-        const click = jest.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
+        const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
 
         renderYourData();
-        userEvent.click(screen.getByRole('button', { name: 'Download my data' }));
+        await userEvent.click(screen.getByRole('button', { name: 'Download my data' }));
 
         await waitFor(() => expect(click).toHaveBeenCalled());
         expect(createObjectURL).toHaveBeenCalled();
@@ -49,38 +49,38 @@ describe('YourData', () => {
         renderYourData();
         expect(screen.queryByLabelText(/enter your password/i)).not.toBeInTheDocument();
 
-        userEvent.click(screen.getByRole('button', { name: 'Delete my account' }));
+        await userEvent.click(screen.getByRole('button', { name: 'Delete my account' }));
         expect(await screen.findByText(/can't be undone/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/enter your password/i)).toBeRequired();
 
-        userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+        await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
         await waitFor(() => expect(screen.queryByLabelText(/enter your password/i)).not.toBeInTheDocument());
         expect(deleteAccount).not.toHaveBeenCalled();
     });
 
     test('deletes the account, logs out and says so on the login page', async () => {
-        (deleteAccount as jest.Mock).mockResolvedValue(undefined);
+        (deleteAccount as Mock).mockResolvedValue(undefined);
         renderYourData();
 
-        userEvent.click(screen.getByRole('button', { name: 'Delete my account' }));
-        userEvent.type(await screen.findByLabelText(/enter your password/i), 'my-password');
-        userEvent.click(screen.getByRole('button', { name: 'Delete my account permanently' }));
+        await userEvent.click(screen.getByRole('button', { name: 'Delete my account' }));
+        await userEvent.type(await screen.findByLabelText(/enter your password/i), 'my-password');
+        await userEvent.click(screen.getByRole('button', { name: 'Delete my account permanently' }));
 
-        expect(await screen.findByText(/login page/i)).toHaveTextContent('"accountDeleted":true');
+        expect(await screen.findByText(/login page/i)).toBeInTheDocument();
         expect(deleteAccount).toHaveBeenCalledWith('my-password');
-        expect(mockLogout).toHaveBeenCalled();
+        expect(mockLogout).toHaveBeenCalledWith('Your account and its data have been deleted.');
     });
 
     test("shows the API's error and stays signed in when the password is wrong", async () => {
-        (deleteAccount as jest.Mock).mockRejectedValue({
+        (deleteAccount as Mock).mockRejectedValue({
             isAxiosError: true,
             response: { status: 403, data: { error: 'Incorrect password' } },
         });
         renderYourData();
 
-        userEvent.click(screen.getByRole('button', { name: 'Delete my account' }));
-        userEvent.type(await screen.findByLabelText(/enter your password/i), 'wrong');
-        userEvent.click(screen.getByRole('button', { name: 'Delete my account permanently' }));
+        await userEvent.click(screen.getByRole('button', { name: 'Delete my account' }));
+        await userEvent.type(await screen.findByLabelText(/enter your password/i), 'wrong');
+        await userEvent.click(screen.getByRole('button', { name: 'Delete my account permanently' }));
 
         expect(await screen.findByText('Incorrect password')).toBeInTheDocument();
         expect(mockLogout).not.toHaveBeenCalled();

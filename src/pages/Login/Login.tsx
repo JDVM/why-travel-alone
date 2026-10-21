@@ -1,5 +1,5 @@
 import { useState, FormEvent } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../../auth/AuthContext';
 import '../../auth/auth.scss';
@@ -9,10 +9,8 @@ function Login() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [submitting, setSubmitting] = useState(false);
-    const { login } = useAuth();
+    const { login, logoutNotice } = useAuth();
     const navigate = useNavigate();
-    const location = useLocation();
-    const state = location.state as { accountDeleted?: boolean; passwordReset?: boolean } | null;
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -35,14 +33,9 @@ function Login() {
     return (
         <div className="auth">
             <h1 className="auth__title">Log In</h1>
-            {state?.accountDeleted && (
+            {logoutNotice && (
                 <p className="auth__notice" role="status">
-                    Your account and its data have been deleted.
-                </p>
-            )}
-            {state?.passwordReset && (
-                <p className="auth__notice" role="status">
-                    Your password has been changed. Log in with your new password.
+                    {logoutNotice}
                 </p>
             )}
             <form className="auth__form" onSubmit={handleSubmit}>

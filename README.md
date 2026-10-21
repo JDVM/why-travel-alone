@@ -6,14 +6,15 @@ Why Travel Alone is a small passion project that began as my capstone for the Br
 
 ## Technologies
 
-- React
-- JavaScript
+- React, built with Vite
+- TypeScript and JavaScript
 - Axios
 - SASS
 - React Router DOM
 - React Icons
 - Knex
 - MySQL
+- Vitest, React Testing Library and Playwright for tests
 
 ## Setup
 
@@ -22,9 +23,18 @@ Why Travel Alone is a small passion project that began as my capstone for the Br
 1. Clone the repository: `https://github.com/JDVM/why-travel-alone.git`
 2. Install dependencies: `npm ci`
 3. Copy `.env.example` to `.env` and point it at the API
-4. Run the application: `npm start`
+4. Run the application: `npm start` (Vite's development server on http://localhost:3000)
 
-Rendering errors show a "Something went wrong" page instead of a blank screen. Set `REACT_APP_SENTRY_DSN` at build time to report them, and uncaught errors, to Sentry. Reports carry the account id only: no query strings (which can hold one-time tokens), cookies, headers or console arguments. The Sentry SDK is loaded as a separate chunk only when a DSN is set.
+| Command | What it does |
+| --- | --- |
+| `npm start` | Development server with instant reload |
+| `npm run build` | Production build into `build/` |
+| `npm test` | Unit and component tests (Vitest) |
+| `npm run lint` | ESLint, including the rules of hooks and accessibility checks; warnings fail CI |
+| `npm run typecheck` | TypeScript |
+| `npm run e2e` | Browser tests against the full stack (see below) |
+
+Rendering errors show a "Something went wrong" page instead of a blank screen. Set `REACT_APP_SENTRY_DSN` at build time to report them, and uncaught errors, to Sentry. Reports carry the account id only: no query strings (which can hold one-time tokens), cookies, headers or console arguments. Builds without a DSN don't include the Sentry SDK at all; with one, it loads as a separate chunk.
 
 ### Back-end
 

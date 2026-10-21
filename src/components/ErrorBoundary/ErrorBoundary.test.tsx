@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import ErrorBoundary from './ErrorBoundary';
 import { reportError } from '../../monitoring';
 
-jest.mock('../../monitoring', () => ({ reportError: jest.fn() }));
+vi.mock('../../monitoring', () => ({ reportError: vi.fn() }));
 
 function Broken(): JSX.Element {
     throw new Error('boom');
@@ -11,10 +11,10 @@ function Broken(): JSX.Element {
 describe('ErrorBoundary', () => {
     beforeEach(() => {
         // React logs caught render errors; keep the test output readable.
-        jest.spyOn(console, 'error').mockImplementation(() => {});
+        vi.spyOn(console, 'error').mockImplementation(() => {});
     });
     afterEach(() => {
-        jest.restoreAllMocks();
+        vi.restoreAllMocks();
     });
 
     test('renders its children when nothing fails', () => {

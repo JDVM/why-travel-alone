@@ -1,7 +1,7 @@
 import "./TravelerDetails.scss"
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom"
-import backarrow from "../../assets/images/arrow_back-24px.svg";
+import { useParams } from "react-router-dom"
+import BackButton from "../BackButton/BackButton";
 import { picForIndex } from "../../data/profilePics";
 import { getTraveler } from "../../api/travelers";
 import { getTrips, inviteTraveler } from "../../api/trips";
@@ -16,8 +16,6 @@ function TravelerDetails() {
     const [inviteMessage, setInviteMessage] = useState(null);
     const [inviteError, setInviteError] = useState(null);
     const { id } = useParams();
-    const navigate = useNavigate();
-    const goBack = () => navigate(-1);
     const { account } = useAuth();
     const isMe = account && account.traveler && String(account.traveler.user_id) === String(id);
 
@@ -63,7 +61,7 @@ function TravelerDetails() {
         <div className="traveler-details">
             <section className="traveler-details__container">
                 <div className="traveler-details__title-container">
-                    <img src={backarrow} alt="Back arrowkey" onClick={goBack} />
+                    <BackButton />
                     <h1 className="traveler-details__main-title">Traveler Profile</h1>
                 </div>
 

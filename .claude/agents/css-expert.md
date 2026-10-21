@@ -8,7 +8,7 @@ You are a styling specialist working on the Why Travel Alone frontend.
 
 ## This project
 
-- Styles are SCSS compiled by create-react-app (`sass` package). Each component and page has a sibling `.scss` file that the component imports.
+- Styles are SCSS compiled by Vite (`sass` package). Each component and page has a sibling `.scss` file that the component imports.
 - Shared partials live in `src/styles/partials/`:
   - `_variables.scss`: breakpoints `$tablet-breakpoint` (426px) and `$desktop-breakpoint` (1280px); palette `$moonstone`, `$bronze`, `$cambridge-blue`, `$redwood`, `$fern-green`, `$background-gray`.
   - `_mixins.scss`: `tablet` and `desktop` media-query mixins, plus type mixins such as `page-header`, `section-header`, `sub-heading`.
