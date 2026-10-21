@@ -6,6 +6,7 @@ import { getDestinations } from '../../api/destinations';
 import { errorMessage } from '../../api/errors';
 import { Destination, Profile as ProfileData, TypeOfTravel } from '../../types';
 import YourData from '../../components/YourData/YourData';
+import SignedInDevices from '../../components/SignedInDevices/SignedInDevices';
 import './Profile.scss';
 
 // users.special_considerations is a VARCHAR(50).
@@ -217,6 +218,7 @@ function Profile() {
                     {saving ? 'Saving…' : 'Save profile'}
                 </button>
             </form>
+            <SignedInDevices />
             <YourData />
         </>
     );
