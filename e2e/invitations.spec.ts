@@ -38,7 +38,7 @@ test('an owner invites a traveler, who accepts, sees the member view, and leaves
     // Members can view and leave, but not edit or remove anyone, and they
     // don't see the owner's private details.
     await expect(page.getByRole('button', { name: 'Leave trip' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Edit' })).toHaveCount(0);
+    await expect(page.getByRole('link', { name: 'Edit' })).toHaveCount(0);
     await expect(page.locator('.small-traveler-card__button')).toHaveCount(0);
     const ownerCard = page.locator('.small-traveler-card__container', { hasText: owner.name });
     const ownCard = page.locator('.small-traveler-card__container', { hasText: guest.name });

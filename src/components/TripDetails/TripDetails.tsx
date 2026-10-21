@@ -1,12 +1,36 @@
-import "./TripDetails.scss"
-import { useEffect, useState, useCallback } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom"
+import { useEffect, useState, useCallback, ReactNode } from "react";
+import { Link as RouterLink, useParams, useNavigate } from "react-router-dom";
+import {
+    Alert,
+    Box,
+    Button,
+    Container,
+    List,
+    ListItem,
+    ListItemText,
+    Paper,
+    Typography,
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 import SmallTravelerCard from "../SmallTravelerCard/SmallTravelerCard";
-import BackButton from "../BackButton/BackButton";
+import PageHeader from "../PageHeader/PageHeader";
 import { getTrip, removeTraveler, cancelInvitation, leaveTrip } from "../../api/trips";
 import { errorMessage } from "../../api/errors";
 import { useAuth } from "../../auth/AuthContext";
 import { TripDetail } from "../../types";
+
+// One labelled value. The trip-details__text class is what the browser tests
+// read the values by.
+function Detail({ label, children }: { label: string; children: ReactNode }) {
+    return (
+        <Box>
+            <Typography variant="overline" color="text.secondary" component="h3" sx={{ lineHeight: 1.5 }}>
+                {label}
+            </Typography>
+            <Typography className="trip-details__text">{children}</Typography>
+        </Box>
+    );
+}
 
 // A trip you own or are on. Owners can edit it, remove travelers and manage
 // invitations; other travelers can only view it or leave.
@@ -54,14 +78,22 @@ function TripDetails() {
     };
 
     if (error) {
-        return <p>{error}</p>;
+        return (
+            <Container maxWidth="md" sx={{ py: 3 }}>
+                <PageHeader title="Trip Details" back />
+                <Alert severity="error">{error}</Alert>
+            </Container>
+        );
     }
     if (!tripDetails) {
-        return <p>Loading trip data, please wait…</p>;
+        return (
+            <Container maxWidth="md" sx={{ py: 3 }}>
+                <Typography>Loading trip data, please wait…</Typography>
+            </Container>
+        );
     }
 
     const isOwner = tripDetails.is_owner;
-    const kidFriendly = tripDetails.kid_friendly ? "Yes" : "No";
     const travelersForThisTrip = tripDetails.users;
     const removableIds = isOwner
         ? travelersForThisTrip.map((traveler) => traveler.user_id).filter((userId) => userId !== myTravelerId)
@@ -69,82 +101,79 @@ function TripDetails() {
     const invitations = tripDetails.invitations ?? [];
 
     return (
-        <div className="trip-details">
-            <div className="trip-details__container">
-                <div className="trip-details__title-container">
-                    <BackButton />
-                    <h1 className="trip-details__main-title">Trip Details</h1>
-                </div>
-                <div className="trip-details__information-container">
-                    <div className="trip-details__information">
-                        <h3 className="trip-details__title">Trip Name</h3>
-                        <p className="trip-details__text">{tripDetails.trip_name}</p>
-                    </div>
-                    <div className="trip-details__information">
-                        <h4 className="trip-details__title">Trip Duration</h4>
-                        <p className="trip-details__text">{tripDetails.trip_length} days</p>
-                    </div>
-                    <div className="trip-details__information">
-                        <h4 className="trip-details__title">Destination</h4>
-                        <p className="trip-details__text">{tripDetails.destination}</p>
-                    </div>
-                    <div className="trip-details__information">
-                        <label htmlFor="kid-friendly" className="trip-details__title">Kid Friendly</label>
-                        <p id="kid-friendly" className="trip-details__text">{kidFriendly}</p>
-                    </div>
-                    <div className="trips-card__information--description">
-                        <h3 className="trip-details__title">Trip Description</h3>
-                        <p className="trip-details__text">{tripDetails.notes}</p>
-                    </div>
-                </div>
-                {isOwner ? (
-                    <Link className="trip-details__button-container" to={`/Trips/${id}/edit`}>
-                        <button className="trip-details__button">Edit</button>
-                    </Link>
-                ) : (
-                    <div className="trip-details__button-container">
-                        <button className="trip-details__button" type="button" onClick={handleLeave}>Leave trip</button>
-                    </div>
+        <Container maxWidth="md" sx={{ py: 3 }}>
+            <PageHeader
+                title="Trip Details"
+                back
+                actions={
+                    isOwner ? (
+                        <Button variant="contained" component={RouterLink} to={`/Trips/${id}/edit`} startIcon={<EditIcon />}>
+                            Edit
+                        </Button>
+                    ) : (
+                        <Button variant="outlined" color="error" onClick={handleLeave}>
+                            Leave trip
+                        </Button>
+                    )
+                }
+            />
+            <Paper variant="outlined" sx={{ p: { xs: 2, sm: 3 }, mb: 3 }}>
+                <Box sx={{ display: "grid", gap: 2, gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)" } }}>
+                    <Detail label="Trip Name">{tripDetails.trip_name}</Detail>
+                    <Detail label="Trip Duration">{tripDetails.trip_length} days</Detail>
+                    <Detail label="Destination">{tripDetails.destination}</Detail>
+                    <Detail label="Kid Friendly">{tripDetails.kid_friendly ? "Yes" : "No"}</Detail>
+                </Box>
+                {tripDetails.notes && (
+                    <Box sx={{ mt: 2 }}>
+                        <Detail label="Trip Description">{tripDetails.notes}</Detail>
+                    </Box>
                 )}
-                {actionError && <p className="trip-details__error">{actionError}</p>}
-            </div>
+            </Paper>
+            {actionError && <Alert severity="error" sx={{ mb: 3 }}>{actionError}</Alert>}
 
             {isOwner && invitations.length > 0 && (
-                <section className="trip-details__invitations">
-                    <h2 className="trip-details__title">Invitations</h2>
-                    <ul className="trip-details__invitation-list">
-                        {invitations.map((invitation) => (
-                            <li className="trip-details__invitation" key={invitation.user_id}>
-                                <span>{invitation.first_name} {invitation.last_name}</span>
-                                {invitation.status === "pending" ? (
-                                    <>
-                                        <span className="trip-details__invitation-status">Waiting for a reply</span>
-                                        <button
-                                            className="trip-details__invitation-cancel"
-                                            type="button"
-                                            onClick={() => act(() => cancelInvitation(id, invitation.user_id), "Unable to cancel the invitation.")}
-                                        >
-                                            Cancel
-                                        </button>
-                                    </>
-                                ) : (
-                                    <span className="trip-details__invitation-status">Declined</span>
-                                )}
-                            </li>
-                        ))}
-                    </ul>
-                </section>
+                <Box component="section" sx={{ mb: 3 }}>
+                    <Typography component="h2" variant="h6" sx={{ fontWeight: 700, mb: 1 }}>Invitations</Typography>
+                    <Paper variant="outlined">
+                        <List disablePadding>
+                            {invitations.map((invitation, index) => (
+                                <ListItem
+                                    key={invitation.user_id}
+                                    className="trip-details__invitation"
+                                    divider={index < invitations.length - 1}
+                                    secondaryAction={
+                                        invitation.status === "pending" && (
+                                            <Button
+                                                size="small"
+                                                onClick={() => act(() => cancelInvitation(id, invitation.user_id), "Unable to cancel the invitation.")}
+                                            >
+                                                Cancel
+                                            </Button>
+                                        )
+                                    }
+                                >
+                                    <ListItemText
+                                        primary={`${invitation.first_name} ${invitation.last_name}`}
+                                        secondary={invitation.status === "pending" ? "Waiting for a reply" : "Declined"}
+                                    />
+                                </ListItem>
+                            ))}
+                        </List>
+                    </Paper>
+                </Box>
             )}
 
-            <section>
+            <Box component="section">
+                <Typography component="h2" variant="h6" sx={{ fontWeight: 700, mb: 1 }}>Travelers</Typography>
                 <SmallTravelerCard
                     travelers={travelersForThisTrip}
                     removableIds={removableIds}
                     onRemove={(traveler) => act(() => removeTraveler(id, traveler.user_id), "Unable to remove the traveler.")}
                 />
-            </section>
-        </div>
-    )
+            </Box>
+        </Container>
+    );
 }
 
 export default TripDetails;

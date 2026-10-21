@@ -1,16 +1,14 @@
 import { useNavigate } from 'react-router-dom';
-import backarrow from '../../assets/images/arrow_back-24px.svg';
-import './BackButton.scss';
+import { IconButton } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-// Goes back to the previous page. A real button, so it works with the
-// keyboard and screen readers (the arrow image used to be clickable only with
-// a mouse).
+// Goes back to the previous page.
 function BackButton() {
     const navigate = useNavigate();
     return (
-        <button type="button" className="back-button" onClick={() => navigate(-1)} aria-label="Go back">
-            <img className="back-button__icon" src={backarrow} alt="" />
-        </button>
+        <IconButton onClick={() => navigate(-1)} aria-label="Go back" edge="start">
+            <ArrowBackIcon />
+        </IconButton>
     );
 }
 
