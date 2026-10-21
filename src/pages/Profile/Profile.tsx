@@ -1,5 +1,18 @@
-import { useEffect, useState, FormEvent } from 'react';
+import { useEffect, useState, FormEvent, ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
+import {
+    Alert,
+    Autocomplete,
+    Box,
+    Button,
+    Checkbox,
+    Container,
+    FormControlLabel,
+    Paper,
+    Stack,
+    TextField,
+    Typography,
+} from '@mui/material';
 import { useAuth } from '../../auth/AuthContext';
 import { getProfile, updateProfile, getTypesOfTravel } from '../../api/profile';
 import { getDestinations } from '../../api/destinations';
@@ -7,7 +20,7 @@ import { errorMessage } from '../../api/errors';
 import { Destination, Profile as ProfileData, TypeOfTravel } from '../../types';
 import YourData from '../../components/YourData/YourData';
 import SignedInDevices from '../../components/SignedInDevices/SignedInDevices';
-import './Profile.scss';
+import PageHeader from '../../components/PageHeader/PageHeader';
 
 // users.special_considerations is a VARCHAR(50).
 const SPECIAL_CONSIDERATIONS_MAX = 50;
@@ -93,134 +106,141 @@ function Profile() {
     };
 
     if (!form) {
-        return <p className="profile__status">{error ?? 'Loading your profile…'}</p>;
+        return (
+            <Container maxWidth="md" sx={{ py: 3 }}>
+                <PageHeader title="Your traveler profile" />
+                {error ? <Alert severity="error">{error}</Alert> : <Typography>Loading your profile…</Typography>}
+            </Container>
+        );
     }
 
-    const selectedPlaces = destinations
-        .filter((destination) => form.preferred_destination_ids.includes(destination.id))
-        .map((destination) => destination.place);
+    const selectedDestinations = destinations.filter((destination) => form.preferred_destination_ids.includes(destination.id));
 
     return (
-        <>
-            <form className="profile" onSubmit={handleSubmit}>
-                <h1 className="profile__title">Your traveler profile</h1>
-                {welcome && (
-                    <p className="profile__note">
-                        Welcome! Add a few details so other travelers know how you like to travel. You can change them any time.
-                    </p>
-                )}
-
-                <label className="profile__label" htmlFor="first_name">
-                    First name
-                    <input
-                        id="first_name"
-                        className="profile__input"
-                        value={form.first_name}
-                        onChange={(e) => update({ first_name: e.target.value })}
-                        maxLength={255}
-                        required
-                    />
-                </label>
-                <label className="profile__label" htmlFor="last_name">
-                    Last name
-                    <input
-                        id="last_name"
-                        className="profile__input"
-                        value={form.last_name}
-                        onChange={(e) => update({ last_name: e.target.value })}
-                        maxLength={255}
-                        required
-                    />
-                </label>
-                <label className="profile__label" htmlFor="type_of_travel">
-                    Travel style
-                    <select
+        <Container maxWidth="md" sx={{ py: 3 }}>
+            <PageHeader title="Your traveler profile" />
+            {welcome && (
+                <Alert severity="info" sx={{ mb: 3 }}>
+                    Welcome! Add a few details so other travelers know how you like to travel. You can change them any time.
+                </Alert>
+            )}
+            <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <Section title="About you">
+                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                        <TextField
+                            id="first_name"
+                            label="First name"
+                            value={form.first_name}
+                            onChange={(e) => update({ first_name: e.target.value })}
+                            fullWidth
+                            slotProps={{ htmlInput: { required: true, maxLength: 255 } }}
+                        />
+                        <TextField
+                            id="last_name"
+                            label="Last name"
+                            value={form.last_name}
+                            onChange={(e) => update({ last_name: e.target.value })}
+                            fullWidth
+                            slotProps={{ htmlInput: { required: true, maxLength: 255 } }}
+                        />
+                    </Stack>
+                    <TextField
                         id="type_of_travel"
-                        className="profile__input"
+                        select
+                        label="Travel style"
                         value={form.type_of_travel_id}
                         onChange={(e) => update({ type_of_travel_id: e.target.value })}
+                        slotProps={{ select: { native: true }, inputLabel: { shrink: true } }}
                     >
                         <option value="">Not set</option>
                         {types.map((type) => (
                             <option key={type.id} value={type.id}>{type.type_of_travel}</option>
                         ))}
-                    </select>
-                </label>
-
-                <fieldset className="profile__private">
-                    <legend className="profile__legend">Private details</legend>
-                    <p className="profile__hint">
-                        Only you, and the owners of trips you join, can see these.
-                    </p>
-                    <label className="profile__checkbox" htmlFor="has_kids">
-                        <input
-                            id="has_kids"
-                            type="checkbox"
-                            checked={form.has_kids}
-                            onChange={(e) => update({ has_kids: e.target.checked })}
-                        />
-                        I travel with kids
-                    </label>
-                    <label className="profile__label" htmlFor="special_considerations">
-                        Special considerations
-                        <input
-                            id="special_considerations"
-                            className="profile__input"
-                            value={form.special_considerations}
-                            onChange={(e) => update({ special_considerations: e.target.value })}
-                            maxLength={SPECIAL_CONSIDERATIONS_MAX}
-                            placeholder="e.g. vegetarian, step-free access"
-                        />
-                    </label>
-                    <label className="profile__checkbox profile__consent" htmlFor="special_considerations_consent">
-                        <input
-                            id="special_considerations_consent"
-                            type="checkbox"
-                            checked={form.special_considerations_consent}
-                            onChange={(e) => update({ special_considerations_consent: e.target.checked })}
-                            required={form.special_considerations.trim() !== ''}
-                        />
-                        <span>
-                            I agree to Why Travel Alone storing my special considerations, which may include health
-                            information, and showing them only to me and the owners of trips I join. To withdraw, clear
-                            the field and save.
-                        </span>
-                    </label>
-                </fieldset>
-
-                <label className="profile__label" htmlFor="destinations">
-                    Preferred destinations
-                    <select
-                        id="destinations"
-                        className="profile__input"
+                    </TextField>
+                    <Autocomplete
                         multiple
-                        size={8}
-                        value={form.preferred_destination_ids.map(String)}
-                        onChange={(e) =>
-                            update({
-                                preferred_destination_ids: Array.from(e.target.selectedOptions, (option) => Number(option.value)),
-                            })
-                        }
-                    >
-                        {destinations.map((destination) => (
-                            <option key={destination.id} value={destination.id}>{destination.place}</option>
-                        ))}
-                    </select>
-                </label>
-                <p className="profile__hint">
-                    Hold Ctrl (Cmd on a Mac) to choose several.
-                    {selectedPlaces.length > 0 && ` Selected: ${selectedPlaces.join(', ')}.`}
-                </p>
+                        id="destinations"
+                        options={destinations}
+                        value={selectedDestinations}
+                        onChange={(_, chosen) => update({ preferred_destination_ids: chosen.map((destination) => destination.id) })}
+                        getOptionLabel={(destination) => destination.place}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                        filterSelectedOptions
+                        renderInput={(params) => (
+                            <TextField {...params} label="Preferred destinations" placeholder="Type to search" />
+                        )}
+                    />
+                </Section>
 
-                {error && <p className="profile__error">{error}</p>}
-                {saved && <p className="profile__saved">Profile saved.</p>}
-                <button className="profile__button" type="submit" disabled={saving}>
-                    {saving ? 'Saving…' : 'Save profile'}
-                </button>
-            </form>
-            <SignedInDevices />
-            <YourData />
-        </>
+                <Section
+                    title="Private details"
+                    hint="Only you, and the owners of trips you join, can see these."
+                >
+                    <FormControlLabel
+                        label="I travel with kids"
+                        control={
+                            <Checkbox
+                                id="has_kids"
+                                checked={form.has_kids}
+                                onChange={(e) => update({ has_kids: e.target.checked })}
+                            />
+                        }
+                    />
+                    <TextField
+                        id="special_considerations"
+                        label="Special considerations"
+                        value={form.special_considerations}
+                        onChange={(e) => update({ special_considerations: e.target.value })}
+                        placeholder="e.g. vegetarian, step-free access"
+                        helperText={`${form.special_considerations.length}/${SPECIAL_CONSIDERATIONS_MAX}`}
+                        slotProps={{ htmlInput: { maxLength: SPECIAL_CONSIDERATIONS_MAX } }}
+                    />
+                    <FormControlLabel
+                        sx={{ alignItems: 'flex-start', '& .MuiCheckbox-root': { pt: 0 } }}
+                        label={
+                            <Typography variant="body2">
+                                I agree to Why Travel Alone storing my special considerations, which may include health
+                                information, and showing them only to me and the owners of trips I join. To withdraw, clear
+                                the field and save.
+                            </Typography>
+                        }
+                        control={
+                            <Checkbox
+                                id="special_considerations_consent"
+                                checked={form.special_considerations_consent}
+                                onChange={(e) => update({ special_considerations_consent: e.target.checked })}
+                                slotProps={{ input: { required: form.special_considerations.trim() !== '' } }}
+                            />
+                        }
+                    />
+                </Section>
+
+                {error && <Alert severity="error">{error}</Alert>}
+                {saved && <Alert severity="success">Profile saved.</Alert>}
+                <Box>
+                    <Button variant="contained" size="large" type="submit" disabled={saving}>
+                        {saving ? 'Saving…' : 'Save profile'}
+                    </Button>
+                </Box>
+            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 4 }}>
+                <SignedInDevices />
+                <YourData />
+            </Box>
+        </Container>
+    );
+}
+
+// A titled card grouping related fields.
+function Section({ title, hint, children }: { title: string; hint?: string; children: ReactNode }) {
+    return (
+        <Paper variant="outlined" sx={{ p: { xs: 2, sm: 3 }, display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Box>
+                <Typography component="h2" variant="h6" sx={{ fontWeight: 700 }}>{title}</Typography>
+                {hint && <Typography variant="body2" color="text.secondary">{hint}</Typography>}
+            </Box>
+            {children}
+        </Paper>
     );
 }
 

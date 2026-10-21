@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Alert, Box, Button, Card, CardActions, CardContent, Chip, Container, Paper, Stack, Typography } from '@mui/material';
+import PlaceIcon from '@mui/icons-material/Place';
+import PageHeader from '../../components/PageHeader/PageHeader';
 import { getInvitations, acceptInvitation, declineInvitation } from '../../api/invitations';
 import { errorMessage } from '../../api/errors';
 import { ReceivedInvitation } from '../../types';
-import './Invitations.scss';
 
 function Invitations() {
     const [invitations, setInvitations] = useState<ReceivedInvitation[] | null>(null);
@@ -44,42 +46,54 @@ function Invitations() {
         load();
     };
 
+    let content;
     if (!invitations) {
-        return <p className="invitations__status">{error ?? 'Loading invitations…'}</p>;
+        content = error ? <Alert severity="error">{error}</Alert> : <Typography>Loading invitations…</Typography>;
+    } else if (invitations.length === 0) {
+        content = (
+            <Paper variant="outlined" sx={{ p: 4, textAlign: 'center' }}>
+                <Typography>You have no invitations right now.</Typography>
+            </Paper>
+        );
+    } else {
+        content = (
+            <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' } }}>
+                {invitations.map((invitation) => {
+                    const owner = [invitation.owner_first_name, invitation.owner_last_name].filter(Boolean).join(' ');
+                    return (
+                        <Card key={invitation.invitation_id} variant="outlined" className="invitations__card">
+                            <CardContent>
+                                <Typography component="h2" variant="h6" sx={{ fontWeight: 700 }}>
+                                    {invitation.trip_name}
+                                </Typography>
+                                {owner && (
+                                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+                                        Invited by {owner}
+                                    </Typography>
+                                )}
+                                <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', rowGap: 1 }}>
+                                    {invitation.destination && <Chip icon={<PlaceIcon />} label={invitation.destination} size="small" />}
+                                    <Chip label={`${invitation.trip_length} days`} size="small" />
+                                    {invitation.kid_friendly && <Chip label="Kid friendly" size="small" variant="outlined" />}
+                                </Stack>
+                            </CardContent>
+                            <CardActions sx={{ justifyContent: 'flex-end', px: 2, pb: 2 }}>
+                                <Button onClick={() => decline(invitation)}>Decline</Button>
+                                <Button variant="contained" onClick={() => accept(invitation)}>Accept</Button>
+                            </CardActions>
+                        </Card>
+                    );
+                })}
+            </Box>
+        );
     }
 
     return (
-        <div className="invitations">
-            <h1 className="invitations__title">Invitations</h1>
-            {error && <p className="invitations__error">{error}</p>}
-            {invitations.length === 0 ? (
-                <p className="invitations__empty">You have no invitations right now.</p>
-            ) : (
-                <ul className="invitations__list">
-                    {invitations.map((invitation) => {
-                        const owner = [invitation.owner_first_name, invitation.owner_last_name].filter(Boolean).join(' ');
-                        return (
-                            <li className="invitations__card" key={invitation.invitation_id}>
-                                <h2 className="invitations__trip">{invitation.trip_name}</h2>
-                                <p className="invitations__details">
-                                    {invitation.destination} · {invitation.trip_length} days
-                                    {invitation.kid_friendly ? ' · Kid friendly' : ''}
-                                </p>
-                                {owner && <p className="invitations__from">Invited by {owner}</p>}
-                                <div className="invitations__actions">
-                                    <button className="invitations__accept" type="button" onClick={() => accept(invitation)}>
-                                        Accept
-                                    </button>
-                                    <button className="invitations__decline" type="button" onClick={() => decline(invitation)}>
-                                        Decline
-                                    </button>
-                                </div>
-                            </li>
-                        );
-                    })}
-                </ul>
-            )}
-        </div>
+        <Container maxWidth="lg" sx={{ py: 3 }}>
+            <PageHeader title="Invitations" />
+            {invitations && error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+            {content}
+        </Container>
     );
 }
 

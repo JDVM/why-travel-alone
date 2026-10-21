@@ -1,6 +1,6 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
+import { Button, Container, Link, Stack, Typography } from '@mui/material';
 import { reportError } from '../../monitoring';
-import './ErrorBoundary.scss';
 
 interface ErrorBoundaryProps {
     children: ReactNode;
@@ -30,20 +30,20 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
             return this.props.children;
         }
         return (
-            <section className="error-boundary" role="alert">
-                <h1 className="error-boundary__title">Something went wrong</h1>
-                <p className="error-boundary__text">
+            <Container maxWidth="sm" sx={{ py: 6 }} role="alert">
+                <Typography component="h1" variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
+                    Something went wrong
+                </Typography>
+                <Typography sx={{ mb: 3 }}>
                     This page hit an unexpected error. It has been reported. Reloading usually fixes it.
-                </p>
-                <div className="error-boundary__actions">
-                    <button type="button" className="error-boundary__button" onClick={() => window.location.reload()}>
+                </Typography>
+                <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
+                    <Button variant="contained" onClick={() => window.location.reload()}>
                         Reload page
-                    </button>
-                    <a className="error-boundary__link" href="/">
-                        Go to the home page
-                    </a>
-                </div>
-            </section>
+                    </Button>
+                    <Link href="/">Go to the home page</Link>
+                </Stack>
+            </Container>
         );
     }
 }

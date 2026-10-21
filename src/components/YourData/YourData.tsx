@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import { exportAccountData, deleteAccount } from '../../api/account';
 import { errorMessage } from '../../api/errors';
-import './YourData.scss';
+import { Alert, Box, Button, Paper, Stack, TextField, Typography } from '@mui/material';
 
 // Saves a Blob as a file through a temporary link.
 function saveFile(blob: Blob, filename: string) {
@@ -65,64 +65,56 @@ function YourData() {
     };
 
     return (
-        <section className="your-data" aria-labelledby="your-data-title">
-            <h2 id="your-data-title" className="your-data__title">Your data</h2>
-
-            <p className="your-data__text">
-                Download a copy of everything Why Travel Alone stores about you, as a JSON file.
-            </p>
-            <button
-                type="button"
-                className="your-data__button"
-                onClick={handleDownload}
-                disabled={downloading}
-            >
+        <Paper
+            component="section"
+            variant="outlined"
+            aria-labelledby="your-data-title"
+            sx={{ p: { xs: 2, sm: 3 }, display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'flex-start' }}
+        >
+            <Typography id="your-data-title" component="h2" variant="h6" sx={{ fontWeight: 700 }}>
+                Your data
+            </Typography>
+            <Typography>Download a copy of everything Why Travel Alone stores about you, as a JSON file.</Typography>
+            <Button variant="outlined" onClick={handleDownload} disabled={downloading}>
                 {downloading ? 'Preparing download…' : 'Download my data'}
-            </button>
-            {downloadError && <p className="your-data__error">{downloadError}</p>}
+            </Button>
+            {downloadError && <Alert severity="error">{downloadError}</Alert>}
 
             {!confirming ? (
-                <button
-                    type="button"
-                    className="your-data__button your-data__button--danger"
-                    onClick={() => setConfirming(true)}
-                >
+                <Button variant="outlined" color="error" onClick={() => setConfirming(true)}>
                     Delete my account
-                </button>
+                </Button>
             ) : (
-                <form className="your-data__confirm" onSubmit={handleDelete}>
-                    <p className="your-data__warning">
+                <Box
+                    component="form"
+                    onSubmit={handleDelete}
+                    sx={{ alignSelf: 'stretch', display: 'flex', flexDirection: 'column', gap: 2, p: 2, border: 1, borderColor: 'error.main', borderRadius: 1 }}
+                >
+                    <Alert severity="warning">
                         This permanently deletes your account, your profile and the trips you own. Travelers on
                         your trips lose access to them. Trips you joined continue without you. This can't be undone.
-                    </p>
-                    <label className="your-data__label" htmlFor="delete-password">
-                        Enter your password to confirm
-                        <input
-                            id="delete-password"
-                            className="your-data__input"
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            autoComplete="current-password"
-                            required
-                        />
-                    </label>
-                    {deleteError && <p className="your-data__error">{deleteError}</p>}
-                    <div className="your-data__actions">
-                        <button
-                            type="submit"
-                            className="your-data__button your-data__button--danger"
-                            disabled={deleting}
-                        >
+                    </Alert>
+                    <TextField
+                        id="delete-password"
+                        label="Enter your password to confirm"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        autoComplete="current-password"
+                        slotProps={{ htmlInput: { required: true } }}
+                    />
+                    {deleteError && <Alert severity="error">{deleteError}</Alert>}
+                    <Stack direction="row" spacing={2}>
+                        <Button type="submit" variant="contained" color="error" disabled={deleting}>
                             {deleting ? 'Deleting…' : 'Delete my account permanently'}
-                        </button>
-                        <button type="button" className="your-data__link" onClick={cancelDelete} disabled={deleting}>
+                        </Button>
+                        <Button onClick={cancelDelete} disabled={deleting}>
                             Cancel
-                        </button>
-                    </div>
-                </form>
+                        </Button>
+                    </Stack>
+                </Box>
             )}
-        </section>
+        </Paper>
     );
 }
 

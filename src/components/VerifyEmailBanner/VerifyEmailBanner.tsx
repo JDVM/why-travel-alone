@@ -1,8 +1,8 @@
 import { useState } from 'react';
+import { Alert, Button, Typography } from '@mui/material';
 import { useAuth } from '../../auth/AuthContext';
 import { resendVerification } from '../../api/auth';
 import { errorMessage } from '../../api/errors';
-import './VerifyEmailBanner.scss';
 
 // Reminds signed-in users with an unconfirmed email address to confirm it,
 // since inviting and joining trips needs a confirmed address.
@@ -33,17 +33,25 @@ function VerifyEmailBanner() {
     };
 
     return (
-        <div className="verify-banner" role="status">
-            <p className="verify-banner__text">
+        <Alert
+            severity="warning"
+            role="status"
+            className="verify-banner"
+            square
+            sx={{ justifyContent: 'center', alignItems: 'center' }}
+            action={
+                <Button color="inherit" size="small" variant="outlined" onClick={handleResend} disabled={sending}>
+                    {sending ? 'Sending…' : 'Send a new link'}
+                </Button>
+            }
+        >
+            <Typography variant="body2">
                 Confirm your email address to invite travelers and join trips. We sent a link to{' '}
                 <strong>{account.email}</strong>.
-            </p>
-            <button type="button" className="verify-banner__button" onClick={handleResend} disabled={sending}>
-                {sending ? 'Sending…' : 'Send a new link'}
-            </button>
-            {message && <p className="verify-banner__text">{message}</p>}
-            {error && <p className="verify-banner__error">{error}</p>}
-        </div>
+            </Typography>
+            {message && <Typography variant="body2">{message}</Typography>}
+            {error && <Typography variant="body2" color="error">{error}</Typography>}
+        </Alert>
     );
 }
 
