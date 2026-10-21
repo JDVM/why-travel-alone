@@ -1,8 +1,9 @@
 import { useState, FormEvent } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Button, TextField } from '@mui/material';
 import { useAuth } from '../../auth/AuthContext';
-import '../../auth/auth.scss';
+import { AuthError, AuthForm, AuthLink, AuthNotice, AuthPage, AuthSwitch } from '../../auth/AuthPage';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -31,50 +32,39 @@ function Login() {
     };
 
     return (
-        <div className="auth">
-            <h1 className="auth__title">Log In</h1>
-            {logoutNotice && (
-                <p className="auth__notice" role="status">
-                    {logoutNotice}
-                </p>
-            )}
-            <form className="auth__form" onSubmit={handleSubmit}>
-                <label className="auth__label" htmlFor="email">
-                    Email
-                    <input
-                        id="email"
-                        className="auth__input"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        autoComplete="email"
-                        required
-                    />
-                </label>
-                <label className="auth__label" htmlFor="password">
-                    Password
-                    <input
-                        id="password"
-                        className="auth__input"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        autoComplete="current-password"
-                        required
-                    />
-                </label>
-                {error && <p className="auth__error">{error}</p>}
-                <button className="auth__button" type="submit" disabled={submitting}>
+        <AuthPage title="Log In">
+            {logoutNotice && <AuthNotice>{logoutNotice}</AuthNotice>}
+            <AuthForm onSubmit={handleSubmit}>
+                <TextField
+                    id="email"
+                    label="Email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    autoComplete="email"
+                    slotProps={{ htmlInput: { required: true } }}
+                />
+                <TextField
+                    id="password"
+                    label="Password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    autoComplete="current-password"
+                    slotProps={{ htmlInput: { required: true } }}
+                />
+                {error && <AuthError>{error}</AuthError>}
+                <Button variant="contained" size="large" type="submit" disabled={submitting}>
                     {submitting ? 'Logging in…' : 'Log In'}
-                </button>
-            </form>
-            <p className="auth__switch">
-                <Link to="/forgot-password">Forgot your password?</Link>
-            </p>
-            <p className="auth__switch">
-                Need an account? <Link to="/register">Register</Link>
-            </p>
-        </div>
+                </Button>
+            </AuthForm>
+            <AuthSwitch>
+                <AuthLink to="/forgot-password">Forgot your password?</AuthLink>
+            </AuthSwitch>
+            <AuthSwitch>
+                Need an account? <AuthLink to="/register">Register</AuthLink>
+            </AuthSwitch>
+        </AuthPage>
     );
 }
 

@@ -1,10 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { CacheProvider } from '@emotion/react';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import './index.css';
 import App from './App';
 import { AuthProvider } from './auth/AuthContext';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import { initMonitoring } from './monitoring';
+import theme from './theme';
+import { createStyleCache } from './styleCache';
 
 initMonitoring();
 
@@ -15,10 +19,15 @@ if (!container) {
 
 ReactDOM.createRoot(container).render(
   <React.StrictMode>
-    <ErrorBoundary>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </ErrorBoundary>
+    <CacheProvider value={createStyleCache()}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <ErrorBoundary>
+          <AuthProvider>
+            <App />
+          </AuthProvider>
+        </ErrorBoundary>
+      </ThemeProvider>
+    </CacheProvider>
   </React.StrictMode>
 );

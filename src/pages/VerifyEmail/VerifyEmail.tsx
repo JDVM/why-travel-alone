@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Typography } from '@mui/material';
 import { useAuth } from '../../auth/AuthContext';
 import { useLinkToken } from '../../auth/useLinkToken';
 import { verifyEmail } from '../../api/auth';
 import { errorMessage } from '../../api/errors';
-import '../../auth/auth.scss';
+import { AuthError, AuthLink, AuthNotice, AuthPage, AuthSwitch } from '../../auth/AuthPage';
 
 type Status = 'verifying' | 'verified' | 'failed';
 
@@ -42,30 +42,27 @@ function VerifyEmail() {
     }, [status, isAuthenticated, refreshAccount]);
 
     return (
-        <div className="auth">
-            <h1 className="auth__title">Confirm your email</h1>
-            {status === 'verifying' && <p role="status">Confirming your email address…</p>}
+        <AuthPage title="Confirm your email">
+            {status === 'verifying' && <Typography role="status">Confirming your email address…</Typography>}
             {status === 'verified' && (
                 <>
-                    <p className="auth__notice" role="status">
-                        Thanks, your email address is confirmed.
-                    </p>
-                    <p className="auth__switch">
-                        {isAuthenticated ? <Link to="/Trips">Go to your trips</Link> : <Link to="/login">Log in</Link>}
-                    </p>
+                    <AuthNotice>Thanks, your email address is confirmed.</AuthNotice>
+                    <AuthSwitch>
+                        {isAuthenticated ? <AuthLink to="/Trips">Go to your trips</AuthLink> : <AuthLink to="/login">Log in</AuthLink>}
+                    </AuthSwitch>
                 </>
             )}
             {status === 'failed' && (
                 <>
-                    <p className="auth__error">{error}</p>
-                    <p className="auth__switch">
+                    <AuthError>{error}</AuthError>
+                    <AuthSwitch>
                         {isAuthenticated
                             ? 'Use "Send a new link" at the top of the page to get another one.'
-                            : <>Log in to get a new link. <Link to="/login">Log in</Link></>}
-                    </p>
+                            : <>Log in to get a new link. <AuthLink to="/login">Log in</AuthLink></>}
+                    </AuthSwitch>
                 </>
             )}
-        </div>
+        </AuthPage>
     );
 }
 

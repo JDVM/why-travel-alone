@@ -1,19 +1,36 @@
 import { useEffect, useState } from "react";
-import "./Header.scss";
-import logo from "../../assets/Logo/plain-logo.svg"
-import { Link, NavLink, NavLinkProps, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
+import logo from "../../assets/Logo/plain-logo.svg";
 import { useAuth } from "../../auth/AuthContext";
+import { brand } from "../../theme";
 
-// NavLink's className accepts a function of the active state; the previous code
-// interpolated that function into a template string, so the active class was
-// never applied. This returns the class string directly.
-const navClass: NavLinkProps["className"] = ({ isActive }) => (isActive ? "header__links active" : "header__links");
+const MEMBER_LINKS = [
+    { to: "/Travelers", label: "Travelers" },
+    { to: "/Trips", label: "Trips" },
+    { to: "/new", label: "New Trip" },
+    { to: "/invitations", label: "Invitations" },
+    { to: "/profile", label: "Profile" },
+];
+
+const GUEST_LINKS = [
+    { to: "/login", label: "Log In" },
+    { to: "/register", label: "Register" },
+];
+
+// NavLink marks the current page with the "active" class.
+const navButtonSx = {
+    color: "inherit",
+    justifyContent: { xs: "flex-start", md: "center" },
+    "&.active": { bgcolor: brand.fernGreen, color: "#fff" },
+} as const;
 
 function Header() {
     const { isAuthenticated, account, logout } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
-    // On phones the signed-in links fold into a menu, opened with a button.
+    // Below the md breakpoint the signed-in links fold into a menu, opened
+    // with a button.
     const [menuOpen, setMenuOpen] = useState(false);
 
     // Close the menu after following a link.
@@ -26,72 +43,66 @@ function Header() {
         navigate("/login");
     };
 
+    const links = isAuthenticated ? MEMBER_LINKS : GUEST_LINKS;
+    const accountName = account?.traveler
+        ? `${account.traveler.first_name} ${account.traveler.last_name}`
+        : account?.email;
+
     return (
-        <header className="header">
-            <div className="header__container">
-                <div className="header__title-container">
-                    <Link to={"/Travelers"}><img className="header__logo" src={logo} alt="Why Travel Alone logo" /></Link>
-                    <h1 className="header__title">Why Travel Alone</h1>
-                    {isAuthenticated && (
-                        <button
-                            type="button"
-                            className="header__menu-button"
-                            aria-expanded={menuOpen}
-                            aria-controls="site-nav"
-                            onClick={() => setMenuOpen((open) => !open)}
-                        >
-                            {menuOpen ? "Close" : "Menu"}
-                        </button>
-                    )}
-                </div>
-                <nav
+        <AppBar position="static" elevation={0} sx={{ bgcolor: brand.moonstone, color: brand.textDark }}>
+            <Toolbar sx={{ flexWrap: "wrap", gap: 1, py: 1 }}>
+                <Link to="/Travelers">
+                    <Box component="img" src={logo} alt="Why Travel Alone logo" sx={{ display: "block", width: { xs: 32, md: 48 } }} />
+                </Link>
+                <Typography component="h1" variant="h6" sx={{ fontWeight: 700 }}>
+                    Why Travel Alone
+                </Typography>
+                {isAuthenticated && (
+                    <Button
+                        variant="outlined"
+                        color="inherit"
+                        size="small"
+                        aria-expanded={menuOpen}
+                        aria-controls="site-nav"
+                        onClick={() => setMenuOpen((open) => !open)}
+                        sx={{ ml: "auto", display: { md: "none" } }}
+                    >
+                        {menuOpen ? "Close" : "Menu"}
+                    </Button>
+                )}
+                <Box
+                    component="nav"
                     id="site-nav"
                     aria-label="Main"
-                    className={`header__nav${isAuthenticated ? " header__nav--member" : ""}${menuOpen ? " header__nav--open" : ""}`}
+                    sx={{
+                        display: { xs: isAuthenticated && !menuOpen ? "none" : "flex", md: "flex" },
+                        flexDirection: { xs: isAuthenticated ? "column" : "row", md: "row" },
+                        alignItems: { xs: "stretch", md: "center" },
+                        gap: 0.5,
+                        width: { xs: isAuthenticated ? "100%" : "auto", md: "auto" },
+                        ml: { xs: isAuthenticated ? 0 : "auto", md: "auto" },
+                    }}
                 >
+                    {links.map(({ to, label }) => (
+                        <Button key={to} component={NavLink} to={to} sx={navButtonSx}>
+                            {label}
+                        </Button>
+                    ))}
                     {isAuthenticated && (
                         <>
-                            <NavLink className={navClass} to={"/Travelers"}>
-                                <p className="header__text">Travelers</p>
-                            </NavLink>
-                            <NavLink className={navClass} to={"/Trips"}>
-                                <p className="header__text">Trips</p>
-                            </NavLink>
-                            <NavLink className={navClass} to={"/new"}>
-                                <p className="header__text">New Trip</p>
-                            </NavLink>
-                            <NavLink className={navClass} to={"/invitations"}>
-                                <p className="header__text">Invitations</p>
-                            </NavLink>
-                            <NavLink className={navClass} to={"/profile"}>
-                                <p className="header__text">Profile</p>
-                            </NavLink>
-                        </>
-                    )}
-                    {isAuthenticated ? (
-                        <>
-                            {account && (
-                                <span className="header__text header__account">
-                                    {account.traveler ? `${account.traveler.first_name} ${account.traveler.last_name}` : account.email}
-                                </span>
+                            {accountName && (
+                                <Typography className="header__account" variant="body2" sx={{ px: 1, fontWeight: 600 }}>
+                                    {accountName}
+                                </Typography>
                             )}
-                            <button className="header__links header__logout" type="button" onClick={handleLogout}>
-                                <p className="header__text">Log Out</p>
-                            </button>
-                        </>
-                    ) : (
-                        <>
-                            <NavLink className={navClass} to={"/login"}>
-                                <p className="header__text">Log In</p>
-                            </NavLink>
-                            <NavLink className={navClass} to={"/register"}>
-                                <p className="header__text">Register</p>
-                            </NavLink>
+                            <Button variant="outlined" color="inherit" onClick={handleLogout}>
+                                Log Out
+                            </Button>
                         </>
                     )}
-                </nav>
-            </div>
-        </header>
+                </Box>
+            </Toolbar>
+        </AppBar>
     );
 }
 
