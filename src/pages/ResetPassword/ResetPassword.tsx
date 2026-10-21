@@ -1,10 +1,11 @@
 import { useState, FormEvent } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { Button, TextField } from '@mui/material';
 import { useAuth } from '../../auth/AuthContext';
 import { useLinkToken } from '../../auth/useLinkToken';
 import { resetPassword } from '../../api/auth';
 import { errorMessage } from '../../api/errors';
-import '../../auth/auth.scss';
+import { AuthError, AuthForm, AuthLink, AuthPage, AuthSwitch } from '../../auth/AuthPage';
 
 const MIN_PASSWORD_LENGTH = 8;
 
@@ -44,56 +45,48 @@ function ResetPassword() {
 
     if (!token) {
         return (
-            <div className="auth">
-                <h1 className="auth__title">Choose a new password</h1>
-                <p className="auth__error">This link is missing its code.</p>
-                <p className="auth__switch">
-                    <Link to="/forgot-password">Ask for a new link</Link>
-                </p>
-            </div>
+            <AuthPage title="Choose a new password">
+                <AuthError>This link is missing its code.</AuthError>
+                <AuthSwitch>
+                    <AuthLink to="/forgot-password">Ask for a new link</AuthLink>
+                </AuthSwitch>
+            </AuthPage>
         );
     }
 
     return (
-        <div className="auth">
-            <h1 className="auth__title">Choose a new password</h1>
-            <form className="auth__form" onSubmit={handleSubmit}>
-                <label className="auth__label" htmlFor="password">
-                    New password
-                    <input
-                        id="password"
-                        className="auth__input"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        autoComplete="new-password"
-                        minLength={MIN_PASSWORD_LENGTH}
-                        required
-                    />
-                </label>
-                <label className="auth__label" htmlFor="confirm">
-                    Confirm new password
-                    <input
-                        id="confirm"
-                        className="auth__input"
-                        type="password"
-                        value={confirm}
-                        onChange={(e) => setConfirm(e.target.value)}
-                        autoComplete="new-password"
-                        required
-                    />
-                </label>
-                {error && <p className="auth__error">{error}</p>}
-                <button className="auth__button" type="submit" disabled={submitting}>
+        <AuthPage title="Choose a new password">
+            <AuthForm onSubmit={handleSubmit}>
+                <TextField
+                    id="password"
+                    label="New password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    autoComplete="new-password"
+                    helperText={`At least ${MIN_PASSWORD_LENGTH} characters.`}
+                    slotProps={{ htmlInput: { required: true, minLength: MIN_PASSWORD_LENGTH } }}
+                />
+                <TextField
+                    id="confirm"
+                    label="Confirm new password"
+                    type="password"
+                    value={confirm}
+                    onChange={(e) => setConfirm(e.target.value)}
+                    autoComplete="new-password"
+                    slotProps={{ htmlInput: { required: true } }}
+                />
+                {error && <AuthError>{error}</AuthError>}
+                <Button variant="contained" size="large" type="submit" disabled={submitting}>
                     {submitting ? 'Saving…' : 'Change password'}
-                </button>
-            </form>
+                </Button>
+            </AuthForm>
             {error && (
-                <p className="auth__switch">
-                    Link expired? <Link to="/forgot-password">Ask for a new one</Link>
-                </p>
+                <AuthSwitch>
+                    Link expired? <AuthLink to="/forgot-password">Ask for a new one</AuthLink>
+                </AuthSwitch>
             )}
-        </div>
+        </AuthPage>
     );
 }
 

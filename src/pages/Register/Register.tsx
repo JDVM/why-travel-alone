@@ -1,8 +1,9 @@
 import { useState, FormEvent } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Button, Checkbox, FormControlLabel, Link, Stack, TextField } from '@mui/material';
 import { useAuth } from '../../auth/AuthContext';
-import '../../auth/auth.scss';
+import { AuthError, AuthForm, AuthLink, AuthPage, AuthSwitch } from '../../auth/AuthPage';
 
 const MIN_PASSWORD_LENGTH = 8;
 
@@ -47,84 +48,84 @@ function Register() {
     };
 
     return (
-        <div className="auth">
-            <h1 className="auth__title">Create Account</h1>
-            <form className="auth__form" onSubmit={handleSubmit}>
-                <label className="auth__label" htmlFor="firstName">
-                    First name
-                    <input
+        <AuthPage title="Create Account">
+            <AuthForm onSubmit={handleSubmit}>
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                    <TextField
                         id="firstName"
-                        className="auth__input"
-                        type="text"
+                        label="First name"
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                         autoComplete="given-name"
-                        maxLength={255}
-                        required
+                        fullWidth
+                        slotProps={{ htmlInput: { required: true, maxLength: 255 } }}
                     />
-                </label>
-                <label className="auth__label" htmlFor="lastName">
-                    Last name
-                    <input
+                    <TextField
                         id="lastName"
-                        className="auth__input"
-                        type="text"
+                        label="Last name"
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
                         autoComplete="family-name"
-                        maxLength={255}
-                        required
+                        fullWidth
+                        slotProps={{ htmlInput: { required: true, maxLength: 255 } }}
                     />
-                </label>
-                <label className="auth__label" htmlFor="email">
-                    Email
-                    <input
-                        id="email"
-                        className="auth__input"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        autoComplete="email"
-                        required
-                    />
-                </label>
-                <label className="auth__label" htmlFor="password">
-                    Password
-                    <input
-                        id="password"
-                        className="auth__input"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        autoComplete="new-password"
-                        minLength={MIN_PASSWORD_LENGTH}
-                        required
-                    />
-                </label>
-                <label className="auth__checkbox" htmlFor="acceptTerms">
-                    <input
-                        id="acceptTerms"
-                        type="checkbox"
-                        checked={acceptTerms}
-                        onChange={(e) => setAcceptTerms(e.target.checked)}
-                        required
-                    />
-                    <span>
-                        I agree to the{' '}
-                        <Link to="/terms" target="_blank" rel="noopener noreferrer">Terms of Service</Link>{' '}
-                        and have read the{' '}
-                        <Link to="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</Link>.
-                    </span>
-                </label>
-                {error && <p className="auth__error">{error}</p>}
-                <button className="auth__button" type="submit" disabled={submitting}>
+                </Stack>
+                <TextField
+                    id="email"
+                    label="Email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    autoComplete="email"
+                    slotProps={{ htmlInput: { required: true } }}
+                />
+                <TextField
+                    id="password"
+                    label="Password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    autoComplete="new-password"
+                    helperText={`At least ${MIN_PASSWORD_LENGTH} characters.`}
+                    slotProps={{ htmlInput: { required: true, minLength: MIN_PASSWORD_LENGTH } }}
+                />
+                <FormControlLabel
+                    sx={{ alignItems: 'flex-start', '& .MuiCheckbox-root': { pt: 0 } }}
+                    control={
+                        <Checkbox
+                            id="acceptTerms"
+                            checked={acceptTerms}
+                            onChange={(e) => setAcceptTerms(e.target.checked)}
+                            slotProps={{ input: { required: true } }}
+                        />
+                    }
+                    label={
+                        <span>
+                            I agree to the{' '}
+                            <AuthLinkNewTab to="/terms">Terms of Service</AuthLinkNewTab>{' '}
+                            and have read the{' '}
+                            <AuthLinkNewTab to="/privacy">Privacy Policy</AuthLinkNewTab>.
+                        </span>
+                    }
+                />
+                {error && <AuthError>{error}</AuthError>}
+                <Button variant="contained" size="large" type="submit" disabled={submitting}>
                     {submitting ? 'Creating account…' : 'Register'}
-                </button>
-            </form>
-            <p className="auth__switch">
-                Already have an account? <Link to="/login">Log in</Link>
-            </p>
-        </div>
+                </Button>
+            </AuthForm>
+            <AuthSwitch>
+                Already have an account? <AuthLink to="/login">Log in</AuthLink>
+            </AuthSwitch>
+        </AuthPage>
+    );
+}
+
+// The legal pages open in a new tab so the half-filled form isn't lost.
+function AuthLinkNewTab({ to, children }: { to: string; children: string }) {
+    return (
+        <Link href={to} target="_blank" rel="noopener noreferrer">
+            {children}
+        </Link>
     );
 }
 
