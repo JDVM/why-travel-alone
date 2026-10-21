@@ -14,11 +14,11 @@ interface SmallTravelerCardProps {
 function SmallTravelerCard({ travelers, removableIds = [], onRemove }: SmallTravelerCardProps) {
     return (
         <Box sx={{ display: "grid", gap: 2, gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", md: "repeat(3, 1fr)" } }}>
-            {travelers.map((t, i) => (
+            {travelers.map((t) => (
                 <Card key={t.user_id} variant="outlined" className="small-traveler-card__container" sx={{ display: "flex", flexDirection: "column" }}>
                     <CardActionArea component={RouterLink} to={`/Travelers/${t.user_id}`} sx={{ flexGrow: 1 }}>
                         <CardContent sx={{ display: "flex", gap: 2, alignItems: "flex-start" }}>
-                            <Avatar src={picForIndex(i)} alt="" sx={{ width: 56, height: 56 }} />
+                            <Avatar src={picForIndex(t.user_id)} alt="" sx={{ width: 56, height: 56 }} />
                             <Box sx={{ minWidth: 0 }}>
                                 <Typography sx={{ fontWeight: 700 }}>{`${t.first_name} ${t.last_name}`}</Typography>
                                 {t.type_of_travel && (
