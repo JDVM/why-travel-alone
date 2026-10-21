@@ -1,6 +1,6 @@
 import type { Mock } from 'vitest';
 import { StrictMode } from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import VerifyEmail from './VerifyEmail';
 import { verifyEmail } from '../../api/auth';
@@ -52,6 +52,8 @@ describe('VerifyEmail', () => {
         renderAt('/verify-email?token=abc123');
 
         expect(await screen.findByText(/your email address is confirmed/i)).toBeInTheDocument();
+        // The refresh runs in an effect after that render, and only once.
+        await waitFor(() => expect(mockRefreshAccount).toHaveBeenCalled());
         expect(mockRefreshAccount).toHaveBeenCalledTimes(1);
     });
 

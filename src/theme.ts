@@ -1,7 +1,9 @@
 import { createTheme } from '@mui/material/styles';
 
-// The brand palette from src/styles/partials/_variables.scss, for Material UI.
-// Keep the two in step while pages move from Sass to MUI components.
+// The brand palette. Bronze and redwood are a shade darker than the original
+// palette so white text on them, and redwood text on the page, meet the WCAG
+// AA contrast minimum (4.5:1). textDark is for text on the lighter brand
+// colours (moonstone, cambridge blue), where white would be too faint.
 export const brand = {
     moonstone: '#72BCC6',
     bronze: '#9a6528',
@@ -39,6 +41,12 @@ const theme = createTheme({
         button: { textTransform: 'none', fontWeight: 600 },
     },
     components: {
+        MuiCssBaseline: {
+            styleOverrides: {
+                // A clear outline on whatever has keyboard focus, everywhere.
+                ':focus-visible': { outline: `2px solid ${brand.fernGreen}`, outlineOffset: 2 },
+            },
+        },
         MuiButton: {
             defaultProps: { disableElevation: true },
             styleOverrides: { root: { borderRadius: 999 } },
