@@ -43,9 +43,10 @@ jobs:
           curl -fsS http://localhost:3000/ | grep -q '<div id="root">'
           # No inline scripts, so the CSP can forbid them.
           ! curl -fsS http://localhost:3000/ | grep -q '<script>'
-          # The API address is built in.
-          main=$(curl -fsS http://localhost:3000/ | grep -o '/assets/index-[^"]*\.js')
-          curl -fsS "http://localhost:3000$main" | grep -q 'https://api.example.com'
+          # The API address is built into the scripts the page loads up front
+          # (the main bundle and the chunks it preloads).
+          scripts=$(curl -fsS http://localhost:3000/ | grep -o '/assets/[^"]*\.js')
+          for script in $scripts; do curl -fsS "http://localhost:3000$script"; done | grep -q 'https://api.example.com'
       - name: Logs
         if: failure()
         run: docker logs web
