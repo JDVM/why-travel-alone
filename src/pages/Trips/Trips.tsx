@@ -1,7 +1,9 @@
-import TripsCard from "../../components/TripsCard/TripsCard"
-import "./Trips.scss"
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
+import { Alert, Button, Container, Link, Paper, Typography } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import TripsCard from "../../components/TripsCard/TripsCard";
+import PageHeader from "../../components/PageHeader/PageHeader";
 import { getTrips } from "../../api/trips";
 import { TripSummary } from "../../types";
 
@@ -18,27 +20,37 @@ function Trips() {
             });
     }, []);
 
+    let content;
     if (error) {
-        return <p>{error}</p>;
+        content = <Alert severity="error">{error}</Alert>;
+    } else if (!trips) {
+        content = <Typography>Loading trips, please wait…</Typography>;
+    } else if (trips.length === 0) {
+        // Trips are owner-scoped, so a brand-new account has none yet.
+        content = (
+            <Paper variant="outlined" sx={{ p: 4, textAlign: "center" }}>
+                <Typography className="trips__empty">
+                    You don't have any trips yet. <Link component={RouterLink} to="/new">Create your first trip</Link>.
+                </Typography>
+            </Paper>
+        );
+    } else {
+        content = <TripsCard trips={trips} />;
     }
-    if (!trips) {
-        return <p>Loading trips, please wait…</p>;
-    }
-    // Trips are owner-scoped, so a brand-new account has none yet.
-    if (trips.length === 0) {
-        return (
-            <div className="trips">
-                <p className="trips__empty">
-                    You don't have any trips yet. <Link to="/new">Create your first trip</Link>.
-                </p>
-            </div>
-        )
-    }
+
     return (
-        <div className="trips">
-            <TripsCard trips={trips} />
-        </div>
-    )
+        <Container maxWidth="lg" sx={{ py: 3 }}>
+            <PageHeader
+                title="Your trips"
+                actions={
+                    <Button variant="contained" component={RouterLink} to="/new" startIcon={<AddIcon />}>
+                        New trip
+                    </Button>
+                }
+            />
+            {content}
+        </Container>
+    );
 }
 
 export default Trips

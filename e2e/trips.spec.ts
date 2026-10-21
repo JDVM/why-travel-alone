@@ -16,7 +16,7 @@ test('an owner creates, edits and deletes a trip', async ({ page }) => {
     await expect(page.locator('.small-traveler-card__button')).toHaveCount(0);
 
     // The edit form starts from the trip's current values.
-    await page.getByRole('button', { name: 'Edit' }).click();
+    await page.getByRole('link', { name: 'Edit' }).click();
     await expect(page.getByLabel('Trip Name')).toHaveValue(name);
     await expect(page.getByLabel('Kid Friendly Trip')).toBeChecked();
     await expect(page.locator('#destination-select option:checked')).toHaveText(destination as string);
@@ -45,5 +45,5 @@ test("another account can't open someone else's trip", async ({ page }) => {
     await page.goto(`/Trips/${tripId}`);
     await expect(page.getByText(/not found/i)).toBeVisible();
     await expect(page.locator('.small-traveler-card__container')).toHaveCount(0);
-    await expect(page.getByRole('button', { name: 'Edit' })).toHaveCount(0);
+    await expect(page.getByRole('link', { name: 'Edit' })).toHaveCount(0);
 });

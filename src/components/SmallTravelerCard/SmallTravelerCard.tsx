@@ -1,6 +1,5 @@
-import { MouseEvent } from "react";
-import "./SmallTravelerCard.scss";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
+import { Avatar, Box, Button, Card, CardActionArea, CardActions, CardContent, Typography } from "@mui/material";
 import { picForIndex } from "../../data/profilePics";
 import { Traveler } from "../../types";
 
@@ -13,53 +12,41 @@ interface SmallTravelerCardProps {
 // The travelers on a trip. Only the trip's owner gets Remove buttons, and
 // never for themselves (removableIds excludes them).
 function SmallTravelerCard({ travelers, removableIds = [], onRemove }: SmallTravelerCardProps) {
-    const handleRemove = (e: MouseEvent<HTMLButtonElement>, traveler: Traveler) => {
-        // The button sits inside a Link; stop the click from navigating.
-        e.preventDefault();
-        e.stopPropagation();
-        if (onRemove) {
-            onRemove(traveler);
-        }
-    };
-
     return (
-        <div className="small-traveler-card">
-            {travelers.map((t, i) => {
-                const name = `${t.first_name} ${t.last_name}`;
-                const hasKids = t.has_kids ? "Yes" : "No";
-                return (
-                    <Link className="small-traveler-card__container" key={t.user_id} to={`/Travelers/${t.user_id}`}>
-                        <img className="small-traveler-card__image" src={picForIndex(i)} alt="" />
-                        <section className="small-traveler-card__information">
-                            <article className="small-traveler-card__info-container">
-                                <p className="small-traveler-card__title">Name</p>
-                                <p className="small-traveler-card__text">{name}</p>
-                            </article>
-                            <article className="small-traveler-card__info-container">
-                                <p className="small-traveler-card__title">Type of travel</p>
-                                <p className="small-traveler-card__text">{t.type_of_travel}</p>
-                            </article>
-                            {/* Private fields: the API only sends them when you may see them. */}
-                            {"has_kids" in t && (
-                                <article className="small-traveler-card__info-container">
-                                    <p className="small-traveler-card__title">Kids</p>
-                                    <p className="small-traveler-card__text">{hasKids}</p>
-                                </article>
-                            )}
-                            {"special_considerations" in t && (
-                                <article className="small-traveler-card__info-container">
-                                    <p className="small-traveler-card__title">Special Considerations</p>
-                                    <p className="small-traveler-card__text">{t.special_considerations}</p>
-                                </article>
-                            )}
-                        </section>
-                        {removableIds.includes(t.user_id) && (
-                            <button className="small-traveler-card__button" type="button" onClick={(e) => handleRemove(e, t)}>Remove</button>
-                        )}
-                    </Link>
-                );
-            })}
-        </div>
-    )
+        <Box sx={{ display: "grid", gap: 2, gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", md: "repeat(3, 1fr)" } }}>
+            {travelers.map((t, i) => (
+                <Card key={t.user_id} variant="outlined" className="small-traveler-card__container" sx={{ display: "flex", flexDirection: "column" }}>
+                    <CardActionArea component={RouterLink} to={`/Travelers/${t.user_id}`} sx={{ flexGrow: 1 }}>
+                        <CardContent sx={{ display: "flex", gap: 2, alignItems: "flex-start" }}>
+                            <Avatar src={picForIndex(i)} alt="" sx={{ width: 56, height: 56 }} />
+                            <Box sx={{ minWidth: 0 }}>
+                                <Typography sx={{ fontWeight: 700 }}>{`${t.first_name} ${t.last_name}`}</Typography>
+                                {t.type_of_travel && (
+                                    <Typography variant="body2" color="text.secondary">{t.type_of_travel}</Typography>
+                                )}
+                                {/* Private fields: the API only sends them when you may see them. */}
+                                {"has_kids" in t && (
+                                    <Typography variant="body2">Kids: {t.has_kids ? "Yes" : "No"}</Typography>
+                                )}
+                                {"special_considerations" in t && (
+                                    <Typography variant="body2">
+                                        Special Considerations: {t.special_considerations || "None"}
+                                    </Typography>
+                                )}
+                            </Box>
+                        </CardContent>
+                    </CardActionArea>
+                    {removableIds.includes(t.user_id) && onRemove && (
+                        <CardActions sx={{ justifyContent: "flex-end" }}>
+                            <Button className="small-traveler-card__button" color="error" size="small" onClick={() => onRemove(t)}>
+                                Remove
+                            </Button>
+                        </CardActions>
+                    )}
+                </Card>
+            ))}
+        </Box>
+    );
 }
+
 export default SmallTravelerCard;

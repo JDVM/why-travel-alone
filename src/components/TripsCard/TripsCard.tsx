@@ -1,41 +1,47 @@
-import { Link } from "react-router-dom"
-import "./TripsCard.scss"
-import { TripSummary } from "../../types"
+import { Link as RouterLink } from "react-router-dom";
+import { Box, Card, CardActionArea, CardContent, Chip, Stack, Typography } from "@mui/material";
+import PlaceIcon from "@mui/icons-material/Place";
+import GroupIcon from "@mui/icons-material/Group";
+import { TripSummary } from "../../types";
 
+// The trips you own or are on, as a grid of cards linking to each trip.
 function TripsCard({ trips }: { trips: TripSummary[] }) {
     return (
-        <div className="trips-card">
-            {trips.map((data) => {
-                const kidFriendly = data.kid_friendly ? "Yes" : "No";
-
-                return (
-                    <Link className="trips-card__container" to={`/Trips/${data.trip_id}`} key={data.trip_id}>
-                        <div className="trips-card__title-container">
-                            <h1 className="trips-card__main-title">{data.trip_name}</h1>
-                            <p className="trips-card__role">{data.is_owner ? "You're the owner" : "You're a traveler"}</p>
-                        </div>
-                        <div className="trips-card__info-container">
-                            <div className="trips-card__information">
-                                <h3 className="trips-card__title">Number of travelers</h3>
-                                <p className="trips-card__text">{data.num_travelers}</p>
-                            </div>
-                            <div className="trips-card__information">
-                                <h3 className="trips-card__title">Destination</h3>
-                                <p className="trips-card__text">{data.destination}</p>
-                            </div>
-                            <div className="trips-card__information">
-                                <h3 className="trips-card__title">Kid Friendly</h3>
-                                <p className="trips-card__text">{kidFriendly}</p>
-                            </div>
-                            <div className="trips-card__information--description">
-                                <h3 className="trips-card__title">Description/notes</h3>
-                                <p className="trips-card__description">{data.notes}</p>
-                            </div>
-                        </div>
-                    </Link>
-                );
-            })}
-        </div>
+        <Box sx={{ display: "grid", gap: 2, gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" } }}>
+            {trips.map((trip) => (
+                <Card key={trip.trip_id} variant="outlined">
+                    <CardActionArea
+                        className="trips-card__container"
+                        component={RouterLink}
+                        to={`/Trips/${trip.trip_id}`}
+                        sx={{ height: "100%", alignItems: "stretch" }}
+                    >
+                        <CardContent>
+                            <Typography component="h2" variant="h6" sx={{ fontWeight: 700 }}>
+                                {trip.trip_name}
+                            </Typography>
+                            <Typography className="trips-card__role" variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+                                {trip.is_owner ? "You're the owner" : "You're a traveler"}
+                            </Typography>
+                            <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap", rowGap: 1, mb: 1.5 }}>
+                                {trip.destination && <Chip icon={<PlaceIcon />} label={trip.destination} size="small" />}
+                                <Chip
+                                    icon={<GroupIcon />}
+                                    label={`${trip.num_travelers} ${trip.num_travelers === 1 ? "traveler" : "travelers"}`}
+                                    size="small"
+                                />
+                                <Chip label={trip.kid_friendly ? "Kid friendly" : "Adults only"} size="small" variant="outlined" />
+                            </Stack>
+                            {trip.notes && (
+                                <Typography variant="body2" sx={{ display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                                    {trip.notes}
+                                </Typography>
+                            )}
+                        </CardContent>
+                    </CardActionArea>
+                </Card>
+            ))}
+        </Box>
     );
 }
 
