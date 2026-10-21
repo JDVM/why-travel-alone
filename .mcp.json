@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "mui": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@mui/mcp@0.1.8"],
+      "env": {
+        "MUI_RECIPES_API_KEY": "${MUI_RECIPES_API_KEY:-}"
+      }
+    }
+  }
+}
