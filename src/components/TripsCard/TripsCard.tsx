@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom"
 import "./TripsCard.scss"
+import { TripSummary } from "../../types"
 
-function TripsCard({ trips }) {
+function TripsCard({ trips }: { trips: TripSummary[] }) {
     return (
         <div className="trips-card">
             {trips.map((data) => {

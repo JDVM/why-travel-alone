@@ -1,4 +1,4 @@
-import { api, toBool } from './client';
+import { api, toBool, Wire } from './client';
 import { Traveler } from '../types';
 
 // preferred_destinations arrives from JSON_ARRAYAGG: sometimes a JSON string,
@@ -7,8 +7,11 @@ import { Traveler } from '../types';
 //
 // has_kids is only present when the API lets you see it; keep it absent
 // otherwise, so the UI can tell "hidden" apart from "no".
-export function normalizeTraveler(raw: any): Traveler {
-    let prefs = raw.preferred_destinations;
+export type WireTraveler = Wire<Traveler, 'has_kids' | 'preferred_destinations'>;
+
+export function normalizeTraveler(raw: WireTraveler): Traveler {
+    const { has_kids, preferred_destinations, ...rest } = raw;
+    let prefs = preferred_destinations;
     if (typeof prefs === 'string') {
         try {
             prefs = JSON.parse(prefs);
@@ -16,21 +19,23 @@ export function normalizeTraveler(raw: any): Traveler {
             prefs = [];
         }
     }
-    prefs = Array.isArray(prefs) ? prefs.filter((p: unknown) => p != null) : [];
 
-    const traveler: Traveler = { ...raw, preferred_destinations: prefs };
+    const traveler: Traveler = {
+        ...rest,
+        preferred_destinations: Array.isArray(prefs) ? prefs.filter((p): p is string => typeof p === 'string') : [],
+    };
     if ('has_kids' in raw) {
-        traveler.has_kids = toBool(raw.has_kids);
+        traveler.has_kids = toBool(has_kids);
     }
     return traveler;
 }
 
 export async function getTravelers(): Promise<Traveler[]> {
-    const { data } = await api.get<any[]>('/travelers');
+    const { data } = await api.get<WireTraveler[]>('/travelers');
     return data.map(normalizeTraveler);
 }
 
 export async function getTraveler(id: string | number): Promise<Traveler> {
-    const { data } = await api.get(`/travelers/${id}`);
+    const { data } = await api.get<WireTraveler>(`/travelers/${id}`);
     return normalizeTraveler(data);
 }

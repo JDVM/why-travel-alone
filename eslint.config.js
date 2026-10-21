@@ -25,8 +25,6 @@ export default tseslint.config(
             'react-refresh/only-export-components': ['warn', { allowConstantExport: true, allowExportNames: ['useAuth'] }],
             // Unused variables are errors, except deliberately ignored rest siblings.
             '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true, args: 'none' }],
-            // The API layer types raw JSON loosely before normalizing it.
-            '@typescript-eslint/no-explicit-any': 'off',
         },
     },
     {

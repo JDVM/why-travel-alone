@@ -7,7 +7,7 @@ Why Travel Alone is a small passion project that began as my capstone for the Br
 ## Technologies
 
 - React, built with Vite
-- TypeScript and JavaScript
+- TypeScript (strict mode)
 - Axios
 - SASS
 - React Router DOM

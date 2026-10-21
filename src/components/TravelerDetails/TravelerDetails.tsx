@@ -7,17 +7,18 @@ import { getTraveler } from "../../api/travelers";
 import { getTrips, inviteTraveler } from "../../api/trips";
 import { errorMessage } from "../../api/errors";
 import { useAuth } from "../../auth/AuthContext";
+import { Traveler, TripSummary } from "../../types";
 
 function TravelerDetails() {
-    const [travelerDetails, setTravelerDetails] = useState(null);
-    const [ownedTrips, setOwnedTrips] = useState([]);
+    const [travelerDetails, setTravelerDetails] = useState<Traveler | null>(null);
+    const [ownedTrips, setOwnedTrips] = useState<TripSummary[]>([]);
     const [selectedTripId, setSelectedTripId] = useState("");
-    const [error, setError] = useState(null);
-    const [inviteMessage, setInviteMessage] = useState(null);
-    const [inviteError, setInviteError] = useState(null);
-    const { id } = useParams();
+    const [error, setError] = useState<string | null>(null);
+    const [inviteMessage, setInviteMessage] = useState<string | null>(null);
+    const [inviteError, setInviteError] = useState<string | null>(null);
+    const { id = "" } = useParams();
     const { account } = useAuth();
-    const isMe = account && account.traveler && String(account.traveler.user_id) === String(id);
+    const isMe = account?.traveler != null && String(account.traveler.user_id) === id;
 
     useEffect(() => {
         getTraveler(id)
@@ -39,7 +40,7 @@ function TravelerDetails() {
 
     const name = `${travelerDetails.first_name} ${travelerDetails.last_name}`;
     const hasKids = travelerDetails.has_kids ? "Yes" : "No";
-    const preferredDestinations = travelerDetails.preferred_destinations || [];
+    const preferredDestinations = travelerDetails.preferred_destinations ?? [];
 
     const handleInvite = async () => {
         setInviteMessage(null);

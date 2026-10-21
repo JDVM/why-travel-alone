@@ -8,8 +8,12 @@ import { initMonitoring } from './monitoring';
 
 initMonitoring();
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+const container = document.getElementById('root');
+if (!container) {
+  throw new Error('index.html has no #root element');
+}
+
+ReactDOM.createRoot(container).render(
   <React.StrictMode>
     <ErrorBoundary>
       <AuthProvider>
@@ -18,4 +22,3 @@ root.render(
     </ErrorBoundary>
   </React.StrictMode>
 );
-

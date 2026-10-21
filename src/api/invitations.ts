@@ -1,8 +1,8 @@
-import { api, toBool } from './client';
+import { api, toBool, Wire } from './client';
 import { ReceivedInvitation } from '../types';
 
 export async function getInvitations(): Promise<ReceivedInvitation[]> {
-    const { data } = await api.get<any[]>('/invitations');
+    const { data } = await api.get<Wire<ReceivedInvitation, 'kid_friendly'>[]>('/invitations');
     return data.map((invitation) => ({ ...invitation, kid_friendly: toBool(invitation.kid_friendly) }));
 }
 

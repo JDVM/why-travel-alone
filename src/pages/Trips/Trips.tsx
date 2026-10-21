@@ -3,10 +3,11 @@ import "./Trips.scss"
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getTrips } from "../../api/trips";
+import { TripSummary } from "../../types";
 
 function Trips() {
-    const [trips, setTrips] = useState();
-    const [error, setError] = useState(null);
+    const [trips, setTrips] = useState<TripSummary[]>();
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         getTrips()

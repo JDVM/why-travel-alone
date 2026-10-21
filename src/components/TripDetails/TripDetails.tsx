@@ -1,22 +1,23 @@
 import "./TripDetails.scss"
 import { useEffect, useState, useCallback } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom"
-import SmallTravelerCard from "../SmallTravelerCard/SmallTraverlerCard";
+import SmallTravelerCard from "../SmallTravelerCard/SmallTravelerCard";
 import BackButton from "../BackButton/BackButton";
 import { getTrip, removeTraveler, cancelInvitation, leaveTrip } from "../../api/trips";
 import { errorMessage } from "../../api/errors";
 import { useAuth } from "../../auth/AuthContext";
+import { TripDetail } from "../../types";
 
 // A trip you own or are on. Owners can edit it, remove travelers and manage
 // invitations; other travelers can only view it or leave.
 function TripDetails() {
-    const { id } = useParams();
-    const [tripDetails, setTripDetails] = useState(null);
-    const [error, setError] = useState(null);
-    const [actionError, setActionError] = useState(null);
+    const { id = "" } = useParams();
+    const [tripDetails, setTripDetails] = useState<TripDetail | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const [actionError, setActionError] = useState<string | null>(null);
     const navigate = useNavigate();
     const { account } = useAuth();
-    const myTravelerId = account && account.traveler ? account.traveler.user_id : null;
+    const myTravelerId = account?.traveler?.user_id ?? null;
 
     const loadTrip = useCallback(() => {
         getTrip(id)
@@ -32,7 +33,7 @@ function TripDetails() {
     }, [loadTrip]);
 
     // Runs an owner or member action, then reloads the trip or reports the error.
-    const act = async (action, fallback) => {
+    const act = async (action: () => Promise<void>, fallback: string) => {
         setActionError(null);
         try {
             await action();
@@ -61,11 +62,11 @@ function TripDetails() {
 
     const isOwner = tripDetails.is_owner;
     const kidFriendly = tripDetails.kid_friendly ? "Yes" : "No";
-    const travelersForThisTrip = tripDetails.users || [];
+    const travelersForThisTrip = tripDetails.users;
     const removableIds = isOwner
         ? travelersForThisTrip.map((traveler) => traveler.user_id).filter((userId) => userId !== myTravelerId)
         : [];
-    const invitations = tripDetails.invitations || [];
+    const invitations = tripDetails.invitations ?? [];
 
     return (
         <div className="trip-details">

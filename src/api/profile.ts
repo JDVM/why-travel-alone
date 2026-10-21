@@ -1,8 +1,10 @@
 import axios from 'axios';
-import { api, toBool } from './client';
+import { api, toBool, Wire } from './client';
 import { Profile, ProfileInput, TypeOfTravel } from '../types';
 
-function normalizeProfile(raw: any): Profile {
+type WireProfile = Wire<Profile, 'has_kids' | 'special_considerations_consent'>;
+
+function normalizeProfile(raw: WireProfile): Profile {
     return {
         ...raw,
         has_kids: toBool(raw.has_kids),
@@ -13,7 +15,7 @@ function normalizeProfile(raw: any): Profile {
 // Your profile, or null for an older account that doesn't have one yet.
 export async function getProfile(): Promise<Profile | null> {
     try {
-        const { data } = await api.get('/profile');
+        const { data } = await api.get<WireProfile>('/profile');
         return normalizeProfile(data);
     } catch (err) {
         if (axios.isAxiosError(err) && err.response?.status === 404) {
@@ -25,7 +27,7 @@ export async function getProfile(): Promise<Profile | null> {
 
 // Replaces the whole profile.
 export async function updateProfile(input: ProfileInput): Promise<Profile> {
-    const { data } = await api.put('/profile', input);
+    const { data } = await api.put<WireProfile>('/profile', input);
     return normalizeProfile(data);
 }
 
