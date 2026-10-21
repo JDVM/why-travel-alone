@@ -66,6 +66,8 @@ test('a forgotten password is reset by email, signing out other sessions', async
 
     await page.goto('/login');
     await page.getByRole('link', { name: 'Forgot your password?' }).click();
+    // The login page has an Email field too: wait for the reset page first.
+    await expect(page.getByRole('heading', { name: 'Reset your password' })).toBeVisible();
     await page.getByLabel('Email').fill(user.email);
     await page.getByRole('button', { name: 'Send reset link' }).click();
     await expect(page.getByText(/if an account uses/i)).toBeVisible();
