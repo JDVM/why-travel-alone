@@ -72,7 +72,7 @@
         cursor: pointer;
 
         &--danger {
-            background: #a33a2f;
+            background: $danger;
         }
 
         &:disabled {

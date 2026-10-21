@@ -25,7 +25,7 @@
 
     &__main-title {
         @include page-header;
-        color: white;
+        color: $text-dark;
         width: 90%;
         text-align: center;
     }
@@ -33,11 +33,11 @@
     &__title {
         margin: 0 .5rem;
         @include sub-heading;
-        color: white;
+        color: $text-dark;
     }
 
     &__text {
-        color: white;
+        color: $text-dark;
         margin: .5rem;
         @include body-copy
     }

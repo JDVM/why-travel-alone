@@ -17,5 +17,8 @@
 
     &__icon {
         display: block;
+        // The arrow image is white; drawn dark, it stands out on the light
+        // title bars it sits on.
+        filter: brightness(0);
     }
 }

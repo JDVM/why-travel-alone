@@ -65,7 +65,7 @@ function TravelerDetails() {
                     <h1 className="traveler-details__main-title">Traveler Profile</h1>
                 </div>
 
-                <img className="traveler-details__image" alt="Traveler profile" src={picForIndex(0)} />
+                <img className="traveler-details__image" alt="" src={picForIndex(0)} />
                 <section className="traveler-details__information-container">
                     <article className="traveler-details__information">
                         <h3 className="traveler-details__title">Name</h3>
