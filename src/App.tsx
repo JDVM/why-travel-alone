@@ -1,10 +1,11 @@
+import { ReactNode } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import './App.scss';
 import Header from './components/Header/Header';
-import Travelers from './pages/Travelers/Traveler';
-import Trips from './pages/Trips/Trips'
+import Travelers from './pages/Travelers/Travelers';
+import Trips from './pages/Trips/Trips';
 import AddTrip from './components/AddTrip/AddTrip';
-import TripDetails from './components/TripDetails/TripDetails'
+import TripDetails from './components/TripDetails/TripDetails';
 import TravelerDetails from './components/TravelerDetails/TravelerDetails';
 import EditTrip from './components/EditTrip/EditTrip';
 import Login from './pages/Login/Login';
@@ -23,7 +24,7 @@ import VerifyEmailBanner from './components/VerifyEmailBanner/VerifyEmailBanner'
 
 // A page that crashes shows the error message under a working header, and
 // navigating elsewhere starts the next page fresh.
-function PageErrorBoundary({ children }) {
+function PageErrorBoundary({ children }: { children: ReactNode }) {
   const location = useLocation();
   return <ErrorBoundary key={location.pathname}>{children}</ErrorBoundary>;
 }

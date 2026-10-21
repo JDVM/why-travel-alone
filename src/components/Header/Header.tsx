@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import "./Header.scss";
 import logo from "../../assets/Logo/plain-logo.svg"
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, NavLinkProps, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 
 // NavLink's className accepts a function of the active state; the previous code
 // interpolated that function into a template string, so the active class was
 // never applied. This returns the class string directly.
-const navClass = ({ isActive }) => (isActive ? "header__links active" : "header__links");
+const navClass: NavLinkProps["className"] = ({ isActive }) => (isActive ? "header__links active" : "header__links");
 
 function Header() {
     const { isAuthenticated, account, logout } = useAuth();

@@ -1,11 +1,12 @@
 import "./Travelers.scss"
-import TravelerCard from "../../components/TravelerCard/TravelersCard"
+import TravelerCard from "../../components/TravelerCard/TravelerCard"
 import { useEffect, useState } from "react";
 import { getTravelers } from "../../api/travelers";
+import { Traveler } from "../../types";
 
 function Travelers() {
-    const [travelers, setTravelers] = useState();
-    const [error, setError] = useState(null);
+    const [travelers, setTravelers] = useState<Traveler[]>();
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         getTravelers()

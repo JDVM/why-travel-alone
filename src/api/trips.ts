@@ -1,9 +1,9 @@
-import { api, toBool } from './client';
+import { api, toBool, Wire } from './client';
 import { TripSummary, TripDetail, TripInput } from '../types';
-import { normalizeTraveler } from './travelers';
+import { normalizeTraveler, WireTraveler } from './travelers';
 
 export async function getTrips(): Promise<TripSummary[]> {
-    const { data } = await api.get<any[]>('/trips');
+    const { data } = await api.get<Wire<TripSummary, 'kid_friendly' | 'is_owner' | 'num_travelers'>[]>('/trips');
     return data.map((t) => ({
         ...t,
         kid_friendly: toBool(t.kid_friendly),
@@ -13,12 +13,12 @@ export async function getTrips(): Promise<TripSummary[]> {
 }
 
 export async function getTrip(id: string | number): Promise<TripDetail> {
-    const { data } = await api.get(`/trips/${id}`);
+    const { data } = await api.get<Wire<TripDetail, 'kid_friendly' | 'is_owner' | 'users'>>(`/trips/${id}`);
     return {
         ...data,
         kid_friendly: toBool(data.kid_friendly),
         is_owner: toBool(data.is_owner),
-        users: Array.isArray(data.users) ? data.users.map(normalizeTraveler) : [],
+        users: Array.isArray(data.users) ? (data.users as WireTraveler[]).map(normalizeTraveler) : [],
     };
 }
 

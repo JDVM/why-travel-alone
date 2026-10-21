@@ -1,18 +1,15 @@
-import React from "react";
 import "./TravelerCard.scss";
 import { Link } from "react-router-dom";
 import { picForIndex } from "../../data/profilePics";
+import { Traveler } from "../../types";
 
-function TravelerCard({ travelers }) {
-    if (travelers === undefined) {
-        return <p>Loading...</p>;
-    }
+function TravelerCard({ travelers }: { travelers: Traveler[] }) {
     return (
         <div className="traveler-card">
             {travelers.map((t, i) => {
                 const name = `${t.first_name} ${t.last_name}`;
                 const hasKids = t.has_kids ? "Yes" : "No";
-                const preferredDestinations = t.preferred_destinations || [];
+                const preferredDestinations = t.preferred_destinations ?? [];
                 return (
                     <Link className="traveler-card__container" key={t.user_id} to={`/Travelers/${t.user_id}`}>
                         <img className="traveler-card__image" src={picForIndex(i)} alt="" />

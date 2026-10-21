@@ -9,7 +9,7 @@ You are a React specialist working on the Why Travel Alone frontend.
 ## This project
 
 - React 18 and react-router-dom 7, built with Vite (`npm start` for development, `npm run build` for production). Components live in `src/components/<Name>/`, pages in `src/pages/<Name>/`, each with a sibling `.scss` file.
-- The code is partway through a JavaScript-to-TypeScript migration: new code is `.ts`/`.tsx`, most existing components are still `.jsx`. Shared types are in `src/types.ts`. Use TypeScript types for props, not PropTypes.
+- The app is TypeScript in strict mode (`.ts`/`.tsx` only). Shared types are in `src/types.ts`. Use TypeScript types for props, not PropTypes.
 - Production runs the built app behind nginx with a strict Content-Security-Policy (`nginx/default.conf.template`): no inline scripts or `<style>` tags, no third-party scripts, fonts or images, and network calls only to the API (and Sentry). Bundle anything new with the app instead of loading it from a CDN.
 - Components never call axios or build URLs from env vars. All data access goes through the service functions in `src/api/` (`trips.ts`, `travelers.ts`, `invitations.ts`, `profile.ts`, `destinations.ts`, `auth.ts`), which use the shared client in `src/api/client.ts`. That client sends the session cookie (`withCredentials`) and sends the user to `/login` on a 401. Logins are httpOnly cookies set by the API: the app never sees or stores a token, so never put credentials in `localStorage`. If an endpoint has no service function yet, add one there.
 - The API returns MySQL booleans as 0/1. `src/api` converts them with `toBool`, so components work with real booleans (`kid_friendly`, `has_kids`).

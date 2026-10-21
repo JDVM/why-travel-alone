@@ -1,16 +1,19 @@
-import React from "react";
+import { MouseEvent } from "react";
 import "./SmallTravelerCard.scss";
 import { Link } from "react-router-dom";
 import { picForIndex } from "../../data/profilePics";
+import { Traveler } from "../../types";
+
+interface SmallTravelerCardProps {
+    travelers: Traveler[];
+    removableIds?: number[];
+    onRemove?: (traveler: Traveler) => void;
+}
 
 // The travelers on a trip. Only the trip's owner gets Remove buttons, and
 // never for themselves (removableIds excludes them).
-function SmallTravelerCard({ travelers, removableIds = [], onRemove }) {
-    if (travelers === undefined) {
-        return <p>Loading...</p>;
-    }
-
-    const handleRemove = (e, traveler) => {
+function SmallTravelerCard({ travelers, removableIds = [], onRemove }: SmallTravelerCardProps) {
+    const handleRemove = (e: MouseEvent<HTMLButtonElement>, traveler: Traveler) => {
         // The button sits inside a Link; stop the click from navigating.
         e.preventDefault();
         e.stopPropagation();

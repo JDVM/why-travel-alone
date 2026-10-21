@@ -115,9 +115,13 @@ export async function logIn(page: Page, user: { email: string; password: string 
     await page.waitForURL('**/Trips');
 }
 
+// The app sends the logout request without waiting for it, so wait for the
+// API's answer too: until then the session still works on the server.
 export async function logOut(page: Page) {
+    const loggedOut = page.waitForResponse((response) => response.url().endsWith('/auth/logout'));
     await page.getByRole('button', { name: 'Log Out' }).click();
     await page.waitForURL('**/login');
+    await loggedOut;
 }
 
 // Creates a trip through the UI and returns its id.

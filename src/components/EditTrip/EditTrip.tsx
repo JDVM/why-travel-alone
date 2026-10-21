@@ -1,29 +1,30 @@
 import './EditTrip.scss'
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import BackButton from "../BackButton/BackButton";
 import { getDestinations } from "../../api/destinations";
 import { getTrip, updateTrip, deleteTrip } from "../../api/trips";
 import { errorMessage } from "../../api/errors";
+import { Destination, TripInput } from "../../types";
 
 function EditTrip() {
-    const { id } = useParams();
-    const [destination, setDestination] = useState(null);
-    const [tripDetails, setTripDetails] = useState({
+    const { id = "" } = useParams();
+    const [destination, setDestination] = useState<Destination[] | null>(null);
+    const [tripDetails, setTripDetails] = useState<TripInput>({
         trip_name: "",
         kid_friendly: false,
         destination_id: "",
         trip_length: "",
         notes: ""
     });
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
 
     // Load destinations first, then the trip. Older APIs return only the
     // destination name from GET /trips/:id, so fall back to matching the name
     // against the destinations list when destination_id is absent.
     useEffect(() => {
-        let destinationsList = [];
+        let destinationsList: Destination[] = [];
         getDestinations()
             .then((list) => {
                 destinationsList = list;
@@ -46,10 +47,10 @@ function EditTrip() {
             });
     }, [id])
 
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!tripDetails.trip_name || !tripDetails.destination_id || tripDetails.trip_length === "" || isNaN(tripDetails.trip_length)) {
+        if (!tripDetails.trip_name || !tripDetails.destination_id || tripDetails.trip_length === "" || Number.isNaN(Number(tripDetails.trip_length))) {
             setError("Please fill in all required fields and ensure trip length is a valid number.");
             return;
         }

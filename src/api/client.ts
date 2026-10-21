@@ -36,6 +36,10 @@ api.interceptors.response.use(
     }
 );
 
+// A type as the API sends it, before normalizing: the fields in K arrive in a
+// looser form (e.g. tinyint 0/1 for booleans) and are checked at runtime.
+export type Wire<T, K extends keyof T> = Omit<T, K> & { [P in K]?: unknown };
+
 // The API returns MySQL tinyint booleans as 0/1. Normalize to real booleans.
 export const toBool = (value: unknown): boolean =>
     value === true || value === 1 || value === '1' || value === 'true';

@@ -46,10 +46,10 @@ describe('monitoring', () => {
 
         expect(
             scrubBreadcrumb({ category: 'navigation', data: { from: '/login?next=1', to: '/reset-password?token=abc' } })
-                .data
+                ?.data
         ).toEqual({ from: '/login', to: '/reset-password' });
 
-        expect(scrubBreadcrumb({ category: 'xhr', data: { url: 'http://api/trips?x=1', status_code: 500 } }).data).toEqual(
+        expect(scrubBreadcrumb({ category: 'xhr', data: { url: 'http://api/trips?x=1', status_code: 500 } })?.data).toEqual(
             { url: 'http://api/trips', status_code: 500 }
         );
     });
