@@ -1,3 +1,5 @@
+@use '../styles/partials/variables' as *;
+
 .auth {
     max-width: 400px;
     margin: 2rem auto;
@@ -26,7 +28,7 @@
 
     &__input {
         padding: 0.5rem;
-        border: 1px solid #ccc;
+        border: 1px solid $cambridge-blue;
         border-radius: 4px;
         font-size: 1rem;
     }
@@ -34,8 +36,8 @@
     &__button {
         padding: 0.6rem;
         border: none;
-        border-radius: 4px;
-        background: #1a73e8;
+        border-radius: 1rem;
+        background: $fern-green;
         color: #fff;
         font-size: 1rem;
         cursor: pointer;
@@ -61,11 +63,11 @@
         margin: 0;
         padding: 0.75rem;
         border-radius: 4px;
-        background: #e8f3ea;
+        background: $notice-success;
     }
 
     &__error {
-        color: #b00020;
+        color: $danger;
         margin: 0;
     }
 

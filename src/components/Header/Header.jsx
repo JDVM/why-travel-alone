@@ -1,6 +1,7 @@
+import { useEffect, useState } from "react";
 import "./Header.scss";
 import logo from "../../assets/Logo/plain-logo.svg"
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 
 // NavLink's className accepts a function of the active state; the previous code
@@ -11,6 +12,14 @@ const navClass = ({ isActive }) => (isActive ? "header__links active" : "header_
 function Header() {
     const { isAuthenticated, account, logout } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
+    // On phones the signed-in links fold into a menu, opened with a button.
+    const [menuOpen, setMenuOpen] = useState(false);
+
+    // Close the menu after following a link.
+    useEffect(() => {
+        setMenuOpen(false);
+    }, [location.pathname]);
 
     const handleLogout = () => {
         logout();
@@ -23,8 +32,23 @@ function Header() {
                 <div className="header__title-container">
                     <Link to={"/Travelers"}><img className="header__logo" src={logo} alt="Why Travel Alone logo" /></Link>
                     <h1 className="header__title">Why Travel Alone</h1>
+                    {isAuthenticated && (
+                        <button
+                            type="button"
+                            className="header__menu-button"
+                            aria-expanded={menuOpen}
+                            aria-controls="site-nav"
+                            onClick={() => setMenuOpen((open) => !open)}
+                        >
+                            {menuOpen ? "Close" : "Menu"}
+                        </button>
+                    )}
                 </div>
-                <nav className="header__nav">
+                <nav
+                    id="site-nav"
+                    aria-label="Main"
+                    className={`header__nav${isAuthenticated ? " header__nav--member" : ""}${menuOpen ? " header__nav--open" : ""}`}
+                >
                     {isAuthenticated && (
                         <>
                             <NavLink className={navClass} to={"/Travelers"}>
@@ -68,6 +92,7 @@ function Header() {
                 </nav>
             </div>
         </header>
-    )
+    );
 }
-export default Header
+
+export default Header;

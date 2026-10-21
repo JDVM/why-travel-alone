@@ -15,7 +15,7 @@ function TravelerCard({ travelers }) {
                 const preferredDestinations = t.preferred_destinations || [];
                 return (
                     <Link className="traveler-card__container" key={t.user_id} to={`/Travelers/${t.user_id}`}>
-                        <img className="traveler-card__image" src={picForIndex(i)} alt="Traveler profile" />
+                        <img className="traveler-card__image" src={picForIndex(i)} alt="" />
                         <section className="traveler-card__information">
                             <article className="traveler-card__info-container">
                                 <h3 className="traveler-card__title">Name</h3>

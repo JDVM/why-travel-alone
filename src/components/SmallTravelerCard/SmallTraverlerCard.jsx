@@ -26,7 +26,7 @@ function SmallTravelerCard({ travelers, removableIds = [], onRemove }) {
                 const hasKids = t.has_kids ? "Yes" : "No";
                 return (
                     <Link className="small-traveler-card__container" key={t.user_id} to={`/Travelers/${t.user_id}`}>
-                        <img className="small-traveler-card__image" src={picForIndex(i)} alt="Traveler profile" />
+                        <img className="small-traveler-card__image" src={picForIndex(i)} alt="" />
                         <section className="small-traveler-card__information">
                             <article className="small-traveler-card__info-container">
                                 <p className="small-traveler-card__title">Name</p>

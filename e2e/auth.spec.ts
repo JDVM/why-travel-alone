@@ -104,3 +104,23 @@ test.describe('sessions', () => {
         await expect(page.locator('.header__account')).toHaveText(user.name);
     });
 });
+
+test('on a phone, the signed-in links are in a menu that closes after navigating @mobile', async ({ page, isMobile }) => {
+    test.skip(!isMobile, 'Phones only');
+    const user = await createUser();
+    await logIn(page, user);
+
+    const menu = page.getByRole('button', { name: 'Menu' });
+    const trips = page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Trips' });
+    await expect(trips).toBeHidden();
+    await expect(menu).toHaveAttribute('aria-expanded', 'false');
+
+    await menu.click();
+    await expect(page.getByRole('button', { name: 'Close' })).toHaveAttribute('aria-expanded', 'true');
+    await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Profile' }).click();
+    await expect(page).toHaveURL(/\/profile$/);
+    await expect(trips).toBeHidden();
+
+    const overflows = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+    expect(overflows).toBe(false);
+});
