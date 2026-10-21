@@ -1,5 +1,5 @@
 import { api } from './client';
-import { Account, AuthResponse } from '../types';
+import { Account, AuthResponse, Session } from '../types';
 
 export async function login(email: string, password: string): Promise<AuthResponse> {
     const { data } = await api.post<AuthResponse>('/auth/login', { email, password });
@@ -45,4 +45,21 @@ export async function forgotPassword(email: string): Promise<void> {
 // Sets a new password with the token from the emailed link.
 export async function resetPassword(token: string, password: string): Promise<void> {
     await api.post('/auth/reset-password', { token, password });
+}
+
+// Ends this browser's session.
+export async function logout(): Promise<void> {
+    await api.post('/auth/logout');
+}
+
+// The browsers and devices signed in to the account.
+export async function getSessions(): Promise<Session[]> {
+    const { data } = await api.get<Session[]>('/auth/sessions');
+    return data;
+}
+
+// Signs out every browser and device except this one. Resolves to how many.
+export async function signOutOtherSessions(): Promise<number> {
+    const { data } = await api.delete<{ ended: number }>('/auth/sessions');
+    return data.ended;
 }

@@ -14,7 +14,7 @@ You are an end-to-end testing specialist working on the Why Travel Alone fronten
 - It needs the whole stack running, started from the API repository checked out next to this one:
   ```sh
   cd ../why-travel-alone-api
-  JWT_SECRET=$(openssl rand -hex 32) TRUST_PROXY=1 docker compose --profile web up -d --build
+  APP_SECRET=$(openssl rand -hex 32) TRUST_PROXY=1 docker compose --profile web up -d --build
   ```
   That gives the app on :3000, the API on :8080 and Mailpit (the emails the API sends) on :8025. The database starts empty: there are no demo accounts.
 - CI runs the suite on every pull request in both repositories (the `e2e` job). It uses the other repository's branch with the same name if there is one, otherwise its `main`, so give paired frontend and API branches the same name.

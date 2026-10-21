@@ -28,8 +28,12 @@ function clientAddress(): string {
     return `10.${Math.floor(Math.random() * 250)}.${Math.floor(counter / 250)}.${counter % 250}`;
 }
 
+export const APP_URL = process.env.E2E_BASE_URL || 'http://localhost:3000';
+
+// Requests that change something must come from the web app's origin (the
+// API's CSRF check), and this client keeps the session cookie signup sets.
 async function api(): Promise<APIRequestContext> {
-    return playwrightRequest.newContext({ baseURL: API_URL });
+    return playwrightRequest.newContext({ baseURL: API_URL, extraHTTPHeaders: { Origin: APP_URL } });
 }
 
 export function uniqueEmail(prefix = 'e2e'): string {

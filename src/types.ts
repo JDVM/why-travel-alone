@@ -24,8 +24,17 @@ export interface Account {
 
 // Response body of POST /auth/login and POST /auth/register.
 export interface AuthResponse {
-    token: string;
     account: Account;
+}
+
+// A browser or device signed in to the account.
+export interface Session {
+    id: string;
+    user_agent: string | null;
+    created_at: string;
+    last_seen_at: string;
+    // The browser this list is being viewed in.
+    current: boolean;
 }
 
 // A traveler as the API shows them to the current user. has_kids and

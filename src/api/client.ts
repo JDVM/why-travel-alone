@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { getToken, clearToken } from '../auth/token';
 
 // Where the API is, fixed when the app is built: REACT_APP_API_BASE_URL (e.g.
 // https://api.example.com), or for local development REACT_APP_API_URL plus
@@ -11,31 +10,23 @@ export function apiBaseUrl(env: Partial<ImportMetaEnv> = import.meta.env): strin
     return `${env.REACT_APP_API_URL}:${env.REACT_APP_API_PORT}`;
 }
 
-// One axios instance for the whole app.
+// One axios instance for the whole app. withCredentials sends the session
+// cookie the API set at login; the page's JavaScript never sees it.
 export const api = axios.create({
     baseURL: apiBaseUrl(),
-});
-
-// Attach the bearer token to every request when we have one.
-api.interceptors.request.use((config) => {
-    const token = getToken();
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
+    withCredentials: true,
 });
 
 // Pages anyone can open, signed in or not.
 const PUBLIC_PATHS = ['/login', '/register', '/privacy', '/terms', '/forgot-password', '/reset-password', '/verify-email'];
 
-// On 401 the token is missing/expired: drop it and send the user to login.
+// On 401 the session is missing or has ended: send the user to login.
 // Skip the redirect on public pages: the auth pages show the error themselves
 // (e.g. a failed login attempt), and the legal pages don't need an account.
 api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response && error.response.status === 401) {
-            clearToken();
             const path = window.location.pathname.toLowerCase();
             if (!PUBLIC_PATHS.some((publicPath) => path.startsWith(publicPath))) {
                 window.location.assign('/login');

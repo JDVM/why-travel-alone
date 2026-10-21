@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { Account } from '../types';
-import { getToken, setToken, clearToken } from './token';
 import * as authApi from '../api/auth';
 import { Registration } from '../api/auth';
 import { setMonitoringUser } from '../monitoring';
@@ -27,20 +26,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [loading, setLoading] = useState(true);
     const [logoutNotice, setLogoutNotice] = useState<string | null>(null);
 
-    // On first load, if a token is present, validate and hydrate the account
-    // from /auth/me. A rejected call (expired/invalid token) clears it.
+    // On first load, ask the API who this browser's session cookie belongs to.
+    // A 401 just means nobody is signed in.
     useEffect(() => {
-        if (!getToken()) {
-            setLoading(false);
-            return;
-        }
         authApi
             .getMe()
             .then((acct) => setAccount(acct))
-            .catch(() => {
-                clearToken();
-                setAccount(null);
-            })
+            .catch(() => setAccount(null))
             .finally(() => setLoading(false));
     }, []);
 
@@ -50,20 +42,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, [account]);
 
     const login = async (email: string, password: string) => {
-        const { token, account: acct } = await authApi.login(email, password);
-        setToken(token);
+        const { account: acct } = await authApi.login(email, password);
         setLogoutNotice(null);
         setAccount(acct);
     };
 
     const register = async (registration: Registration) => {
-        const { token, account: acct } = await authApi.register(registration);
-        setToken(token);
+        const { account: acct } = await authApi.register(registration);
         setAccount(acct);
     };
 
     const logout = (notice?: string) => {
-        clearToken();
+        // Ends the session on the server too. It may already be gone (after a
+        // password reset or account deletion), which is fine.
+        authApi.logout().catch(() => {});
         setLogoutNotice(notice ?? null);
         setAccount(null);
     };

@@ -57,7 +57,7 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     env:
-      JWT_SECRET: ci-only-jwt-secret-at-least-32-characters
+      APP_SECRET: ci-only-app-secret-at-least-32-characters
       TRUST_PROXY: "1"
     steps:
       - uses: actions/checkout@v6

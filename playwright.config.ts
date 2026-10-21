@@ -4,7 +4,7 @@ import { defineConfig, devices } from '@playwright/test';
 // MySQL and Mailpit for emails). Start the stack from the API repository:
 //
 //   cd ../why-travel-alone-api
-//   JWT_SECRET=$(openssl rand -hex 32) TRUST_PROXY=1 docker compose --profile web up -d --build
+//   APP_SECRET=$(openssl rand -hex 32) TRUST_PROXY=1 docker compose --profile web up -d --build
 //
 // then run `npm run e2e` here. CI does the same on every pull request.
 export default defineConfig({

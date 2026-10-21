@@ -1,5 +1,6 @@
+import { request } from '@playwright/test';
 import { test, expect } from './support/test';
-import { createUser, logIn, logOut, mailTo, linkIn, uniqueEmail, PASSWORD } from './support/stack';
+import { API_URL, createUser, logIn, logOut, mailTo, linkIn, uniqueEmail, PASSWORD } from './support/stack';
 
 test.describe('signing up and logging in', () => {
     test('a visitor signs up, accepts the terms, and confirms their email @mobile', async ({ page }) => {
@@ -59,5 +60,47 @@ test.describe('signing up and logging in', () => {
         // Nothing overflows sideways on a phone.
         const overflows = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
         expect(overflows).toBe(false);
+    });
+});
+
+test.describe('sessions', () => {
+    test('a login is an httpOnly cookie that scripts on the page cannot read', async ({ page, context }) => {
+        const user = await createUser();
+        await logIn(page, user);
+
+        expect(await page.evaluate(() => ({ ...localStorage }))).toEqual({});
+        expect(await page.evaluate(() => document.cookie)).not.toContain('wta_session');
+        const session = (await context.cookies(API_URL)).find((cookie) => cookie.name === 'wta_session');
+        expect(session).toMatchObject({ httpOnly: true, secure: true, sameSite: 'Lax' });
+
+        // Logging out ends the session on the server, not just in this browser.
+        await logOut(page);
+        const replay = await request.newContext({ baseURL: API_URL });
+        const me = await replay.get('/auth/me', { headers: { Cookie: `wta_session=${session!.value}` } });
+        expect(me.status()).toBe(401);
+        await replay.dispose();
+    });
+
+    test('a user signs out their other devices from the profile page', async ({ page, browser }) => {
+        const user = await createUser();
+        const phone = await browser.newPage();
+        await logIn(phone, user);
+        await logIn(page, user);
+
+        await page.getByRole('link', { name: 'Profile' }).click();
+        // This browser, the "phone", and the signup createUser did through the API.
+        await expect(page.locator('.devices__item')).toHaveCount(3);
+        await expect(page.locator('.devices__item', { hasText: '(this device)' })).toHaveCount(1);
+        await page.getByRole('button', { name: 'Sign out other devices' }).click();
+        await expect(page.getByText('Signed out 2 other devices.')).toBeVisible();
+        await expect(page.locator('.devices__item')).toHaveCount(1);
+
+        await phone.goto('/Trips');
+        await expect(phone).toHaveURL(/\/login$/);
+        await phone.close();
+
+        // This device is still signed in.
+        await page.reload();
+        await expect(page.locator('.header__account')).toHaveText(user.name);
     });
 });
