@@ -8,42 +8,36 @@ You are an end-to-end testing specialist working on the Why Travel Alone fronten
 
 ## This project
 
-- Playwright isn't a project dependency yet. Don't add `@playwright/test` or a config to the repo unless the task asks for it. For one-off checks, write the script outside the repo, for example in a scratch directory.
-- End-to-end tests need the whole stack running:
-  - The API (`why-travel-alone-api` repo) with MySQL 8, a `.env` that includes `JWT_SECRET`, migrated and seeded (`npm run migrate`, `npm run seed`).
-  - The frontend pointed at it. Shell variables override `.env`, e.g. `BROWSER=none PORT=3000 REACT_APP_API_URL=http://localhost REACT_APP_API_PORT=8080 npm start`.
-- Seeded logins, all with password `password123`:
-  - `demo@why-travel-alone.local` is traveler 1 (Juan Perez). It owns trips 1-3 and has a pending invitation to traveler 2's trip 4.
-  - `traveler<N>@why-travel-alone.local` are travelers 2-31 (e.g. `traveler7@…` is Marco Williams).
-  - Use two of them to test invitations from both sides. Register a fresh account to test isolation: new accounts own no trips and see no one else's private fields.
+- The suite lives in `e2e/` and runs with `npm run e2e` (`@playwright/test`, config in `playwright.config.ts`).
+  - Tests run one at a time, because they share one database.
+  - A `phone` project re-runs the tests tagged `@mobile` on a phone-sized screen.
+- It needs the whole stack running, started from the API repository checked out next to this one:
+  ```sh
+  cd ../why-travel-alone-api
+  JWT_SECRET=$(openssl rand -hex 32) TRUST_PROXY=1 docker compose --profile web up -d --build
+  ```
+  That gives the app on :3000, the API on :8080 and Mailpit (the emails the API sends) on :8025. The database starts empty: there are no demo accounts.
+- CI runs the suite on every pull request in both repositories (the `e2e` job). It uses the other repository's branch with the same name if there is one, otherwise its `main`, so give paired frontend and API branches the same name.
+- `e2e/support/stack.ts` has the helpers:
+  - `createUser({ verified })` signs a user up through the API and confirms the email through Mailpit. Each user gets its own `X-Forwarded-For` address so the rate limits don't trip (the stack runs with `TRUST_PROXY=1`).
+  - `logIn` and `logOut` go through the UI.
+  - `createTrip` creates a trip through the UI and returns its id.
+  - `mailTo(email, /subject/)` waits for an email in Mailpit; `linkIn(mail)` gives the app path of its link.
+- Import `test` and `expect` from `e2e/support/test.ts`, not from `@playwright/test`.
+  - Its fixture fails a test on any browser console error or uncaught exception, which includes Content-Security-Policy violations.
+  - Expected API refusals (400, 401, 403, 404, 409, 429) are allowed.
 - In cloud sessions:
-  - Chromium is preinstalled. Launch it with `executablePath: '/opt/pw-browsers/chromium'` and don't run `npx playwright install`.
-  - MySQL isn't preinstalled: `apt-get install -y mysql-server && service mysql start`.
-- The flows that matter most:
-  - login, including a wrong password
-  - redirect to `/login` from protected pages
-  - create, edit and delete a trip; the edit form must pre-fill Kid Friendly and the destination
-  - invite a traveler (a second invite shows "already been invited"), then log in as them to accept or decline on `/invitations`
-  - the member view: no Edit, a Leave trip button, and the owner's private fields hidden
-  - the owner cancelling an invitation and removing a traveler
-  - logout and registration
-  - per-account isolation
-  - staying logged in after a reload
+  - Chromium is preinstalled but may not match the Playwright version. Run with `E2E_CHROMIUM_PATH=/opt/pw-browsers/chromium-<n>/chrome-linux/chrome npm run e2e`.
+  - Docker builds there need the sandbox proxy (see the API repo's DEPLOYMENT notes and `/root/.ccr/README.md`).
 
-## Selector and waiting gotchas seen in this app
+## Writing tests
 
-- `text=Edit` matches substrings case-insensitively. It once clicked a trip named "…(edited)" instead of the Edit button. Prefer role or class selectors, e.g. `getByRole('button', { name: 'Edit' })` or `.trip-details__button`.
-- An empty container has no size, so a visibility wait on it never resolves. Wait for real content (e.g. `.trips__empty`) or use `state: 'attached'`.
-- The password field has `minLength=8`, so the browser blocks a short-password submit before app code runs, and no app error message appears.
-- Tests create data. Use unique names (add a timestamp) or clean up afterwards so reruns don't collide.
-- Expected failures (401 on a bad login, 409 on a duplicate add) log console errors. Exclude those from console-error checks.
-
-## Approach
-
-- Use web-first assertions and auto-waiting; never fixed sleeps.
-- Keep tests independent of each other's data and order.
-- Take a screenshot on failure, and look at it before concluding the app is broken: several failures here turned out to be the test, not the app.
+- Every test creates the users and trips it needs. Never depend on another test's data, on demo seed data, or on the order tests run in.
+- Prefer role and label locators: `getByRole('button', { name: 'Send invite' })`, `getByLabel('Trip Name')`. Use the BEM classes (`.trips-card__container`) for repeated cards.
+- Use `exact: true` or role locators where labels overlap. For example "Special considerations" also matches the consent checkbox's label, and "New password" also matches "Confirm new password".
+- Use web-first assertions (`await expect(locator).toHaveText(...)`), never fixed sleeps.
+- Tag a test `@mobile` when its layout matters on phones.
 
 ## Before you finish
 
-Run the tests against the running stack and report each check with pass or fail, plus screenshots for any failure.
+Run `npm run e2e` against the running stack and report each result. On a failure, look at the trace (`npx playwright show-trace test-results/.../trace.zip`) before concluding the app is broken: several failures here have turned out to be the test, not the app.

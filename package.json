@@ -20,7 +20,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "e2e": "playwright test"
   },
   "jest": {
     "transformIgnorePatterns": [
@@ -46,6 +47,7 @@
     ]
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@types/jest": "^27.5.2",
     "@types/node": "^20.19.43",
     "@types/react": "^18.3.31",

@@ -42,6 +42,20 @@ If you encounter any issues, please feel free to contact me via GitHub.
 - In the terminal, run `npm run migrate` to apply the latest migration files
 - Seed the database by running `npm run seed` to populate it with the latest data
 
+### Browser tests
+
+`e2e/` holds Playwright tests that drive a real browser through the whole app: sign-up and email confirmation, trips, invitations, privacy, password reset. They run against the full stack, started from the API repository (checked out next to this one):
+
+```sh
+cd ../why-travel-alone-api
+JWT_SECRET=$(openssl rand -hex 32) TRUST_PROXY=1 docker compose --profile web up -d --build
+cd ../why-travel-alone
+npx playwright install chromium   # once
+npm run e2e
+```
+
+Each test creates its own users (emails are read from Mailpit), so the suite needs no demo data and can run repeatedly. Any error in the browser console, including a Content-Security-Policy violation, fails the test. CI runs the suite on every pull request in both repositories, against the other repository's branch of the same name if there is one, otherwise its `main`.
+
 ### Deploying
 
 `Dockerfile` builds the production site served by nginx, with a strict Content-Security-Policy and other security headers (`nginx/default.conf.template`):

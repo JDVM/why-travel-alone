@@ -9,3 +9,7 @@ coverage
 .env.*
 !.env.example
 npm-debug.log*
+e2e
+playwright.config.ts
+test-results
+playwright-report
