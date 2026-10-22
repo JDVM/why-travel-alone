@@ -119,7 +119,8 @@ export async function logIn(page: Page, user: { email: string; password: string 
 // API's answer too: until then the session still works on the server.
 export async function logOut(page: Page) {
     const loggedOut = page.waitForResponse((response) => response.url().endsWith('/auth/logout'));
-    await page.getByRole('button', { name: 'Log Out' }).click();
+    await page.getByRole('button', { name: 'Account' }).click();
+    await page.getByRole('menuitem', { name: 'Log Out' }).click();
     await page.waitForURL('**/login');
     await loggedOut;
 }

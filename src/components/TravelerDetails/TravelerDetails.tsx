@@ -8,6 +8,7 @@ import { getTrips, inviteTraveler } from "../../api/trips";
 import { errorMessage } from "../../api/errors";
 import { useAuth } from "../../auth/AuthContext";
 import { Traveler, TripSummary } from "../../types";
+import { LoadingPanel } from "../Loading/Loading";
 
 function Detail({ label, children }: { label: string; children: ReactNode }) {
     return (
@@ -49,7 +50,7 @@ function TravelerDetails() {
         return (
             <Container maxWidth="md" sx={{ py: 3 }}>
                 <PageHeader title="Traveler Profile" back />
-                {error ? <Alert severity="error">{error}</Alert> : <Typography>Loading traveler data, please wait…</Typography>}
+                {error ? <Alert severity="error">{error}</Alert> : <LoadingPanel label="Loading the traveler" />}
             </Container>
         );
     }

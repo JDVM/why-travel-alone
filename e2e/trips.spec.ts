@@ -1,5 +1,5 @@
 import { test, expect } from './support/test';
-import { createUser, createTrip, logIn } from './support/stack';
+import { createUser, createTrip, logIn, logOut } from './support/stack';
 
 const NO_TRIPS = /you don't have any trips yet/i;
 
@@ -44,7 +44,7 @@ test("another account can't open someone else's trip", async ({ page }) => {
     const owner = await createUser();
     await logIn(page, owner);
     const tripId = await createTrip(page, `Private ${Date.now()}`);
-    await page.getByRole('button', { name: 'Log Out' }).click();
+    await logOut(page);
 
     const stranger = await createUser();
     await logIn(page, stranger);

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Alert, Button, Container, Typography } from "@mui/material";
+import { Alert, Button, Container } from "@mui/material";
 import PageHeader from "../PageHeader/PageHeader";
 import TripForm from "../TripForm/TripForm";
 import { tripFormError } from "../TripForm/tripFormError";
@@ -8,6 +8,7 @@ import { getDestinations } from "../../api/destinations";
 import { getTrip, updateTrip, deleteTrip } from "../../api/trips";
 import { errorMessage } from "../../api/errors";
 import { Destination, TripInput } from "../../types";
+import { LoadingPanel } from "../Loading/Loading";
 
 function EditTrip() {
     const { id = "" } = useParams();
@@ -76,7 +77,7 @@ function EditTrip() {
         <Container maxWidth="sm" sx={{ py: 3 }}>
             <PageHeader title="Edit Trip Details" back />
             {destinations === null ? (
-                error ? <Alert severity="error">{error}</Alert> : <Typography>Loading destination data, please wait…</Typography>
+                error ? <Alert severity="error">{error}</Alert> : <LoadingPanel label="Loading the trip" rows={5} />
             ) : (
                 <TripForm
                     trip={trip}

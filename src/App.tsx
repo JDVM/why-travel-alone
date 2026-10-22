@@ -3,6 +3,7 @@ import { LinearProgress } from '@mui/material';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Header from './components/Header/Header';
 import Login from './pages/Login/Login';
+import Home from './pages/Landing/Home';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import Footer from './components/Footer/Footer';
@@ -47,6 +48,7 @@ function App() {
       <VerifyEmailBanner />
       <PageErrorBoundary>
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/privacy" element={<Privacy />} />
@@ -62,7 +64,7 @@ function App() {
           <Route path="/new" element={<ProtectedRoute><AddTrip /></ProtectedRoute>} />
           <Route path="/invitations" element={<ProtectedRoute><Invitations /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-          <Route path='/*' element={<Navigate to="/Travelers" />} />
+          <Route path='/*' element={<Navigate to="/" replace />} />
         </Routes>
       </PageErrorBoundary>
       <Footer />

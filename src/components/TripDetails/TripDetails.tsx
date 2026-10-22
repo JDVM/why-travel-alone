@@ -18,6 +18,7 @@ import { getTrip, removeTraveler, cancelInvitation, leaveTrip } from "../../api/
 import { errorMessage } from "../../api/errors";
 import { useAuth } from "../../auth/AuthContext";
 import { TripDetail } from "../../types";
+import { LoadingPanel } from "../Loading/Loading";
 
 // One labelled value, grouped so assistive technology (and the browser
 // tests) can find a value by its label.
@@ -89,7 +90,7 @@ function TripDetails() {
     if (!tripDetails) {
         return (
             <Container maxWidth="md" sx={{ py: 3 }}>
-                <Typography>Loading trip data, please wait…</Typography>
+                <LoadingPanel label="Loading the trip" />
             </Container>
         );
     }

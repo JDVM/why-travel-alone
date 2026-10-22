@@ -3,6 +3,21 @@ import { test, expect } from './support/test';
 import { API_URL, accountName, createUser, logIn, logOut, mailTo, linkIn, uniqueEmail, verifyBanner, PASSWORD } from './support/stack';
 
 test.describe('signing up and logging in', () => {
+    test('visitors see the landing page; signed-in travelers go to their trips @mobile', async ({ page }) => {
+        await page.goto('/');
+        await expect(page.getByRole('heading', { name: /find your people/i, level: 1 })).toBeVisible();
+        await page.getByRole('link', { name: 'Sign up free' }).click();
+        await expect(page).toHaveURL(/\/register$/);
+
+        const user = await createUser();
+        await logIn(page, user);
+        await page.goto('/');
+        await expect(page).toHaveURL(/\/Trips$/);
+        // Unknown addresses go home too.
+        await page.goto('/no-such-page');
+        await expect(page).toHaveURL(/\/Trips$/);
+    });
+
     test('a visitor signs up, accepts the terms, and confirms their email @mobile', async ({ page }) => {
         const email = uniqueEmail('signup');
         await page.goto('/register');

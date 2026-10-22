@@ -6,6 +6,7 @@ import PageHeader from "../../components/PageHeader/PageHeader";
 import { getTravelers } from "../../api/travelers";
 import { Traveler } from "../../types";
 import { matchesSearch } from "./matchesSearch";
+import { LoadingCards } from "../../components/Loading/Loading";
 
 function Travelers() {
     const [travelers, setTravelers] = useState<Traveler[]>();
@@ -30,7 +31,7 @@ function Travelers() {
     if (error) {
         content = <Alert severity="error">{error}</Alert>;
     } else if (travelers === undefined) {
-        content = <Typography>Loading…</Typography>;
+        content = <LoadingCards label="Loading travelers" count={6} height={120} />;
     } else if (shown.length === 0) {
         content = <Typography color="text.secondary">No travelers match "{query}".</Typography>;
     } else {

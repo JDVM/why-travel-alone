@@ -21,6 +21,7 @@ import { Destination, Profile as ProfileData, TypeOfTravel } from '../../types';
 import YourData from '../../components/YourData/YourData';
 import SignedInDevices from '../../components/SignedInDevices/SignedInDevices';
 import PageHeader from '../../components/PageHeader/PageHeader';
+import { LoadingPanel } from '../../components/Loading/Loading';
 
 // users.special_considerations is a VARCHAR(50).
 const SPECIAL_CONSIDERATIONS_MAX = 50;
@@ -109,7 +110,7 @@ function Profile() {
         return (
             <Container maxWidth="md" sx={{ py: 3 }}>
                 <PageHeader title="Your traveler profile" />
-                {error ? <Alert severity="error">{error}</Alert> : <Typography>Loading your profile…</Typography>}
+                {error ? <Alert severity="error">{error}</Alert> : <LoadingPanel label="Loading your profile" rows={5} />}
             </Container>
         );
     }
