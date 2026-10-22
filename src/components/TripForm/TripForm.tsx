@@ -1,10 +1,8 @@
 import { FormEvent, ReactNode } from 'react';
-import { Alert, Box, Button, Checkbox, FormControlLabel, Paper, Stack, TextField } from '@mui/material';
+import { Alert, Autocomplete, Box, Button, Checkbox, FormControlLabel, Paper, Stack, TextField } from '@mui/material';
 import { Destination, TripInput } from '../../types';
 
 interface TripFormProps {
-    // The form's class: the browser tests find the add form by "trip-add".
-    className: string;
     trip: TripInput;
     onChange: (trip: TripInput) => void;
     destinations: Destination[];
@@ -17,8 +15,10 @@ interface TripFormProps {
 
 // The fields of a trip, shared by the add and edit pages. Checks the required
 // fields before calling onSubmit.
-function TripForm({ className, trip, onChange, destinations, submitLabel, onSubmit, error, extraActions }: TripFormProps) {
+function TripForm({ trip, onChange, destinations, submitLabel, onSubmit, error, extraActions }: TripFormProps) {
     const set = (changes: Partial<TripInput>) => onChange({ ...trip, ...changes });
+
+    const destination = destinations.find((place) => String(place.id) === String(trip.destination_id)) ?? null;
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -27,7 +27,7 @@ function TripForm({ className, trip, onChange, destinations, submitLabel, onSubm
 
     return (
         <Paper variant="outlined" sx={{ p: { xs: 2, sm: 3 } }}>
-            <Box component="form" className={className} onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <TextField
                     id="name"
                     label="Trip Name"
@@ -45,21 +45,17 @@ function TripForm({ className, trip, onChange, destinations, submitLabel, onSubm
                         slotProps={{ htmlInput: { inputMode: 'numeric' } }}
                         sx={{ flex: 1 }}
                     />
-                    {/* A native select: simple on phones, and the browser tests pick options by index. */}
-                    <TextField
-                        id="destination-select"
-                        select
-                        label="Destination"
-                        value={trip.destination_id}
-                        onChange={(e) => set({ destination_id: e.target.value })}
-                        slotProps={{ select: { native: true }, inputLabel: { shrink: true } }}
+                    {/* Searchable: the list is every country. */}
+                    <Autocomplete
+                        id="destination"
+                        options={destinations}
+                        value={destination}
+                        onChange={(_, chosen) => set({ destination_id: chosen ? chosen.id : '' })}
+                        getOptionLabel={(place) => place.place}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                        renderInput={(params) => <TextField {...params} label="Destination" placeholder="Type to search" />}
                         sx={{ flex: 2 }}
-                    >
-                        <option value="">Select Destination</option>
-                        {destinations.map((place) => (
-                            <option key={place.id} value={place.id}>{place.place}</option>
-                        ))}
-                    </TextField>
+                    />
                 </Stack>
                 <FormControlLabel
                     label="Kid Friendly Trip"

@@ -13,9 +13,9 @@ interface SmallTravelerCardProps {
 // never for themselves (removableIds excludes them).
 function SmallTravelerCard({ travelers, removableIds = [], onRemove }: SmallTravelerCardProps) {
     return (
-        <Box sx={{ display: "grid", gap: 2, gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", md: "repeat(3, 1fr)" } }}>
+        <Box component="ul" sx={{ listStyle: "none", m: 0, p: 0, display: "grid", gap: 2, gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", md: "repeat(3, 1fr)" } }}>
             {travelers.map((t) => (
-                <Card key={t.user_id} variant="outlined" className="small-traveler-card__container" sx={{ display: "flex", flexDirection: "column" }}>
+                <Card component="li" key={t.user_id} variant="outlined" sx={{ display: "flex", flexDirection: "column" }}>
                     <CardActionArea component={RouterLink} to={`/Travelers/${t.user_id}`} sx={{ flexGrow: 1 }}>
                         <CardContent sx={{ display: "flex", gap: 2, alignItems: "flex-start" }}>
                             <Avatar src={picForIndex(t.user_id)} alt="" sx={{ width: 56, height: 56 }} />
@@ -38,7 +38,7 @@ function SmallTravelerCard({ travelers, removableIds = [], onRemove }: SmallTrav
                     </CardActionArea>
                     {removableIds.includes(t.user_id) && onRemove && (
                         <CardActions sx={{ justifyContent: "flex-end" }}>
-                            <Button className="small-traveler-card__button" color="error" size="small" onClick={() => onRemove(t)}>
+                            <Button color="error" size="small" onClick={() => onRemove(t)}>
                                 Remove
                             </Button>
                         </CardActions>

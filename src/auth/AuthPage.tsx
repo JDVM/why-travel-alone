@@ -25,10 +25,9 @@ export function AuthForm({ onSubmit, children }: { onSubmit: (e: FormEvent<HTMLF
     );
 }
 
-// Errors keep the auth__error class: the browser tests look for it.
 export function AuthError({ children }: { children: ReactNode }) {
     return (
-        <Alert severity="error" className="auth__error">
+        <Alert severity="error">
             {children}
         </Alert>
     );

@@ -53,7 +53,7 @@ function SignedInDevices() {
             {sessions && (
                 <List dense>
                     {sessions.map((session) => (
-                        <ListItem className="devices__item" key={session.id} disableGutters>
+                        <ListItem key={session.id} disableGutters>
                             <ListItemText
                                 primary={
                                     <>

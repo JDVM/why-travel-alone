@@ -91,7 +91,7 @@ function Header() {
                     {isAuthenticated && (
                         <>
                             {accountName && (
-                                <Typography className="header__account" variant="body2" sx={{ px: 1, fontWeight: 600 }}>
+                                <Typography data-testid="account-name" variant="body2" sx={{ px: 1, fontWeight: 600 }}>
                                     {accountName}
                                 </Typography>
                             )}

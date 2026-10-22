@@ -1,6 +1,6 @@
 import { readFile } from 'fs/promises';
 import { test, expect } from './support/test';
-import { createUser, logIn, mailTo, linkIn } from './support/stack';
+import { createUser, logIn, mailTo, linkIn, pickFrom } from './support/stack';
 
 test('special considerations are saved only with consent, which clearing withdraws', async ({ page }) => {
     const user = await createUser();
@@ -31,14 +31,9 @@ test('a user picks preferred destinations, which show on their traveler profile'
     await logIn(page, user);
     await page.getByRole('link', { name: 'Profile' }).click();
 
-    const picker = page.getByRole('combobox', { name: 'Preferred destinations' });
     const chosen: string[] = [];
     for (const search of ['a', 'e']) {
-        await picker.fill(search);
-        // The picker's own list (the page's native selects have options too).
-        const option = page.locator('.MuiAutocomplete-listbox').getByRole('option').first();
-        chosen.push((await option.textContent()) as string);
-        await option.click();
+        chosen.push(await pickFrom(page, 'Preferred destinations', search));
     }
     await page.getByRole('button', { name: 'Save profile' }).click();
     await expect(page.getByText('Profile saved.')).toBeVisible();
@@ -77,7 +72,7 @@ test('a user downloads their data, then deletes their account', async ({ page })
     await page.getByLabel('Email').fill(user.email);
     await page.getByLabel('Password').fill(user.password);
     await page.getByRole('button', { name: 'Log In' }).click();
-    await expect(page.locator('.auth__error')).toHaveText(/invalid email or password/i);
+    await expect(page.getByRole('alert')).toHaveText(/invalid email or password/i);
 });
 
 test('a forgotten password is reset by email, signing out other sessions', async ({ page, browser }) => {

@@ -29,7 +29,7 @@ function Trips() {
         // Trips are owner-scoped, so a brand-new account has none yet.
         content = (
             <Paper variant="outlined" sx={{ p: 4, textAlign: "center" }}>
-                <Typography className="trips__empty">
+                <Typography>
                     You don't have any trips yet. <Link component={RouterLink} to="/new">Create your first trip</Link>.
                 </Typography>
             </Paper>

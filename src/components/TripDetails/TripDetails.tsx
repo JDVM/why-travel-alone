@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, ReactNode } from "react";
+import { useEffect, useId, useState, useCallback, ReactNode } from "react";
 import { Link as RouterLink, useParams, useNavigate } from "react-router-dom";
 import {
     Alert,
@@ -19,15 +19,16 @@ import { errorMessage } from "../../api/errors";
 import { useAuth } from "../../auth/AuthContext";
 import { TripDetail } from "../../types";
 
-// One labelled value. The trip-details__text class is what the browser tests
-// read the values by.
+// One labelled value, grouped so assistive technology (and the browser
+// tests) can find a value by its label.
 function Detail({ label, children }: { label: string; children: ReactNode }) {
+    const labelId = useId();
     return (
-        <Box>
-            <Typography variant="overline" color="text.secondary" component="h3" sx={{ lineHeight: 1.5 }}>
+        <Box role="group" aria-labelledby={labelId}>
+            <Typography id={labelId} variant="overline" color="text.secondary" component="h3" sx={{ lineHeight: 1.5 }}>
                 {label}
             </Typography>
-            <Typography className="trip-details__text">{children}</Typography>
+            <Typography>{children}</Typography>
         </Box>
     );
 }
@@ -133,14 +134,13 @@ function TripDetails() {
             {actionError && <Alert severity="error" sx={{ mb: 3 }}>{actionError}</Alert>}
 
             {isOwner && invitations.length > 0 && (
-                <Box component="section" sx={{ mb: 3 }}>
-                    <Typography component="h2" variant="h6" sx={{ fontWeight: 700, mb: 1 }}>Invitations</Typography>
+                <Box component="section" aria-labelledby="trip-invitations" sx={{ mb: 3 }}>
+                    <Typography id="trip-invitations" component="h2" variant="h6" sx={{ fontWeight: 700, mb: 1 }}>Invitations</Typography>
                     <Paper variant="outlined">
                         <List disablePadding>
                             {invitations.map((invitation, index) => (
                                 <ListItem
                                     key={invitation.user_id}
-                                    className="trip-details__invitation"
                                     divider={index < invitations.length - 1}
                                     secondaryAction={
                                         invitation.status === "pending" && (
@@ -164,8 +164,8 @@ function TripDetails() {
                 </Box>
             )}
 
-            <Box component="section">
-                <Typography component="h2" variant="h6" sx={{ fontWeight: 700, mb: 1 }}>Travelers</Typography>
+            <Box component="section" aria-labelledby="trip-travelers">
+                <Typography id="trip-travelers" component="h2" variant="h6" sx={{ fontWeight: 700, mb: 1 }}>Travelers</Typography>
                 <SmallTravelerCard
                     travelers={travelersForThisTrip}
                     removableIds={removableIds}
