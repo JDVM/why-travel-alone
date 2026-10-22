@@ -152,7 +152,7 @@ export async function pickFrom(page: Page, label: string, search: string): Promi
 // Creates a trip through the UI and returns its id.
 export async function createTrip(page: Page, name: string, { kidFriendly = false, destination = 'a' } = {}): Promise<string> {
     await page.goto('/new');
-    await page.getByLabel('Trip Name').fill(name);
+    await page.getByRole('textbox', { name: 'Trip Name' }).fill(name);
     await page.getByLabel('Trip Length').fill('5');
     await pickFrom(page, 'Destination', destination);
     if (kidFriendly) {
