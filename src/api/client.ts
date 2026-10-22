@@ -28,7 +28,8 @@ api.interceptors.response.use(
     (error) => {
         if (error.response && error.response.status === 401) {
             const path = window.location.pathname.toLowerCase();
-            if (!PUBLIC_PATHS.some((publicPath) => path.startsWith(publicPath))) {
+            // The landing page is public too ('/' exactly: every path starts with it).
+            if (path !== '/' && !PUBLIC_PATHS.some((publicPath) => path.startsWith(publicPath))) {
                 window.location.assign('/login');
             }
         }

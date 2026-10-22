@@ -22,6 +22,7 @@ async function expectAccessible(page: Page, name: string) {
 test.describe('accessibility @mobile', () => {
     test('pages for signed-out visitors', async ({ page }) => {
         for (const [path, heading] of [
+            ['/', 'Find your people. Plan the trip together.'],
             ['/login', 'Log In'],
             ['/register', 'Create Account'],
             ['/forgot-password', 'Reset your password'],

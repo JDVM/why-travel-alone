@@ -6,6 +6,7 @@ import PageHeader from '../../components/PageHeader/PageHeader';
 import { getInvitations, acceptInvitation, declineInvitation } from '../../api/invitations';
 import { errorMessage } from '../../api/errors';
 import { ReceivedInvitation } from '../../types';
+import { LoadingCards } from '../../components/Loading/Loading';
 
 function Invitations() {
     const [invitations, setInvitations] = useState<ReceivedInvitation[] | null>(null);
@@ -48,7 +49,7 @@ function Invitations() {
 
     let content;
     if (!invitations) {
-        content = error ? <Alert severity="error">{error}</Alert> : <Typography>Loading invitations…</Typography>;
+        content = error ? <Alert severity="error">{error}</Alert> : <LoadingCards label="Loading your invitations" count={2} />;
     } else if (invitations.length === 0) {
         content = (
             <Paper variant="outlined" sx={{ p: 4, textAlign: 'center' }}>

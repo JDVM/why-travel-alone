@@ -6,6 +6,7 @@ import TripsCard from "../../components/TripsCard/TripsCard";
 import PageHeader from "../../components/PageHeader/PageHeader";
 import { getTrips } from "../../api/trips";
 import { TripSummary } from "../../types";
+import { LoadingCards } from "../../components/Loading/Loading";
 
 function Trips() {
     const [trips, setTrips] = useState<TripSummary[]>();
@@ -24,7 +25,7 @@ function Trips() {
     if (error) {
         content = <Alert severity="error">{error}</Alert>;
     } else if (!trips) {
-        content = <Typography>Loading trips, please wait…</Typography>;
+        content = <LoadingCards label="Loading your trips" />;
     } else if (trips.length === 0) {
         // Trips are owner-scoped, so a brand-new account has none yet.
         content = (
