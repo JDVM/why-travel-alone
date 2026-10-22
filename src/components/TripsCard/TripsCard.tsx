@@ -7,11 +7,10 @@ import { TripSummary } from "../../types";
 // The trips you own or are on, as a grid of cards linking to each trip.
 function TripsCard({ trips }: { trips: TripSummary[] }) {
     return (
-        <Box sx={{ display: "grid", gap: 2, gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" } }}>
+        <Box component="ul" sx={{ listStyle: "none", m: 0, p: 0, display: "grid", gap: 2, gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" } }}>
             {trips.map((trip) => (
-                <Card key={trip.trip_id} variant="outlined">
+                <Card component="li" key={trip.trip_id} variant="outlined">
                     <CardActionArea
-                        className="trips-card__container"
                         component={RouterLink}
                         to={`/Trips/${trip.trip_id}`}
                         sx={{ height: "100%", alignItems: "stretch" }}
@@ -20,7 +19,7 @@ function TripsCard({ trips }: { trips: TripSummary[] }) {
                             <Typography component="h2" variant="h6" sx={{ fontWeight: 700 }}>
                                 {trip.trip_name}
                             </Typography>
-                            <Typography className="trips-card__role" variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+                            <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
                                 {trip.is_owner ? "You're the owner" : "You're a traveler"}
                             </Typography>
                             <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap", rowGap: 1, mb: 1.5 }}>

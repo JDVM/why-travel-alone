@@ -1,6 +1,6 @@
 import { request } from '@playwright/test';
 import { test, expect } from './support/test';
-import { API_URL, createUser, logIn, logOut, mailTo, linkIn, uniqueEmail, PASSWORD } from './support/stack';
+import { API_URL, accountName, createUser, logIn, logOut, mailTo, linkIn, uniqueEmail, verifyBanner, PASSWORD } from './support/stack';
 
 test.describe('signing up and logging in', () => {
     test('a visitor signs up, accepts the terms, and confirms their email @mobile', async ({ page }) => {
@@ -19,14 +19,14 @@ test.describe('signing up and logging in', () => {
 
         // New users land on their profile, reminded to confirm their email.
         await expect(page).toHaveURL(/\/profile$/);
-        await expect(page.locator('.header__account')).toHaveText('Ana Lima');
-        await expect(page.locator('.verify-banner')).toContainText(email);
+        await expect(accountName(page)).toHaveText('Ana Lima');
+        await expect(verifyBanner(page)).toContainText(email);
 
         await page.goto(linkIn(await mailTo(email, /confirm your email/i)));
         await expect(page.getByText(/your email address is confirmed/i)).toBeVisible();
         // The one-time token doesn't stay in the address bar.
         await expect(page).toHaveURL(/\/verify-email$/);
-        await expect(page.locator('.verify-banner')).toHaveCount(0);
+        await expect(verifyBanner(page)).toHaveCount(0);
     });
 
     test('pages need a login, and a session survives a reload', async ({ page }) => {
@@ -38,12 +38,12 @@ test.describe('signing up and logging in', () => {
         await page.getByLabel('Email').fill(user.email);
         await page.getByLabel('Password').fill('not-the-password');
         await page.getByRole('button', { name: 'Log In' }).click();
-        await expect(page.locator('.auth__error')).toHaveText(/invalid email or password/i);
+        await expect(page.getByRole('alert')).toHaveText(/invalid email or password/i);
 
         await logIn(page, user);
-        await expect(page.locator('.header__account')).toHaveText(user.name);
+        await expect(accountName(page)).toHaveText(user.name);
         await page.reload();
-        await expect(page.locator('.header__account')).toHaveText(user.name);
+        await expect(accountName(page)).toHaveText(user.name);
 
         await logOut(page);
         await page.goto('/Trips');
@@ -89,11 +89,12 @@ test.describe('sessions', () => {
 
         await page.getByRole('link', { name: 'Profile' }).click();
         // This browser, the "phone", and the signup createUser did through the API.
-        await expect(page.locator('.devices__item')).toHaveCount(3);
-        await expect(page.locator('.devices__item', { hasText: '(this device)' })).toHaveCount(1);
+        const devices = page.getByRole('region', { name: 'Signed-in devices' }).getByRole('listitem');
+        await expect(devices).toHaveCount(3);
+        await expect(devices.filter({ hasText: '(this device)' })).toHaveCount(1);
         await page.getByRole('button', { name: 'Sign out other devices' }).click();
         await expect(page.getByText('Signed out 2 other devices.')).toBeVisible();
-        await expect(page.locator('.devices__item')).toHaveCount(1);
+        await expect(devices).toHaveCount(1);
 
         await phone.goto('/Trips');
         await expect(phone).toHaveURL(/\/login$/);
@@ -101,7 +102,7 @@ test.describe('sessions', () => {
 
         // This device is still signed in.
         await page.reload();
-        await expect(page.locator('.header__account')).toHaveText(user.name);
+        await expect(accountName(page)).toHaveText(user.name);
     });
 });
 

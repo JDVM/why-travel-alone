@@ -48,7 +48,6 @@ function AddTrip() {
         <Container maxWidth="sm" sx={{ py: 3 }}>
             <PageHeader title="Add Trip Details" back />
             <TripForm
-                className="trip-add"
                 trip={trip}
                 onChange={setTrip}
                 destinations={destinations}

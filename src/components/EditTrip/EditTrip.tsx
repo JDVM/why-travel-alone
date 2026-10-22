@@ -79,7 +79,6 @@ function EditTrip() {
                 error ? <Alert severity="error">{error}</Alert> : <Typography>Loading destination data, please wait…</Typography>
             ) : (
                 <TripForm
-                    className="trip-edit"
                     trip={trip}
                     onChange={setTrip}
                     destinations={destinations}

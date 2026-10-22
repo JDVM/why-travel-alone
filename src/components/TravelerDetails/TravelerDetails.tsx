@@ -140,10 +140,10 @@ function TravelerDetails() {
                         </Typography>
                     )}
                     {inviteMessage && (
-                        <Alert severity="success" className="traveler-details__message" sx={{ mt: 2 }}>{inviteMessage}</Alert>
+                        <Alert severity="success" sx={{ mt: 2 }}>{inviteMessage}</Alert>
                     )}
                     {inviteError && (
-                        <Alert severity="error" className="traveler-details__error" sx={{ mt: 2 }}>{inviteError}</Alert>
+                        <Alert severity="error" sx={{ mt: 2 }}>{inviteError}</Alert>
                     )}
                 </Paper>
             )}

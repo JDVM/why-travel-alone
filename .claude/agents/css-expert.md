@@ -15,8 +15,8 @@ You are a styling specialist working on the Why Travel Alone frontend.
 - Style with the `sx` prop and theme values (`'primary.main'`, `'text.secondary'`, spacing numbers). Use `brand.*` only where a palette colour has no theme role (e.g. the moonstone header).
 - Layout: `Container` for page width, `Stack` for one-dimensional layout, `Box` with `display: 'grid'` for card grids. Use MUI breakpoints in `sx` (`{ xs: …, sm: …, md: … }`); the header collapses into a Menu button below `md`.
 - Shared building blocks: `PageHeader` (page h1, optional back arrow and actions), `AuthPage` and friends in `src/auth/AuthPage.tsx`, `TripForm`, `LegalPage` in `src/pages/Legal/legal.tsx`.
-- Forms use `TextField`. Required fields set `slotProps={{ htmlInput: { required: true } }}` (native validation without an asterisk in the label). Dropdowns the browser tests drive are native selects: `select` plus `slotProps={{ select: { native: true } }}`.
-- Some class names stay only because the browser tests find elements by them (`header__account`, `auth__error`, `trips-card__container`, `small-traveler-card__container`, `verify-banner`, …). Keep them when you change those components.
+- Forms use `TextField`. Required fields set `slotProps={{ htmlInput: { required: true } }}` (native validation without an asterisk in the label). Long lists (destinations) use `Autocomplete`; short ones can be native selects (`select` plus `slotProps={{ select: { native: true } }}`).
+- Don't add class names for tests. The browser tests find elements by role and label, so keep the semantics they rely on: card grids are lists (`Box component="ul"` with `Card component="li"`), page sections are labelled regions (`section` with `aria-labelledby`), labelled values are `role="group"` with `aria-labelledby`, and the header's account name has `data-testid="account-name"`.
 - Production serves a strict Content-Security-Policy. Emotion's `<style>` tags carry a per-response nonce (`src/styleCache.ts`, `nginx/default.conf.template`); don't add inline `<style>` elements or stylesheets from other sites.
 
 ## Approach

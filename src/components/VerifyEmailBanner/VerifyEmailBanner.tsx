@@ -36,7 +36,6 @@ function VerifyEmailBanner() {
         <Alert
             severity="warning"
             role="status"
-            className="verify-banner"
             square
             sx={{ justifyContent: 'center', alignItems: 'center' }}
             action={

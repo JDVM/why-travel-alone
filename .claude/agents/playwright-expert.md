@@ -33,7 +33,7 @@ You are an end-to-end testing specialist working on the Why Travel Alone fronten
 ## Writing tests
 
 - Every test creates the users and trips it needs. Never depend on another test's data, on demo seed data, or on the order tests run in.
-- Prefer role and label locators: `getByRole('button', { name: 'Send invite' })`, `getByLabel('Trip Name')`. Use the BEM classes (`.trips-card__container`) for repeated cards.
+- Prefer role and label locators: `getByRole('button', { name: 'Send invite' })`, `getByLabel('Trip Name')`. For repeated cards use the list items (`card(page, text)` in `e2e/support/stack.ts`) or a labelled region (`getByRole('region', { name: 'Travelers' }).getByRole('listitem')`), and `pickFrom(page, label, search)` for autocompletes. Don't select by CSS class or id; if an element has no role or label to find it by, fix its semantics (or, for plain text, add a `data-testid`).
 - Use `exact: true` or role locators where labels overlap. For example "Special considerations" also matches the consent checkbox's label, and "New password" also matches "Confirm new password".
 - Use web-first assertions (`await expect(locator).toHaveText(...)`), never fixed sleeps.
 - Tag a test `@mobile` when its layout matters on phones.

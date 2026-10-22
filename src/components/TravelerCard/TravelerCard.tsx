@@ -6,13 +6,12 @@ import { Traveler } from "../../types";
 // The traveler directory, as a grid of cards linking to each profile.
 function TravelerCard({ travelers }: { travelers: Traveler[] }) {
     return (
-        <Box sx={{ display: "grid", gap: 2, gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" } }}>
+        <Box component="ul" sx={{ listStyle: "none", m: 0, p: 0, display: "grid", gap: 2, gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" } }}>
             {travelers.map((t) => {
                 const preferredDestinations = t.preferred_destinations ?? [];
                 return (
-                    <Card key={t.user_id} variant="outlined">
+                    <Card component="li" key={t.user_id} variant="outlined">
                         <CardActionArea
-                            className="traveler-card__container"
                             component={RouterLink}
                             to={`/Travelers/${t.user_id}`}
                             sx={{ height: "100%", alignItems: "stretch" }}

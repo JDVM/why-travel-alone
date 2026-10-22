@@ -7,23 +7,25 @@ import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import Footer from './components/Footer/Footer';
 import VerifyEmailBanner from './components/VerifyEmailBanner/VerifyEmailBanner';
+import { reloadIfStale } from './staleChunks';
 
 // Pages load when first visited, so the first page doesn't wait for all of
-// them. Login is the usual first page, so it comes with the app.
-const Travelers = lazy(() => import('./pages/Travelers/Travelers'));
-const Trips = lazy(() => import('./pages/Trips/Trips'));
-const AddTrip = lazy(() => import('./components/AddTrip/AddTrip'));
-const TripDetails = lazy(() => import('./components/TripDetails/TripDetails'));
-const TravelerDetails = lazy(() => import('./components/TravelerDetails/TravelerDetails'));
-const EditTrip = lazy(() => import('./components/EditTrip/EditTrip'));
-const Register = lazy(() => import('./pages/Register/Register'));
-const Profile = lazy(() => import('./pages/Profile/Profile'));
-const Invitations = lazy(() => import('./pages/Invitations/Invitations'));
-const Privacy = lazy(() => import('./pages/Legal/Privacy'));
-const Terms = lazy(() => import('./pages/Legal/Terms'));
-const ForgotPassword = lazy(() => import('./pages/ForgotPassword/ForgotPassword'));
-const ResetPassword = lazy(() => import('./pages/ResetPassword/ResetPassword'));
-const VerifyEmail = lazy(() => import('./pages/VerifyEmail/VerifyEmail'));
+// them. Login is the usual first page, so it comes with the app. If a page's
+// chunk is gone after a release, the app reloads to pick up the new one.
+const Travelers = lazy(reloadIfStale(() => import('./pages/Travelers/Travelers')));
+const Trips = lazy(reloadIfStale(() => import('./pages/Trips/Trips')));
+const AddTrip = lazy(reloadIfStale(() => import('./components/AddTrip/AddTrip')));
+const TripDetails = lazy(reloadIfStale(() => import('./components/TripDetails/TripDetails')));
+const TravelerDetails = lazy(reloadIfStale(() => import('./components/TravelerDetails/TravelerDetails')));
+const EditTrip = lazy(reloadIfStale(() => import('./components/EditTrip/EditTrip')));
+const Register = lazy(reloadIfStale(() => import('./pages/Register/Register')));
+const Profile = lazy(reloadIfStale(() => import('./pages/Profile/Profile')));
+const Invitations = lazy(reloadIfStale(() => import('./pages/Invitations/Invitations')));
+const Privacy = lazy(reloadIfStale(() => import('./pages/Legal/Privacy')));
+const Terms = lazy(reloadIfStale(() => import('./pages/Legal/Terms')));
+const ForgotPassword = lazy(reloadIfStale(() => import('./pages/ForgotPassword/ForgotPassword')));
+const ResetPassword = lazy(reloadIfStale(() => import('./pages/ResetPassword/ResetPassword')));
+const VerifyEmail = lazy(reloadIfStale(() => import('./pages/VerifyEmail/VerifyEmail')));
 
 // A page that crashes shows the error message under a working header, and
 // navigating elsewhere starts the next page fresh.

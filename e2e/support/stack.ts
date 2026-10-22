@@ -1,4 +1,4 @@
-import { APIRequestContext, expect, Page, request as playwrightRequest } from '@playwright/test';
+import { APIRequestContext, expect, Locator, Page, request as playwrightRequest } from '@playwright/test';
 import { randomUUID } from 'crypto';
 
 // Helpers that talk to the running stack directly: the API (to set up users
@@ -124,19 +124,43 @@ export async function logOut(page: Page) {
     await loggedOut;
 }
 
+// The signed-in account's name in the header.
+export function accountName(page: Page): Locator {
+    return page.getByTestId('account-name');
+}
+
+// The reminder to confirm your email address.
+export function verifyBanner(page: Page): Locator {
+    return page.getByRole('status').filter({ hasText: /confirm your email address/i });
+}
+
+// A card in one of the app's card lists (trips, travelers, invitations).
+export function card(page: Page, text: string): Locator {
+    return page.getByRole('listitem').filter({ hasText: text });
+}
+
+// Picks an option from an autocomplete (e.g. Destination): types the search
+// and clicks the first match, returning its text.
+export async function pickFrom(page: Page, label: string, search: string): Promise<string> {
+    await page.getByRole('combobox', { name: label }).fill(search);
+    const option = page.getByRole('listbox').getByRole('option').first();
+    const text = (await option.textContent()) as string;
+    await option.click();
+    return text;
+}
+
 // Creates a trip through the UI and returns its id.
-export async function createTrip(page: Page, name: string, { kidFriendly = false } = {}): Promise<string> {
+export async function createTrip(page: Page, name: string, { kidFriendly = false, destination = 'a' } = {}): Promise<string> {
     await page.goto('/new');
-    await page.locator('.trip-add select option').nth(3).waitFor({ state: 'attached' });
-    await page.getByLabel('Trip Name').fill(name);
+    await page.getByRole('textbox', { name: 'Trip Name' }).fill(name);
     await page.getByLabel('Trip Length').fill('5');
-    await page.locator('.trip-add select').selectOption({ index: 3 });
+    await pickFrom(page, 'Destination', destination);
     if (kidFriendly) {
         await page.getByLabel('Kid Friendly Trip').check();
     }
     await page.getByRole('button', { name: 'Create Trip' }).click();
     await page.waitForURL('**/Trips');
-    await page.locator('.trips-card__container', { hasText: name }).click();
+    await card(page, name).getByRole('link').click();
     await page.waitForURL(/\/Trips\/\d+$/);
     return page.url().split('/').pop() as string;
 }

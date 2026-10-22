@@ -57,11 +57,11 @@ function Invitations() {
         );
     } else {
         content = (
-            <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' } }}>
+            <Box component="ul" sx={{ listStyle: 'none', m: 0, p: 0, display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' } }}>
                 {invitations.map((invitation) => {
                     const owner = [invitation.owner_first_name, invitation.owner_last_name].filter(Boolean).join(' ');
                     return (
-                        <Card key={invitation.invitation_id} variant="outlined" className="invitations__card">
+                        <Card component="li" key={invitation.invitation_id} variant="outlined">
                             <CardContent>
                                 <Typography component="h2" variant="h6" sx={{ fontWeight: 700 }}>
                                     {invitation.trip_name}
