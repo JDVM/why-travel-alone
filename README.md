@@ -38,8 +38,9 @@ Rendering errors show a "Something went wrong" page instead of a blank screen. S
 ### Back-end
 
 1. Clone the repository: `https://github.com/JDVM/why-travel-alone-api.git`
-2. Install dependencies: `npm install Knex dotenv express mysql2 cors`
-3. Run the application: `node --watch server.js`
+2. Install dependencies: `npm ci` (Node 22, see `.nvmrc`)
+3. Copy `.env.example` to `.env`; the API won't start without an `APP_SECRET` of at least 32 characters
+4. Run the application: `npm run dev`. See that repository's README for its database setup and tests.
 
 If you encounter any issues, please feel free to contact me via GitHub.
 
