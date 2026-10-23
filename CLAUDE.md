@@ -61,7 +61,6 @@ npm run e2e
 
 ## Still to do
 
-- Unit tests for the trip form (`src/components/TripForm/`) and the header menus.
 - Move the last few direct `brand.*` uses in components into named theme colours.
 - Landing page copy (`src/pages/Landing/Landing.tsx`) is a first draft.
 - Before launch, see the checklist in the API repo's `DEPLOYMENT.md` (legal review, `DraftNotice` removal, real addresses).
